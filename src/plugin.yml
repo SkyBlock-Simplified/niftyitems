@@ -1,0 +1,70 @@
+name: NiftyItems
+version: 1.7
+website: http://netcoding.net/
+author: Brian Graham
+authors: [Scrayos]
+
+main: net.netcoding.niftyitems.NiftyItems
+depend: [NiftyBukkit]
+
+commands:
+  clearlore:
+    description: Clears the creative/spawned lore of an item.
+    usage: "§c/<command> [hand|all]"
+    permission: niftyitems.clearlore
+    permission-message: "§7You don't have the required permission: §c<permission>!"
+    aliases: [clore, cl]
+  item:
+    description: Spawns an item.
+    usage: "§c/<command> <type>[:datavalue] [amount]"
+    permission-message: "§7You don't have the required permission: §c<permission>!"
+    aliases: i
+  itemdb:
+    description: Shows information related to an item.
+    usage: "§c/<command> <type>[:datavalue] [amount]"
+    permission: niftyitems.itemdb
+    permission-message: "§7You don't have the required permission: §c<permission>!"
+    aliases: idb
+  itemreload:
+    description: Reloads config.
+    usage: "§c/<command>"
+    permission: niftyitems.reload
+    permission-message: "§7You don't have the required permission: §c<permission>!"
+    aliases: ireload
+
+permissions:
+  niftyitems.*:
+    description: Gives access to all plugin features and commands
+    children:
+      niftyitems.bypass.*:
+        description: Allows you to bypass all blacklists and stacksize limits
+        default: false
+        children:
+          niftyitems.bypass.creative.*:
+            description: Allows you to pull blacklisted items out of the creative inventory
+            default: false
+          niftyitems.bypass.lore:
+            description: Allows you to spawn or pull items from the creative inventory, without lore
+            default: false
+          niftyitems.bypass.placement.*:
+            description: Allows you to place and use blacklisted items
+            default: false
+          niftyitems.bypass.spawning.*:
+            description: Allows you to spawn blacklisted items
+            default: false
+          niftyitems.bypass.stacksize:
+            description: Allows you to bypass stacksize limit on item spawning
+            default: false
+          niftyitems.bypass.store.*:
+            description: Allows you to store/drop spawned items
+            default: false
+      niftyitems.clearlore:
+        description: Allows you to clear the lore on one or all items
+        default: false
+      niftyitems.item:
+        description: Allows you to spawn items
+        default: false
+      niftyitems.itemdb:
+        description: Allows you to check item information
+      niftyitems.reload:
+        description: Allows you to reload the plugin config

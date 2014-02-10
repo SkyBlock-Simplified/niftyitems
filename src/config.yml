@@ -1,0 +1,29 @@
+# Stack sizes when using /item
+stack-size:
+  item: 1
+  block: 64
+  overstacked: 100
+
+# Destroy items when droppped
+destroy-items:
+  spawned: true
+  all: false
+
+# Blacklisted items
+blacklist:
+  # Items that cannot be spawned
+  spawning: 7,8,9,10,11,14,15,16,19,21,22,30,41,42,43,46,51,52,56,57,62,73,78,79,90,97,99,100,119,120,122,125,127,129,133,137,141,142,155,259,263,264,265,266,327,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54,55,56,57,58,59,60,61,62,65,66],384,385,388,397,401,407,422
+  # Items that cannot be taken out of the creative menu
+  creative: 7,8,9,10,11,14,15,16,19,21,22,30,41,42,43,46,51,52,56,57,62,73,78,79,90,97,99,100,119,120,122,125,127,129,133,137,141,142,155,259,263,264,265,266,327,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54,55,56,57,58,59,60,61,62,65,66],384,385,388,397,401,407,422
+  # Items that cannot be used/placed
+  placement: 7,8,9,10,11,51,52,119,120,137,138,259,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54,55,56,57,58,59,60,61,62,65,66],384,385,397:1,401,407,422
+
+localization:
+  lore:
+    creative: 'Creative'
+    spawned: 'Spawned'
+    none: 'This item has no lore'
+  blacklisted:
+    creative: 'The item/block {%1$s} cannot be taken out of the creative menu'
+    spawned: 'The item/block {%1$s} cannot be spawned'
+    placement: 'The item/block {%1$s} cannot be placed/used'
