@@ -1,11 +1,11 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.ItemDatabase;
 import static net.netcoding.niftyitems.managers.Cache.Log;
 
 import java.sql.SQLException;
 import java.util.List;
 
+import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.utilities.StringUtil;
 
@@ -40,7 +40,7 @@ public class ItemDb extends BukkitCommand {
 			}
 		} else {
 			try {
-				stack = ItemDatabase.get(args[0]);
+				stack = NiftyBukkit.getItemDatabase().get(args[0]);
 			} catch (Exception ex) {
 				Log.error(sender, "{%1$s} is an invalid item", args[0]);
 				return;
@@ -55,7 +55,7 @@ public class ItemDb extends BukkitCommand {
 			Log.message(sender, "This tool has {%1$s} uses left", Integer.toString(durability));
 		}
 
-		List<String> itemNameList = ItemDatabase.names(stack);
+		List<String> itemNameList = NiftyBukkit.getItemDatabase().names(stack);
 		String itemNames = StringUtil.implode((ChatColor.GRAY + ", " + ChatColor.RED), itemNameList);
 		if (itemNameList != null) Log.message(sender, "Item aliases: {%1$s}", itemNames);
 	}

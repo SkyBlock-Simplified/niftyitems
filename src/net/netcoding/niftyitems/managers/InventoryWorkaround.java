@@ -7,19 +7,15 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-/*
- * This class can be removed when https://github.com/Bukkit/CraftBukkit/pull/193 is accepted to CraftBukkit
- */
+public class InventoryWorkaround {
 
-public final class InventoryWorkaround {
-
-	private static int firstPartial(final Inventory inventory, final ItemStack item, final int maxAmount) {
+	private static int nextPartial(Inventory inventory, ItemStack item, int maxAmount, int slotNumber) {
 		if (item == null) return -1;
-		final ItemStack[] stacks = inventory.getContents();
+		ItemStack[] stacks = inventory.getContents();
 
-		for (int i = 0; i < stacks.length; i++) {
-			final ItemStack cItem = stacks[i];
-			if (cItem != null && cItem.getAmount() < maxAmount && cItem.isSimilar(item)) return i;
+		for (int i = slotNumber; i < stacks.length; i++) {
+			if (stacks[i] != null && stacks[i].getAmount() < maxAmount && stacks[i].isSimilar(item))
+				return i;
 		}
 
 		return -1;
@@ -27,8 +23,8 @@ public final class InventoryWorkaround {
 
 	// Returns what it couldnt store
 	// This will will abort if it couldn't store all items
-	public static Map<Integer, ItemStack> addAllItems(final Inventory inventory, final ItemStack... items) {
-		final Inventory fakeInventory = Bukkit.getServer().createInventory(null, inventory.getType());
+	public static Map<Integer, ItemStack> addAllItems(Inventory inventory, ItemStack... items) {
+		Inventory fakeInventory = Bukkit.getServer().createInventory(null, inventory.getType());
 		fakeInventory.setContents(inventory.getContents());
 		Map<Integer, ItemStack> overFlow = addItems(fakeInventory, items);
 
@@ -41,23 +37,20 @@ public final class InventoryWorkaround {
 	}
 
 	// Returns what it couldnt store
-	public static Map<Integer, ItemStack> addItems(final Inventory inventory, final ItemStack... items) {
+	public static Map<Integer, ItemStack> addItems(Inventory inventory, ItemStack... items) {
 		return addOversizedItems(inventory, 0, items);
 	}
 
 	// Returns what it couldnt store
 	// Set oversizedStack to below normal stack size to disable oversized stacks
-	public static Map<Integer, ItemStack> addOversizedItems(final Inventory inventory, final int oversizedStacks, final ItemStack... items) {
-		final Map<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
+	public static Map<Integer, ItemStack> addOversizedItems(Inventory inventory, int oversizedStacks, ItemStack... items) {
+		Map<Integer, ItemStack> leftover = new HashMap<>();
+		Map<Material, Integer> lastPartial = new HashMap<>();
+		ItemStack[] combined = new ItemStack[items.length];
 
 		/*
-		 * TODO: some optimization - Create a 'firstPartial' with a 'fromIndex' - Record the lastPartial per Material -
 		 * Cache firstEmpty result
 		 */
-
-		// combine items
-
-		final ItemStack[] combined = new ItemStack[items.length];
 
 		for (ItemStack item : items) {
 			if (item == null || item.getAmount() < 1) continue;
@@ -77,27 +70,26 @@ public final class InventoryWorkaround {
 
 
 		for (int i = 0; i < combined.length; i++) {
-			final ItemStack item = combined[i];
+			ItemStack item = combined[i];
 			if (item == null || item.getType() == Material.AIR) continue;
 
 			while (true) {
-				// Do we already have a stack of it?
-				final int maxAmount = oversizedStacks > item.getType().getMaxStackSize() ? oversizedStacks : item.getType().getMaxStackSize();
-				final int firstPartial = firstPartial(inventory, item, maxAmount);
+				int maxAmount = oversizedStacks > item.getType().getMaxStackSize() ? oversizedStacks : item.getType().getMaxStackSize();
+				int nextPartial = nextPartial(inventory, item, maxAmount, (lastPartial.containsKey(item.getType()) ? lastPartial.get(item.getType()) : 0));
+				lastPartial.put(item.getType(), (nextPartial == -1 ? 0 : nextPartial));
 
-				// Drat! no partial stack
-				if (firstPartial == -1) {
-					// Find a free spot!
-					final int firstFree = inventory.firstEmpty();
+				if (nextPartial == -1) {
+					// Find empty slot
+					int firstFree = inventory.firstEmpty();
 
 					if (firstFree == -1) {
-						// No space at all!
+						// No free space
 						leftover.put(i, item);
 						break;
 					} else {
-						// More than a single stack!
 						if (item.getAmount() > maxAmount) {
-							final ItemStack stack = item.clone();
+							// More than a single stack!
+							ItemStack stack = item.clone();
 							stack.setAmount(maxAmount);
 							inventory.setItem(firstFree, stack);
 							item.setAmount(item.getAmount() - maxAmount);
@@ -108,19 +100,17 @@ public final class InventoryWorkaround {
 						}
 					}
 				} else {
-					// So, apparently it might only partially fit, well lets do just that
-					final ItemStack partialItem = inventory.getItem(firstPartial);
+					ItemStack partialItem = inventory.getItem(nextPartial);
+					int amount = item.getAmount();
+					int partialAmount = partialItem.getAmount();
 
-					final int amount = item.getAmount();
-					final int partialAmount = partialItem.getAmount();
-
-					// Check if it fully fits
+					// Check if it all fits
 					if (amount + partialAmount <= maxAmount) {
 						partialItem.setAmount(amount + partialAmount);
 						break;
 					}
 
-					// It fits partially
+					// Partial fit
 					partialItem.setAmount(maxAmount);
 					item.setAmount(amount + partialAmount - maxAmount);
 				}
@@ -129,4 +119,5 @@ public final class InventoryWorkaround {
 
 		return leftover;
 	}
+
 }

@@ -1,11 +1,11 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.ItemDatabase;
 import static net.netcoding.niftyitems.managers.Cache.Log;
 import static net.netcoding.niftyitems.managers.Cache.Settings;
 
 import java.sql.SQLException;
 
+import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftyitems.managers.InventoryWorkaround;
 
@@ -30,7 +30,7 @@ public class Item extends BukkitCommand {
 				ItemStack item;
 
 				try {
-					item = ItemDatabase.get(args[0]);
+					item = NiftyBukkit.getItemDatabase().get(args[0]);
 
 					if (item.getType() == Material.AIR) {
 						Log.error(sender, "Air cannot be spawned");

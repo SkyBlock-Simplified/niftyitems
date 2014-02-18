@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import net.netcoding.niftybukkit.NiftyBukkit;
+import net.netcoding.niftybukkit.items.ItemData;
 import net.netcoding.niftybukkit.minecraft.BukkitHelper;
 
 import org.bukkit.Material;
@@ -24,7 +26,7 @@ public class Settings extends BukkitHelper {
 	private boolean destroyAllDrops    = false;
 	private boolean destroySpawnDrops  = false;
 	private Map<String, Map<String, String>> localization = new HashMap<>();
-	private Map<String, List<String>> blacklists = new HashMap<>();
+	private Map<String, List<ItemData>> blacklists = new HashMap<>();
 
 	public Settings(JavaPlugin plugin) {
 		super(plugin);
@@ -38,7 +40,7 @@ public class Settings extends BukkitHelper {
 		return this.destroySpawnDrops;
 	}
 
-	public List<String> getBlacklist(String list) {
+	public List<ItemData> getBlacklist(String list) {
 		return this.blacklists.get(list);
 	}
 
@@ -107,26 +109,19 @@ public class Settings extends BukkitHelper {
 	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(Player player, ItemStack stack, String list) {
 		if (stack != null && stack.getType() != Material.AIR) {
-			String bypassPerm = String.format("niftyitems.bypass.%s.", list);
-			String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH).replace("_", "");
+			String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH);
 
-			try {
-				for (String bitem : this.getBlacklist(list)) {
-					String[] parts  = ItemDatabase.splitPattern.split(bitem);
-					int id          = Integer.parseInt(parts[0]);
-					Short data      = Short.parseShort((parts.length == 2 ? parts[1] : 0) + "");
-					boolean similar = (stack.getTypeId() == id) && (data == 0 ? true : stack.getDurability() == data);
-
-					if (similar) {
+			for (ItemData item : this.getBlacklist(list)) {
+				try {
+					if (stack.getTypeId() == item.getId() && (item.getData() == 0 || item.getData() == stack.getDurability())) {
 						if (player == null) return true;
 
-						if (!player.hasPermission(bypassPerm + id) && !player.hasPermission(bypassPerm + itemName))
+						if (!this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) && !this.hasPermissions(player, "bypass", list, itemName))
 							return true;
 					}
+				} catch (Exception ex) {
+					
 				}
-			} catch (NullPointerException npe) {
-				if (!player.hasPermission(bypassPerm + stack.getTypeId()) && !player.hasPermission(bypassPerm + itemName))
-					return true;
 			}
 		}
 
@@ -166,28 +161,13 @@ public class Settings extends BukkitHelper {
 
 		this.blacklists.clear();
 		ConfigurationSection blacklist = config.getConfigurationSection("blacklist");
-		String[] blacklistNames = new String[] { "spawning", "creative", "placement" };
-		for (String listName : blacklistNames) {
-			List<String> blacklistItems = new ArrayList<>();
-			String[] blacklistItemArr = blacklist.getString(listName).split(",(?![^\\[]*\\])");
-
-			for (String blacklistItem : blacklistItemArr) {
-				String currentItem = blacklistItem;
-
-				if (blacklistItem.contains(":")) {
-					String[] split = blacklistItem.split(":");
-					String dataValue = split[1];
-
-					if (dataValue.contains(",")) {
-						String[] dataValues = dataValue.substring(1, (dataValue.length() - 1)).split(",");
-						for (String value : dataValues) blacklistItems.add(String.format("%s:%s", split[0], value));
-					}
-				}
-
-				blacklistItems.add(currentItem);
+		String[] listNames = new String[] { "spawning", "creative", "placement" };
+		for (String listName : listNames) {
+			try {
+				this.blacklists.put(listName, NiftyBukkit.getItemDatabase().parse(blacklist.getString(listName)));
+			} catch (Exception ex) {
+				super.getLog().console("Unable to load blacklist %1$s!", ex, listName);
 			}
-
-			this.blacklists.put(listName, blacklistItems);
 		}
 
 		this.localization.clear();
