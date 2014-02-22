@@ -49,7 +49,7 @@ public class InventoryWorkaround {
 		ItemStack[] combined = new ItemStack[items.length];
 
 		/*
-		 * Cache firstEmpty result
+		 * TODO: Cache firstEmpty result
 		 */
 
 		for (ItemStack item : items) {
