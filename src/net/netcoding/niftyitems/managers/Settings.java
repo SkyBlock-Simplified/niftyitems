@@ -166,7 +166,7 @@ public class Settings extends BukkitHelper {
 			try {
 				this.blacklists.put(listName, NiftyBukkit.getItemDatabase().parse(blacklist.getString(listName)));
 			} catch (Exception ex) {
-				super.getLog().console("Unable to load blacklist %1$s!", ex, listName);
+				this.getLog().console("Unable to load blacklist %1$s!", ex, listName);
 			}
 		}
 

@@ -6,8 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Cache {
 
-	public static transient Settings Settings = null;
-	public static Log Log = null;
+	public static transient Log Log;
+	public static transient Settings Settings;
 
 	public Cache(JavaPlugin plugin) {
 		Log = new Log(plugin);

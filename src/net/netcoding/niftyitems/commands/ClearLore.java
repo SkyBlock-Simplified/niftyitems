@@ -1,13 +1,11 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.Log;
-import static net.netcoding.niftyitems.managers.Cache.Settings;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftyitems.managers.Cache;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,13 +20,13 @@ public class ClearLore extends BukkitCommand {
 	}
 
 	private void revertItem(ItemStack item) {
-		if (!Settings.isRestricted(item).equalsIgnoreCase("none") && item.getItemMeta().hasLore()) {
+		if (!Cache.Settings.isRestricted(item).equalsIgnoreCase("none") && item.getItemMeta().hasLore()) {
 			ItemMeta itemMeta = item.getItemMeta();
 			List<String> lores = itemMeta.getLore();
 			List<String> notOurs = new ArrayList<>();
 
 			for (String lore : lores) {
-				if (!lore.startsWith(Settings.getLore("creative")) && !lore.startsWith(Settings.getLore("spawned")))
+				if (!lore.startsWith(Cache.Settings.getLore("creative")) && !lore.startsWith(Cache.Settings.getLore("spawned")))
 					notOurs.add(lore);
 			}
 
@@ -44,16 +42,16 @@ public class ClearLore extends BukkitCommand {
 
 			if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {
 				this.revertItem(player.getItemInHand());
-				Log.message(sender, "The item {%1$s} has had its lore removed", player.getItemInHand().getType().toString().toLowerCase().replace('_', ' '));
+				this.getLog().message(sender, "The item {%1$s} has had its lore removed", player.getItemInHand().getType().toString().toLowerCase().replace('_', ' '));
 			} else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
 				for (ItemStack item : player.getInventory().getContents())
 					this.revertItem(item);
 
-				Log.message(sender, "All items in your inventory have had their removed");
+				this.getLog().message(sender, "All items in your inventory have had their removed");
 			} else
-				super.showUsage(sender);
+				this.showUsage(sender);
 		} else
-			Log.error(sender, "The command %1$s is not possible from console", super.getCommand().getName());
+			this.getLog().error(sender, "The command %1$s is not possible from console", this.getCommand().getName());
 	}
 
 }
