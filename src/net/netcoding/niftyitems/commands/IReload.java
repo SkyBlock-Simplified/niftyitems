@@ -1,7 +1,5 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.Log;
-
 import java.sql.SQLException;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
@@ -14,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class IReload extends BukkitCommand {
 
 	public IReload(JavaPlugin plugin) {
-		super(plugin, "ireload", false);
+		super(plugin, "itemreload", false);
 	}
 
 	@Override
@@ -22,8 +20,7 @@ public class IReload extends BukkitCommand {
 		this.getPlugin().reloadConfig();
 		NiftyBukkit.getItemDatabase().reload();
 		Cache.Settings.reload();
-
-		Log.message(sender, "%1$s reloaded", this.getPluginDescription().getName());
+		this.getLog().message(sender, "%1$s reloaded", this.getPluginDescription().getName());
 	}
 
 }
