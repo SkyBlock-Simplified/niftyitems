@@ -1,7 +1,5 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.Log;
-
 import java.sql.SQLException;
 import java.util.List;
 
@@ -35,29 +33,31 @@ public class ItemDb extends BukkitCommand {
 			}
 
 			if (stack == null) {
-				Log.error(sender, "Not enough arguments");
+				this.getLog().error(sender, "Not enough arguments");
 				return;
 			}
 		} else {
 			try {
 				stack = NiftyBukkit.getItemDatabase().get(args[0]);
 			} catch (Exception ex) {
-				Log.error(sender, "{%1$s} is an invalid item", args[0]);
+				this.getLog().error(sender, "{%1$s} is an invalid item", args[0]);
 				return;
 			}
 		}
 
-		Log.message(sender, "Item: {%1$s} - {%2$s}:{%3$s}", stack.getType().toString(), stack.getTypeId(), stack.getDurability());
+		this.getLog().message(sender, "Item: {%1$s} - {%2$s}:{%3$s}", stack.getType().toString(), stack.getTypeId(), stack.getDurability());
+		List<String> itemNameList = NiftyBukkit.getItemDatabase().names(stack);
 
 		if (itemHeld && stack.getType() != Material.AIR) {
 			int maxuses = stack.getType().getMaxDurability();
 			int durability = ((maxuses + 1) - stack.getDurability());
-			Log.message(sender, "This tool has {%1$s} uses left", Integer.toString(durability));
+			this.getLog().message(sender, "This tool has {%1$s} uses left", Integer.toString(durability));
 		}
 
-		List<String> itemNameList = NiftyBukkit.getItemDatabase().names(stack);
-		String itemNames = StringUtil.implode((ChatColor.GRAY + ", " + ChatColor.RED), itemNameList);
-		if (itemNameList != null) Log.message(sender, "Item aliases: {%1$s}", itemNames);
+		if (itemNameList.size() > 0) {
+			String itemNames = StringUtil.implode((ChatColor.GRAY + ", " + ChatColor.RED), itemNameList);
+			this.getLog().message(sender, "Item aliases: {%1$s}", itemNames);
+		}
 	}
 
 }
