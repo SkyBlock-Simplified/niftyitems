@@ -1,6 +1,5 @@
 package net.netcoding.niftyitems.listeners;
 
-import static net.netcoding.niftyitems.managers.Cache.Log;
 import static net.netcoding.niftyitems.managers.Cache.Settings;
 
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
 
-import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
@@ -40,11 +38,14 @@ public class Inventory extends BukkitListener {
 	public void onBlockBreak(BlockBreakEvent event) {
 		try {
 			InventoryType.valueOf(event.getBlock().getType().name());
-			Chest chest = (Chest)event.getBlock().getState();
 
-			for (ItemStack item : chest.getInventory().getContents()) {
-				if (Settings.isRestricted(item).equalsIgnoreCase("spawned"))
-					chest.getInventory().removeItem(item);
+			if (event.getBlock() instanceof Chest) {
+				Chest chest = (Chest)event.getBlock().getState();
+
+				for (ItemStack item : chest.getInventory().getContents()) {
+					if (Settings.isRestricted(item).equalsIgnoreCase("spawned"))
+						chest.getInventory().removeItem(item);
+				}
 			}
 		} catch (Exception ex) { }
 	}
@@ -57,14 +58,14 @@ public class Inventory extends BukkitListener {
 		if (!player.hasPermission("niftyitems.bypass.lore")) {
 			if (Settings.isRestricted(item).equalsIgnoreCase("creative")) {
 				if (!(player.getGameMode() == GameMode.CREATIVE || Settings.isOwner(item, player.getName()))) {
-					Log.error(player, "To place {%1$s} you must be the owner or in creative mode", item.getType().toString());
+					this.getLog().error(player, "To place {%1$s} you must be the owner or in creative mode", item.getType().toString());
 					event.setCancelled(true);
 				}
 			}
 		}
 
 		if (Settings.isBlacklisted(player, item, "placement")) {
-			Log.error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
+			this.getLog().error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
 			event.setCancelled(true);
 		}
 	}
@@ -80,24 +81,22 @@ public class Inventory extends BukkitListener {
 
 			if (Settings.isRestricted(currentItem).equalsIgnoreCase("spawned") && Settings.isBlacklisted(player, currentItem, "store")) {
 				List<InventoryType> inventorys = new ArrayList<InventoryType>(
-						Arrays.asList(
-								InventoryType.CHEST,
-								InventoryType.ENDER_CHEST,
-								InventoryType.FURNACE,
-								InventoryType.DISPENSER,
-								InventoryType.DROPPER,
-								InventoryType.HOPPER
-								)
-						);
-
-				System.out.println(invType);
+					Arrays.asList(
+						InventoryType.CHEST,
+						InventoryType.ENDER_CHEST,
+						InventoryType.FURNACE,
+						InventoryType.DISPENSER,
+						InventoryType.DROPPER,
+						InventoryType.HOPPER
+					)
+				);
 
 				if (inventorys.contains(invType)) {
-					System.out.println("made it");
 					if (event.getClick().isShiftClick()) {
+						// TODO: COOLDOWN
 						final int amount = currentItem.getAmount();
 
-						Bukkit.getScheduler().scheduleSyncDelayedTask(this.getPlugin(), new Runnable() {
+						this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								for (ItemStack items : event.getInventory().getContents()) {
@@ -114,7 +113,7 @@ public class Inventory extends BukkitListener {
 									}
 								}
 							}
-						});
+						}, 2L);
 					} else {
 						if (event.getRawSlot() < event.getInventory().getSize()) {
 							event.getInventory().setItem(event.getRawSlot(), new ItemStack(Material.AIR));
@@ -135,7 +134,7 @@ public class Inventory extends BukkitListener {
 		ItemStack item = event.getCursor();
 
 		if (Settings.isBlacklisted(player, item, "creative")) {
-			Log.error(player, Settings.getLocalization("blacklisted", "creative"), item.getType().toString());
+			this.getLog().error(player, Settings.getLocalization("blacklisted", "creative"), item.getType().toString());
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 		} else {
@@ -191,7 +190,7 @@ public class Inventory extends BukkitListener {
 			ItemStack item = player.getItemInHand();
 
 			if (Settings.isBlacklisted(player, item, "placement")) {
-				Log.error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
+				this.getLog().error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
 				event.setCancelled(true);
 			}
 		}
