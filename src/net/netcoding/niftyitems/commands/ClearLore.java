@@ -17,6 +17,7 @@ public class ClearLore extends BukkitCommand {
 
 	public ClearLore(JavaPlugin plugin) {
 		super(plugin, "clearlore", false);
+		this.isPlayerOnly();
 	}
 
 	private void revertItem(ItemStack item) {
@@ -36,22 +37,19 @@ public class ClearLore extends BukkitCommand {
 	}
 
 	@Override
-	public void command(CommandSender sender, String[] args) throws SQLException, Exception {
-		if (sender instanceof Player) {
-			Player player = (Player)sender;
+	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+		Player player = (Player)sender;
 
-			if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {
-				this.revertItem(player.getItemInHand());
-				this.getLog().message(sender, "The item {%1$s} has had its lore removed", player.getItemInHand().getType().toString().toLowerCase().replace('_', ' '));
-			} else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
-				for (ItemStack item : player.getInventory().getContents())
-					this.revertItem(item);
+		if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {
+			this.revertItem(player.getItemInHand());
+			this.getLog().message(sender, "The item {%1$s} has had its lore removed", player.getItemInHand().getType().toString().toLowerCase().replace('_', ' '));
+		} else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
+			for (ItemStack item : player.getInventory().getContents())
+				this.revertItem(item);
 
-				this.getLog().message(sender, "All items in your inventory have had their removed");
-			} else
-				this.showUsage(sender);
+			this.getLog().message(sender, "All items in your inventory have had their removed");
 		} else
-			this.getLog().error(sender, "The command %1$s is not possible from console", this.getCommand().getName());
+			this.showUsage(sender);
 	}
 
 }

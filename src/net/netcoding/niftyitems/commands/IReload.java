@@ -16,7 +16,7 @@ public class IReload extends BukkitCommand {
 	}
 
 	@Override
-	public void command(CommandSender sender, String[] args) throws SQLException, Exception {
+	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		this.getPlugin().reloadConfig();
 		NiftyBukkit.getItemDatabase().reload();
 		Cache.Settings.reload();
