@@ -59,6 +59,11 @@ public class GameMode extends BukkitCommand {
 			}
 
 			if (StringUtil.notEmpty(playerName)) {
+				if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) {
+					this.getLog().error(sender, "You cannot change the gamemode of other players!");
+					return;
+				}
+
 				Player player = findPlayer(playerName);
 				player.setGameMode(mode);
 				this.getLog().message(sender, "Your gamemode has been changed to {%1$s}.", mode.toString().toLowerCase());
