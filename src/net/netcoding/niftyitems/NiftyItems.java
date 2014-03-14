@@ -1,11 +1,13 @@
 package net.netcoding.niftyitems;
 
 import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
+import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.IReload;
 import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
 import net.netcoding.niftyitems.listeners.Inventory;
+import net.netcoding.niftyitems.listeners.Login;
 import net.netcoding.niftyitems.managers.Cache;
 import net.netcoding.niftyitems.managers.Settings;
 
@@ -18,6 +20,7 @@ public class NiftyItems extends BukkitPlugin {
 		Cache.Settings.reload();
 
 		this.getLog().console("Registering Commands");
+		new GameMode(this);
 		new ClearLore(this);
 		new Item(this);
 		new ItemDb(this);
@@ -25,6 +28,7 @@ public class NiftyItems extends BukkitPlugin {
 
 		this.getLog().console("Registering Listeners");
 		new Inventory(this);
+		new Login(this);
 	}
 
 }

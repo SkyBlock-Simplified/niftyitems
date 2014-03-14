@@ -7,10 +7,19 @@ main: net.netcoding.niftyitems.NiftyItems
 depend: [NiftyBukkit]
 
 commands:
+  clearinventory:
+    description: Clears the players inventory
+    usage: "§c/<command> [inv|armor|all]|<player> [inv|armor|all]"
+    permissions: niftyitems.clear
+    aliases: [clearinv, clear, ci]
   clearlore:
     description: Clears the creative/spawned lore of an item
     usage: "§c/<command> [hand|all]"
     aliases: [clore, cl]
+  gamemode:
+    description: Changes the gamemode of a player
+    usage: "§c/<command> [mode] [player]
+    aliases: [gm, adventure, creative, survival]
   item:
     description: Spawns an item
     usage: "§c/<command> <type>[:datavalue] [amount]"
@@ -46,6 +55,13 @@ permissions:
             description: Allows you to bypass stacksize limit on item spawning
           niftyitems.bypass.store.*:
             description: Allows you to store/drop spawned items
+      niftyitems.clear.*:
+        description: Allows you to clear inventories
+        children:
+          niftyitems.clear:
+            description: Allows you to clear your inventory
+          niftyitems.clear.other
+            description: Allows you to clear another players inventory
       niftyitems.clearlore:
         description: Allows you to clear the lore on one or all items
       niftyitems.item:
