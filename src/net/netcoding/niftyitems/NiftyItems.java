@@ -1,31 +1,29 @@
 package net.netcoding.niftyitems;
 
-import static net.netcoding.niftyitems.managers.Cache.Log;
-import net.netcoding.niftyitems.commands.*;
+import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
+import net.netcoding.niftyitems.commands.ClearLore;
+import net.netcoding.niftyitems.commands.IReload;
+import net.netcoding.niftyitems.commands.Item;
+import net.netcoding.niftyitems.commands.ItemDb;
 import net.netcoding.niftyitems.listeners.Inventory;
 import net.netcoding.niftyitems.managers.Cache;
+import net.netcoding.niftyitems.managers.Settings;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-public class NiftyItems extends JavaPlugin {
+public class NiftyItems extends BukkitPlugin {
 
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
-		new Cache(this);
+		Cache.Settings = new Settings(this);
+		Cache.Settings.reload();
 
-		Log.console("Registering Commands");
+		this.getLog().console("Registering Commands");
 		new ClearLore(this);
 		new Item(this);
 		new ItemDb(this);
+		new IReload(this);
 
-		try {
-			new IReload(this).command(this.getServer().getConsoleSender(), null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		Log.console("Registering Event Listeners");
+		this.getLog().console("Registering Listeners");
 		new Inventory(this);
 	}
 
