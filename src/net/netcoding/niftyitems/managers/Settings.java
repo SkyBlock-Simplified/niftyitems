@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
-import net.netcoding.niftybukkit.items.ItemData;
+import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftybukkit.minecraft.BukkitHelper;
 
 import org.bukkit.Material;
@@ -45,8 +45,6 @@ public class Settings extends BukkitHelper {
 	}
 
 	public String getLocalization(String section, String message) {
-		System.out.println(section);
-		System.out.println(message);
 		return this.localization.get(section).get(message);
 	}
 
@@ -108,19 +106,18 @@ public class Settings extends BukkitHelper {
 
 	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(Player player, ItemStack stack, String list) {
+		if (player == null) return true;
+
 		if (stack != null && stack.getType() != Material.AIR) {
 			String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH);
+			boolean blacklisted = (!this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) && !this.hasPermissions(player, "bypass", list, itemName));
 
-			for (ItemData item : this.getBlacklist(list)) {
-				try {
-					if (stack.getTypeId() == item.getId() && (item.getData() == 0 || item.getData() == stack.getDurability())) {
-						if (player == null) return true;
-
-						if (!this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) && !this.hasPermissions(player, "bypass", list, itemName))
-							return true;
-					}
-				} catch (Exception ex) {
-					
+			if ("store".equals(list))
+				return blacklisted;
+			else {
+				for (ItemData item : this.getBlacklist(list)) {
+					if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
+						return blacklisted;
 				}
 			}
 		}
