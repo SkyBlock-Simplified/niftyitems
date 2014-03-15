@@ -30,7 +30,7 @@ public class GameMode extends BukkitCommand {
 			if (arg.matches("(?i)^(1|c|creative)$")) arg = "creative";
 			if (arg.matches("(?i)^(2|a|adventure)$")) arg = "adventure";
 
-			if (alias.matches("(?i)^(adventure|creative|survival)$")) {
+			if (alias.matches("(?i)^adventure|creative|survival$")) {
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
 					playerName = findPlayerName(args[1]);
@@ -59,10 +59,8 @@ public class GameMode extends BukkitCommand {
 			}
 
 			if (StringUtil.notEmpty(playerName)) {
-				if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) {
-					this.getLog().error(sender, "You cannot change the gamemode of other players!");
+				if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) 
 					return;
-				}
 
 				Player player = findPlayer(playerName);
 				player.setGameMode(mode);

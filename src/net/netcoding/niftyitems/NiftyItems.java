@@ -1,8 +1,9 @@
 package net.netcoding.niftyitems;
 
 import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
-import net.netcoding.niftyitems.commands.GameMode;
+import net.netcoding.niftyitems.commands.ClearInv;
 import net.netcoding.niftyitems.commands.ClearLore;
+import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.IReload;
 import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
@@ -20,8 +21,9 @@ public class NiftyItems extends BukkitPlugin {
 		Cache.Settings.reload();
 
 		this.getLog().console("Registering Commands");
-		new GameMode(this);
+		new ClearInv(this);
 		new ClearLore(this);
+		new GameMode(this);
 		new Item(this);
 		new ItemDb(this);
 		new IReload(this);
