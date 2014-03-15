@@ -5,7 +5,7 @@ import net.netcoding.niftybukkit.minecraft.BukkitListener;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Login extends BukkitListener {
@@ -15,7 +15,7 @@ public class Login extends BukkitListener {
 	}
 
 	@EventHandler
-	public void onPlayerLogin(PlayerLoginEvent event) {
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 
 		if (player.getGameMode().equals(GameMode.CREATIVE)) {
