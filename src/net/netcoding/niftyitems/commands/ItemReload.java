@@ -9,9 +9,9 @@ import net.netcoding.niftyitems.managers.Cache;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class IReload extends BukkitCommand {
+public class ItemReload extends BukkitCommand {
 
-	public IReload(JavaPlugin plugin) {
+	public ItemReload(JavaPlugin plugin) {
 		super(plugin, "itemreload", false);
 	}
 
