@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftyitems.managers.Cache;
+import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,13 +21,13 @@ public class ClearLore extends BukkitCommand {
 	}
 
 	private boolean revertItem(ItemStack item) {
-		if (!Cache.Settings.isRestricted(item).equalsIgnoreCase("none") && item.getItemMeta().hasLore()) {
+		if (!Lore.isRestricted(item).equalsIgnoreCase("none") && item.getItemMeta().hasLore()) {
 			ItemMeta itemMeta = item.getItemMeta();
 			List<String> lores = itemMeta.getLore();
 			List<String> notOurs = new ArrayList<>();
 
 			for (String lore : lores) {
-				if (!lore.startsWith(Cache.Settings.getLore("creative")) && !lore.startsWith(Cache.Settings.getLore("spawned")))
+				if (!lore.startsWith(Lore.getLore("creative")) && !lore.startsWith(Lore.getLore("spawned")))
 					notOurs.add(lore);
 			}
 

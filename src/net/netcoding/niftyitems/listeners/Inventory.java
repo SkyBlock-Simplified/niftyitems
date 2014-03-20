@@ -1,12 +1,14 @@
 package net.netcoding.niftyitems.listeners;
 
-import static net.netcoding.niftyitems.managers.Cache.Settings;
+import static net.netcoding.niftyitems.cache.Cache.Config;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftyitems.cache.Cache;
+import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -43,7 +45,7 @@ public class Inventory extends BukkitListener {
 				Chest chest = (Chest)event.getBlock().getState();
 
 				for (ItemStack item : chest.getInventory().getContents()) {
-					if (Settings.isRestricted(item).equalsIgnoreCase("spawned"))
+					if (Lore.isRestricted(item).equalsIgnoreCase("spawned"))
 						chest.getInventory().removeItem(item);
 				}
 			}
@@ -55,17 +57,17 @@ public class Inventory extends BukkitListener {
 		Player player = event.getPlayer();
 		ItemStack item = event.getItemInHand();
 
-		if (!player.hasPermission("niftyitems.bypass.lore")) {
-			if (Settings.isRestricted(item).equalsIgnoreCase("creative")) {
-				if (!(player.getGameMode() == GameMode.CREATIVE || Settings.isOwner(item, player.getName()))) {
-					this.getLog().error(player, "To place {%1$s} you must be the owner or in creative mode", item.getType().toString());
+		if (!this.hasPermissions(player, "bypass", "lore")) {
+			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
+				if (!(player.getGameMode() == GameMode.CREATIVE || Lore.isOwner(item, player.getName()))) {
+					this.getLog().error(player, "To place {%1$s} you must be the owner or in creative mode!", item.getType().toString());
 					event.setCancelled(true);
 				}
 			}
 		}
 
-		if (Settings.isBlacklisted(player, item, "placement")) {
-			this.getLog().error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
+		if (Config.isBlacklisted(player, item, "placement")) {
+			this.getLog().error(player, "The item/block {%1$s} cannot be placed/used!", item.getType().toString());
 			event.setCancelled(true);
 		}
 	}
@@ -75,11 +77,11 @@ public class Inventory extends BukkitListener {
 	public void onInventoryClick(final InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
 
-		if (!player.hasPermission("niftyitems.bypass.lore")) {
+		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
 			final ItemStack currentItem = event.getClick().isShiftClick() ? event.getCurrentItem() : event.getCursor();
 
-			if (Settings.isRestricted(currentItem).equalsIgnoreCase("spawned") && Settings.isBlacklisted(player, currentItem, "store")) {
+			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
 				List<InventoryType> inventorys = new ArrayList<InventoryType>(
 					Arrays.asList(
 						InventoryType.CHEST,
@@ -93,7 +95,6 @@ public class Inventory extends BukkitListener {
 
 				if (inventorys.contains(invType)) {
 					if (event.getClick().isShiftClick()) {
-						// TODO: COOLDOWN
 						final int amount = currentItem.getAmount();
 
 						this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), new Runnable() {
@@ -107,7 +108,7 @@ public class Inventory extends BukkitListener {
 											items.setAmount(items.getAmount() - amount);
 
 										ItemStack in = new ItemStack(currentItem.getType(), amount, currentItem.getDurability());
-										if (Settings.isRestricted(items).equalsIgnoreCase("spawned")) in = Settings.loreItem(player, in, Settings.getLore("spawned"));
+										if (Lore.isRestricted(items).equalsIgnoreCase("spawned")) in = Lore.apply(player, in, Lore.getLore("spawned"));
 										player.getInventory().addItem(in);
 										break;
 									}
@@ -133,13 +134,13 @@ public class Inventory extends BukkitListener {
 		Player player = (Player)event.getWhoClicked();
 		ItemStack item = event.getCursor();
 
-		if (Settings.isBlacklisted(player, item, "creative")) {
-			this.getLog().error(player, Settings.getLocalization("blacklisted", "creative"), item.getType().toString());
+		if (Config.isBlacklisted(player, item, "creative")) {
+			this.getLog().error(player, "You cannot take {%1$s} out of the creative menu!", item.getType().toString());
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 		} else {
-			if (!player.hasPermission("niftyitems.bypass.lore"))
-				event.setCursor(Settings.loreItem(player, item, Settings.getLore("creative")));
+			if (!this.hasPermissions(player, "bypass", "lore"))
+				event.setCursor(Lore.apply(player, item, Lore.getLore("creative")));
 		}
 	}
 
@@ -148,7 +149,7 @@ public class Inventory extends BukkitListener {
 		Player player = e.getEntity();
 
 		for (ItemStack item : e.getDrops()) {
-			if (Settings.isRestricted(item).equalsIgnoreCase("spawned") && Settings.isBlacklisted(player, item, "store"))
+			if (Lore.isRestricted(item).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, item, "store"))
 				item.setAmount(0);
 		}
 	}
@@ -156,11 +157,11 @@ public class Inventory extends BukkitListener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player   = event.getPlayer();
-		boolean destroy = Settings.destroyAllDrops();
+		boolean destroy = Config.destroyAllDrops();
 		ItemStack item  = event.getItemDrop().getItemStack();
 
-		if (destroy || Settings.isRestricted(item).equalsIgnoreCase("spawned")) {
-			if (destroy || Settings.destroySpawnedDrops() || (Settings.isBlacklisted(player, item, "store") && Settings.destroySpawnedDrops())) {
+		if (destroy || Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
+			if (destroy || Config.destroySpawnedDrops() || (Config.isBlacklisted(player, item, "store") && Config.destroySpawnedDrops())) {
 				event.getItemDrop().remove();
 				item.setAmount(0);
 			}
@@ -175,7 +176,7 @@ public class Inventory extends BukkitListener {
 			ItemStack[] items = player.getInventory().getArmorContents();
 
 			for (ItemStack item : items) {
-				if (!Settings.isRestricted(item).equalsIgnoreCase("none"))
+				if (!Lore.isRestricted(item).equalsIgnoreCase("none"))
 					item = new ItemStack(Material.AIR);
 			}
 
@@ -189,8 +190,8 @@ public class Inventory extends BukkitListener {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
-			if (Settings.isBlacklisted(player, item, "placement")) {
-				this.getLog().error(player, Settings.getLocalization("blacklisted", "placement"), item.getType().toString());
+			if (Cache.Config.isBlacklisted(player, item, "placement")) {
+				this.getLog().error(player, "The item/block {%1$s} cannot be placed/used!", item.getType().toString());
 				event.setCancelled(true);
 			}
 		}
@@ -200,11 +201,11 @@ public class Inventory extends BukkitListener {
 	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
 
-		if (!player.hasPermission("niftyitems.bypass.lore")) {
+		if (!this.hasPermissions(player, "bypass", "lore")) {
 			ItemStack item = event.getItem().getItemStack();
 
-			if (Settings.isRestricted(item).equalsIgnoreCase("creative")) {
-				if (!(player.getGameMode() == GameMode.CREATIVE || Settings.isOwner(item, player.getName())))
+			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
+				if (!(player.getGameMode() == GameMode.CREATIVE || Lore.isOwner(item, player.getName())))
 					event.setCancelled(true);
 			}
 		}
@@ -215,12 +216,12 @@ public class Inventory extends BukkitListener {
 		if (event.getView().getPlayer() instanceof Player) {
 			Player player = (Player)event.getView().getPlayer();
 
-			if (!player.hasPermission("niftyitems.bypass.lore")) {
+			if (!this.hasPermissions(player, "bypass", "lore")) {
 				boolean lored = false;
 
 				for (ItemStack item : event.getInventory().getMatrix()) {
-					if (Settings.isRestricted(item).equalsIgnoreCase("creative")) {
-						Settings.loreItem(player, event.getInventory().getItem(0), Settings.getLore("creative"));
+					if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
+						Lore.apply(player, event.getInventory().getItem(0), Lore.getLore("creative"));
 						lored = true;
 						break;
 					}
@@ -228,8 +229,8 @@ public class Inventory extends BukkitListener {
 
 				if (!lored) {
 					for (ItemStack item : event.getInventory().getMatrix()) {
-						if (Settings.isRestricted(item).equalsIgnoreCase("spawned")) {
-							Settings.loreItem(player, event.getInventory().getItem(0), Settings.getLore("spawned"));
+						if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
+							Lore.apply(player, event.getInventory().getItem(0), Lore.getLore("spawned"));
 							break;
 						}
 					}

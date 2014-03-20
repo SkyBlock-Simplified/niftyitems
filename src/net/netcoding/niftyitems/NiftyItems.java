@@ -1,24 +1,24 @@
 package net.netcoding.niftyitems;
 
 import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
+import net.netcoding.niftyitems.cache.Cache;
+import net.netcoding.niftyitems.cache.Config;
 import net.netcoding.niftyitems.commands.ClearInventory;
 import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.GameMode;
-import net.netcoding.niftyitems.commands.ItemReload;
 import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
-import net.netcoding.niftyitems.listeners.Inventory;
+import net.netcoding.niftyitems.commands.ItemReload;
 import net.netcoding.niftyitems.listeners.GameModeFix;
-import net.netcoding.niftyitems.managers.Cache;
-import net.netcoding.niftyitems.managers.Settings;
+import net.netcoding.niftyitems.listeners.Inventory;
 
 public class NiftyItems extends BukkitPlugin {
 
 	@Override
 	public void onEnable() {
 		this.saveDefaultConfig();
-		Cache.Settings = new Settings(this);
-		Cache.Settings.reload();
+		Cache.Config = new Config(this);
+		Cache.Config.init();
 
 		this.getLog().console("Registering Commands");
 		new ClearInventory(this);

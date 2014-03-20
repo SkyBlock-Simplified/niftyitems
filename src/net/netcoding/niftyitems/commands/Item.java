@@ -1,12 +1,13 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.managers.Cache.Settings;
+import static net.netcoding.niftyitems.cache.Cache.Config;
 
 import java.sql.SQLException;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftyitems.managers.InventoryWorkaround;
+import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -32,22 +33,22 @@ public class Item extends BukkitCommand {
 				item = NiftyBukkit.getItemDatabase().get(args[0]);
 
 				if (item.getType() == Material.AIR) {
-					this.getLog().error(sender, "Air cannot be spawned");
+					this.getLog().error(sender, "Air cannot be spawned!");
 					return;
 				}
 			} catch (Exception ex) {
-				this.getLog().error(sender, "{%1$s} is an invalid item name", args[0]);
+				this.getLog().error(sender, "{%1$s} is an invalid item name!", args[0]);
 				return;
 			}
 
 			String displayName = item.getType().toString().replace('_', ' ');
-			boolean canBypass = player.hasPermission("niftyitems.bypass.spawning." + item.getType().getId());
+			boolean canBypass = this.hasPermissions(player, "bypass", "spawning", String.valueOf(item.getType().getId()));
 
 			if (!canBypass) {
 				if (!this.hasPermissions(sender, "item")) return;
 
-				if (Settings.isBlacklisted(player, item, "spawning")) {
-					this.getLog().error(sender, Settings.getLocalization("blacklisted", "spawned"), displayName);
+				if (Config.isBlacklisted(player, item, "spawning")) {
+					this.getLog().error(sender, "You cannot spawn {%1$s}!", displayName);
 					return;
 				}
 			}
@@ -57,13 +58,13 @@ public class Item extends BukkitCommand {
 					item.setAmount(Integer.parseInt(args[1]));
 				else {
 					if (item.getType().isBlock()) {
-						if (Settings.getDefaultBlockStackSize() > 0)
-							item.setAmount(Settings.getDefaultBlockStackSize());
-						else if (Settings.getOversizedStackSize() > 0 && sender.hasPermission("niftyitems.bypass.stacksize"))
-							item.setAmount(Settings.getOversizedStackSize());
+						if (Config.getBlockStackSize() > 0)
+							item.setAmount(Config.getBlockStackSize());
+						else if (Config.getOversizedStackSize() > 0 && this.hasPermissions(sender, "bypass", "stacksize"))
+							item.setAmount(Config.getOversizedStackSize());
 					} else {
-						if (Settings.getDefaultItemStackSize() > 0)
-							item.setAmount(Settings.getDefaultItemStackSize());
+						if (Config.getItemStackSize() > 0)
+							item.setAmount(Config.getItemStackSize());
 					}
 				}
 			} catch (NumberFormatException ex) {
@@ -75,15 +76,15 @@ public class Item extends BukkitCommand {
 				// TODO: Enchantments...
 			}
 
-			boolean nolore     = player.hasPermission("niftyitems.bypass.lore");
-			if (!nolore) item  = Settings.loreItem(player, item, Settings.getLore("spawned"));
+			boolean nolore     = this.hasPermissions(sender, "bypass", "lore");
+			if (!nolore) item  = Lore.apply(player, item, Lore.getLore("spawned"));
 
-			if (sender.hasPermission("niftyitems.bypass.stacksize"))
-				InventoryWorkaround.addOversizedItems(player.getInventory(), Settings.getOversizedStackSize(), item);
+			if (this.hasPermissions(sender, "bypass", "stacksize"))
+				InventoryWorkaround.addOversizedItems(player.getInventory(), Config.getOversizedStackSize(), item);
 			else
 				InventoryWorkaround.addItems(player.getInventory(), item);
 
-			this.getLog().message(sender, "Giving {%1$s} of {%2$s}", item.getAmount(), displayName);
+			this.getLog().message(sender, "Giving {%1$s} of {%2$s}.", item.getAmount(), displayName);
 		} else
 			this.showUsage(sender);
 	}

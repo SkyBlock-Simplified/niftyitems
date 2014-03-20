@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftyitems.managers.Cache;
+import net.netcoding.niftyitems.cache.Cache;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,15 +12,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ItemReload extends BukkitCommand {
 
 	public ItemReload(JavaPlugin plugin) {
-		super(plugin, "itemreload", false);
+		super(plugin, false);
 	}
 
 	@Override
 	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
-		this.getPlugin().reloadConfig();
 		NiftyBukkit.getItemDatabase().reload();
-		Cache.Settings.reload();
-		this.getLog().message(sender, "%1$s reloaded", this.getPluginDescription().getName());
+		Cache.Config.reload();
+		this.getLog().message(sender, "%1$s reloaded.", this.getPluginDescription().getName());
 	}
 
 }
