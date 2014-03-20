@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Item extends BukkitCommand {
 
 	public Item(JavaPlugin plugin) {
-		super(plugin, "item", true, false);
+		super(plugin, true, false);
 		this.setPlayerOnly();
 	}
 
