@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GameMode extends BukkitCommand {
 
 	public GameMode(JavaPlugin plugin) {
-		super(plugin, "clearinventory", false);
+		super(plugin, false);
 	}
 
 	@Override
@@ -25,12 +25,14 @@ public class GameMode extends BukkitCommand {
 
 			org.bukkit.GameMode mode;
 			String playerName;
-			String arg = StringUtil.isEmpty(args[0]) ? "" : args[0];
-			if (arg.matches("(?i)^(0|s|survival)$")) arg = "survival";
-			if (arg.matches("(?i)^(1|c|creative)$")) arg = "creative";
-			if (arg.matches("(?i)^(2|a|adventure)$")) arg = "adventure";
+			String arg = StringUtil.isEmpty(args) ? "" : args[0];
+			if (arg.matches("(?i)^(0|s|survival)$")) arg = "SURVIVAL";
+			if (arg.matches("(?i)^(1|c|creative)$")) arg = "CREATIVE";
+			if (arg.matches("(?i)^(2|a|adventure)$")) arg = "ADVENTURE";
 
 			if (alias.matches("(?i)^adventure|creative|survival$")) {
+				alias = alias.toUpperCase();
+
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
 					playerName = findPlayerName(args[1]);
@@ -64,8 +66,8 @@ public class GameMode extends BukkitCommand {
 
 				Player player = findPlayer(playerName);
 				player.setGameMode(mode);
-				this.getLog().message(sender, "Your gamemode has been changed to {%1$s}.", mode.toString().toLowerCase());
-				if (sender.getName().equals(player.getName())) this.getLog().message(sender, "Set {%1$s} gamemode for {%2$s}.", mode.toString().toLowerCase(), player.getName());
+				this.getLog().message(player, "Your gamemode has been changed to {%1$s}.", mode.toString().toLowerCase());
+				if (!sender.getName().equals(player.getName())) this.getLog().message(sender, "Set {%1$s} gamemode for {%2$s}.", mode.toString().toLowerCase(), player.getName());
 			} else
 				this.getLog().error(sender, "Unable to change gamemode for {%1$s}.", playerName);
 		} else
