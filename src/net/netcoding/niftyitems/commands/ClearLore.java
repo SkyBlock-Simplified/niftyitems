@@ -16,11 +16,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ClearLore extends BukkitCommand {
 
 	public ClearLore(JavaPlugin plugin) {
-		super(plugin, "clearlore", false);
+		super(plugin, false);
 		this.isPlayerOnly();
 	}
 
-	private void revertItem(ItemStack item) {
+	private boolean revertItem(ItemStack item) {
 		if (!Cache.Settings.isRestricted(item).equalsIgnoreCase("none") && item.getItemMeta().hasLore()) {
 			ItemMeta itemMeta = item.getItemMeta();
 			List<String> lores = itemMeta.getLore();
@@ -33,7 +33,10 @@ public class ClearLore extends BukkitCommand {
 
 			itemMeta.setLore(notOurs);
 			item.setItemMeta(itemMeta);
+			return true;
 		}
+
+		return false;
 	}
 
 	@Override
@@ -41,13 +44,15 @@ public class ClearLore extends BukkitCommand {
 		Player player = (Player)sender;
 
 		if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {
-			this.revertItem(player.getItemInHand());
-			this.getLog().message(sender, "The item {%1$s} has had its lore removed", player.getItemInHand().getType().toString().toLowerCase().replace('_', ' '));
+			if (this.revertItem(player.getItemInHand()))
+				this.getLog().message(sender, "The item {%1$s} has had its lore removed.", player.getItemInHand().getType().name());
+			else
+				this.getLog().error(sender, "The item {%1$s} has no lore.", player.getItemInHand().getType().name());
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
 			for (ItemStack item : player.getInventory().getContents())
 				this.revertItem(item);
 
-			this.getLog().message(sender, "All items in your inventory have had their removed");
+			this.getLog().message(sender, "All items in your inventory have had their removed.");
 		} else
 			this.showUsage(sender);
 	}
