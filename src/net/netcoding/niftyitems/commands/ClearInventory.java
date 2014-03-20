@@ -11,10 +11,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class ClearInv extends BukkitCommand {
+public class ClearInventory extends BukkitCommand {
 
-	public ClearInv(JavaPlugin plugin) {
-		super(plugin, "clearinventory", false);
+	public ClearInventory(JavaPlugin plugin) {
+		super(plugin, false);
 	}
 
 	@Override
@@ -81,17 +81,17 @@ public class ClearInv extends BukkitCommand {
 			}
 
 			if (!sender.getName().equals(player.getName()))
-				this.getLog().message(player, "Your %1$s have been cleared.", "");
+				this.getLog().message(player, "Your {%1$s} has been cleared.", removed);
 		}
 
 		String removed = "";
 		if (action.matches("^all|inv$")) removed += "inventory";
 		if (action.matches("^all|armor$")) removed += (StringUtil.notEmpty(removed) ? " and " : "") + "armor";
-		this.getLog().message(sender, "Cleared %1$s of %2$s.", removed, (players.size() > 1 ? "all players" : players.get(0).getName()));
+		this.getLog().message(sender, "Cleared {%1$s} of {%2$s}.", removed, (players.size() > 1 ? "all players" : players.get(0).getName()));
 	}
 
 	private String getAction(String arg) {
-		if (arg.matches("(?i)^inv(?:entory)?$"))
+		if (arg.matches("(?i)^inv(entory)??$"))
 			return "inv";
 		else if (arg.matches("(?i)armou?r"))
 			return "armor";
