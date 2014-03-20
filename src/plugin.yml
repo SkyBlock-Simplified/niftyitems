@@ -7,18 +7,17 @@ main: net.netcoding.niftyitems.NiftyItems
 depend: [NiftyBukkit]
 
 commands:
-  clearinventory:
+  clear:
     description: Clears the players inventory
     usage: "§c/<command> [inv|armor|all]|<player> [inv|armor|all]"
-    permissions: niftyitems.clear
-    aliases: [clearinv, clear, ci]
+    aliases: [clearinventory, clearinv, clear, ci]
   clearlore:
     description: Clears the creative/spawned lore of an item
     usage: "§c/<command> [hand|all]"
     aliases: [clore, cl]
   gamemode:
     description: Changes the gamemode of a player
-    usage: "§c/<command> [mode] [player]"
+    usage: "§c/<command> <survival|creative|adventure> [player]"
     aliases: [gm, adventure, creative, survival]
   item:
     description: Spawns an item
