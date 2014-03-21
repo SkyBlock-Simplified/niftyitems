@@ -16,7 +16,7 @@ public class NiftyItems extends BukkitPlugin {
 
 	@Override
 	public void onEnable() {
-		this.saveDefaultConfig();
+		this.getLog().console("Loading Cache");
 		Cache.Config = new Config(this);
 		Cache.Config.init();
 
