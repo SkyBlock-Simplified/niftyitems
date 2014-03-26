@@ -22,7 +22,7 @@ public class ItemDb extends BukkitCommand {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		ItemStack stack = null;
 		boolean itemHeld = false;
 

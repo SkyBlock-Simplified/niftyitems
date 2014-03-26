@@ -24,7 +24,7 @@ public class Item extends BukkitCommand {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		if (args.length > 0) {
 			Player player = (Player)sender;
 			ItemStack item;

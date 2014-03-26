@@ -18,7 +18,7 @@ public class ClearInventory extends BukkitCommand {
 	}
 
 	@Override
-	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		if (isConsole(sender) && args.length == 0) {
 			this.getLog().error(sender, "You must provide a player name from console!");
 			return;

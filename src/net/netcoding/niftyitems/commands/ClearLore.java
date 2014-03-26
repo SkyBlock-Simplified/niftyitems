@@ -40,7 +40,7 @@ public class ClearLore extends BukkitCommand {
 	}
 
 	@Override
-	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		Player player = (Player)sender;
 
 		if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {

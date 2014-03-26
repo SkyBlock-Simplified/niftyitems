@@ -16,7 +16,7 @@ public class GameMode extends BukkitCommand {
 	}
 
 	@Override
-	public void command(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		if (args.length < 3) {
 			if (isConsole(sender) && args.length != 2) {
 				this.getLog().error(sender, "You must provide both the gamemode and player name from console!");
