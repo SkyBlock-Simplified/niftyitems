@@ -16,8 +16,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ClearLore extends BukkitCommand {
 
 	public ClearLore(JavaPlugin plugin) {
-		super(plugin, false);
+		super(plugin, "clearlore");
 		this.isPlayerOnly();
+		this.setRequireArgs(false);
 	}
 
 	private boolean revertItem(ItemStack item) {

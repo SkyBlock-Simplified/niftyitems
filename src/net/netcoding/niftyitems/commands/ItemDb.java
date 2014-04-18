@@ -17,7 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ItemDb extends BukkitCommand {
 
 	public ItemDb(JavaPlugin plugin) {
-		super(plugin, false);
+		super(plugin, "itemdb");
+		this.setRequireArgs(false);
 	}
 
 	@SuppressWarnings("deprecation")

@@ -18,8 +18,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Item extends BukkitCommand {
 
 	public Item(JavaPlugin plugin) {
-		super(plugin, true, false);
+		super(plugin, "item");
 		this.setPlayerOnly();
+		this.setCheckPerms(false);
 	}
 
 	@SuppressWarnings("deprecation")

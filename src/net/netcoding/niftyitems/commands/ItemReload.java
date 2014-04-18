@@ -12,7 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ItemReload extends BukkitCommand {
 
 	public ItemReload(JavaPlugin plugin) {
-		super(plugin, false);
+		super(plugin, "itemreload");
+		this.setRequireArgs(false);
 	}
 
 	@Override

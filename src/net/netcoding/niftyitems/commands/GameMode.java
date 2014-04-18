@@ -2,7 +2,9 @@ package net.netcoding.niftyitems.commands;
 
 import java.sql.SQLException;
 
+import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftybukkit.mojang.ProfileRepository;
 import net.netcoding.niftybukkit.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
@@ -12,7 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class GameMode extends BukkitCommand {
 
 	public GameMode(JavaPlugin plugin) {
-		super(plugin, false);
+		super(plugin, "gamemode");
+		this.setRequireArgs(false);
 	}
 
 	@Override
@@ -23,6 +26,7 @@ public class GameMode extends BukkitCommand {
 				return;
 			}
 
+			ProfileRepository repository = NiftyBukkit.getMojangRepository();
 			org.bukkit.GameMode mode;
 			String playerName;
 			String arg = StringUtil.isEmpty(args) ? "" : args[0];
@@ -35,9 +39,9 @@ public class GameMode extends BukkitCommand {
 
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = findPlayerName(args[1]);
+					playerName = repository.searchByUsername(args[1])[0].getName();
 				} else if (args.length == 1) {
-					if ((playerName = findPlayerName(arg)) != null)
+					if ((playerName = repository.searchByUsername(arg)[0].getName()) != null)
 						mode = org.bukkit.GameMode.valueOf(alias);
 					else {
 						mode = org.bukkit.GameMode.valueOf(arg);
@@ -50,7 +54,7 @@ public class GameMode extends BukkitCommand {
 			} else {
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = findPlayerName(args[1]);
+					playerName = repository.searchByUsername(args[1])[0].getName();
 				} else if (args.length == 1) {
 					mode = org.bukkit.GameMode.valueOf(arg);
 					playerName = sender.getName();
