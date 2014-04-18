@@ -34,46 +34,50 @@ public class GameMode extends BukkitCommand {
 			if (arg.matches("(?i)^(1|c|creative)$")) arg = "CREATIVE";
 			if (arg.matches("(?i)^(2|a|adventure)$")) arg = "ADVENTURE";
 
-			if (alias.matches("(?i)^adventure|creative|survival$")) {
-				alias = alias.toUpperCase();
+			try {
+				if (alias.matches("(?i)^adventure|creative|survival$")) {
+					alias = alias.toUpperCase();
 
-				if (args.length == 2) {
-					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1])[0].getName();
-				} else if (args.length == 1) {
-					if ((playerName = repository.searchByUsername(arg)[0].getName()) != null)
-						mode = org.bukkit.GameMode.valueOf(alias);
-					else {
+					if (args.length == 2) {
 						mode = org.bukkit.GameMode.valueOf(arg);
+						playerName = repository.searchByUsername(args[1])[0].getName();
+					} else if (args.length == 1) {
+						if ((playerName = repository.searchByUsername(arg)[0].getName()) != null)
+							mode = org.bukkit.GameMode.valueOf(alias);
+						else {
+							mode = org.bukkit.GameMode.valueOf(arg);
+							playerName = sender.getName();
+						}
+					} else {
+						mode = org.bukkit.GameMode.valueOf(alias);
 						playerName = sender.getName();
 					}
 				} else {
-					mode = org.bukkit.GameMode.valueOf(alias);
-					playerName = sender.getName();
+					if (args.length == 2) {
+						mode = org.bukkit.GameMode.valueOf(arg);
+						playerName = repository.searchByUsername(args[1])[0].getName();
+					} else if (args.length == 1) {
+						mode = org.bukkit.GameMode.valueOf(arg);
+						playerName = sender.getName();
+					} else {
+						this.showUsage(sender);
+						return;
+					}
 				}
-			} else {
-				if (args.length == 2) {
-					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1])[0].getName();
-				} else if (args.length == 1) {
-					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = sender.getName();
-				} else {
-					this.showUsage(sender);
-					return;
-				}
+
+				if (StringUtil.notEmpty(playerName)) {
+					if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) 
+						return;
+
+					Player player = findPlayer(playerName);
+					player.setGameMode(mode);
+					this.getLog().message(player, "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
+					if (!sender.getName().equals(player.getName())) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), player.getName());
+				} else
+					this.getLog().error(sender, "Unable to change gamemode for {{0}}.", playerName);
+			} catch (IllegalArgumentException ex) {
+				this.showUsage(sender);
 			}
-
-			if (StringUtil.notEmpty(playerName)) {
-				if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) 
-					return;
-
-				Player player = findPlayer(playerName);
-				player.setGameMode(mode);
-				this.getLog().message(player, "Your gamemode has been changed to {%1$s}.", mode.toString().toLowerCase());
-				if (!sender.getName().equals(player.getName())) this.getLog().message(sender, "Set {%1$s} gamemode for {%2$s}.", mode.toString().toLowerCase(), player.getName());
-			} else
-				this.getLog().error(sender, "Unable to change gamemode for {%1$s}.", playerName);
 		} else
 			this.showUsage(sender);
 	}

@@ -60,14 +60,14 @@ public class Inventory extends BukkitListener {
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
 				if (!(player.getGameMode() == GameMode.CREATIVE || Lore.isOwner(item, player.getName()))) {
-					this.getLog().error(player, "To place {%1$s} you must be the owner or in creative mode!", item.getType().toString());
+					this.getLog().error(player, "To place {{0}} you must be the owner or in creative mode!", item.getType().toString());
 					event.setCancelled(true);
 				}
 			}
 		}
 
 		if (Config.isBlacklisted(player, item, "placement")) {
-			this.getLog().error(player, "The item/block {%1$s} cannot be placed/used!", item.getType().toString());
+			this.getLog().error(player, "The item/block {{0}} cannot be placed/used!", item.getType().toString());
 			event.setCancelled(true);
 		}
 	}
@@ -97,7 +97,7 @@ public class Inventory extends BukkitListener {
 					if (event.getClick().isShiftClick()) {
 						final int amount = currentItem.getAmount();
 
-						this.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(this.getPlugin(), new Runnable() {
+						this.getPlugin().getServer().getScheduler().runTaskLater(this.getPlugin(), new Runnable() {
 							@Override
 							public void run() {
 								for (ItemStack items : event.getInventory().getContents()) {
@@ -135,7 +135,7 @@ public class Inventory extends BukkitListener {
 		ItemStack item = event.getCursor();
 
 		if (Config.isBlacklisted(player, item, "creative")) {
-			this.getLog().error(player, "You cannot take {%1$s} out of the creative menu!", item.getType().toString());
+			this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", item.getType().toString());
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 		} else {
@@ -191,7 +191,7 @@ public class Inventory extends BukkitListener {
 			ItemStack item = player.getItemInHand();
 
 			if (Cache.Config.isBlacklisted(player, item, "placement")) {
-				this.getLog().error(player, "The item/block {%1$s} cannot be placed/used!", item.getType().toString());
+				this.getLog().error(player, "The item/block {{0}} cannot be placed/used!", item.getType().toString());
 				event.setCancelled(true);
 			}
 		}

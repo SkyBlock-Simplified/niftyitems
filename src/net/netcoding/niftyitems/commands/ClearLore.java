@@ -46,9 +46,9 @@ public class ClearLore extends BukkitCommand {
 
 		if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("hand"))) {
 			if (this.revertItem(player.getItemInHand()))
-				this.getLog().message(sender, "The item {%1$s} has had its lore removed.", player.getItemInHand().getType().name());
+				this.getLog().message(sender, "The item {{0}} has had its lore removed.", player.getItemInHand().getType().name());
 			else
-				this.getLog().error(sender, "The item {%1$s} has no lore.", player.getItemInHand().getType().name());
+				this.getLog().error(sender, "The item {{0}} has no lore.", player.getItemInHand().getType().name());
 		} else if (args.length == 1 && args[0].equalsIgnoreCase("all")) {
 			for (ItemStack item : player.getInventory().getContents())
 				this.revertItem(item);

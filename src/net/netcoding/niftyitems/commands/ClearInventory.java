@@ -41,7 +41,7 @@ public class ClearInventory extends BukkitCommand {
 			} else {
 				action = this.getAction(args[0]);
 
-				if (action.equals("all")) {
+				if (action.matches("^all|*$")) {
 					for (Player bplayer : this.getPlugin().getServer().getOnlinePlayers())
 						players.add(bplayer);
 				} else
@@ -50,14 +50,14 @@ public class ClearInventory extends BukkitCommand {
 		} else if (args.length == 2) {
 			action = this.getAction(args[1]);
 
-			if (this.getAction(args[0]).equals("all")) {
+			if (this.getAction(args[0]).matches("^all|*$")) {
 				for (Player bplayer : this.getPlugin().getServer().getOnlinePlayers())
 					players.add(bplayer);
 			} else {
 				Player player = findPlayer(args[0]);
 
 				if (player == null) {
-					this.getLog().error(sender, "Cannot clear inventory of unknown player {%1$s}!", args[0]);
+					this.getLog().error(sender, "Cannot clear inventory of unknown player {{0}}!", args[0]);
 					return;
 				} else {
 					if (!sender.getName().equals(player.getName()) && !this.hasPermissions(sender, "clear", "other"))
@@ -82,13 +82,13 @@ public class ClearInventory extends BukkitCommand {
 			}
 
 			if (!sender.getName().equals(player.getName()))
-				this.getLog().message(player, "Your {%1$s} has been cleared.", removed);
+				this.getLog().message(player, "Your {{0}} has been cleared.", removed);
 		}
 
 		String removed = "";
 		if (action.matches("^all|inv$")) removed += "inventory";
 		if (action.matches("^all|armor$")) removed += (StringUtil.notEmpty(removed) ? " and " : "") + "armor";
-		this.getLog().message(sender, "Cleared {%1$s} of {%2$s}.", removed, (players.size() > 1 ? "all players" : players.get(0).getName()));
+		this.getLog().message(sender, "Cleared {{0}} of {{1}}.", removed, (players.size() > 1 ? "all players" : players.get(0).getName()));
 	}
 
 	private String getAction(String arg) {

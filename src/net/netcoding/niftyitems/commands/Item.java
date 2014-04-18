@@ -38,7 +38,7 @@ public class Item extends BukkitCommand {
 					return;
 				}
 			} catch (Exception ex) {
-				this.getLog().error(sender, "{%1$s} is an invalid item name!", args[0]);
+				this.getLog().error(sender, "{{0}} is an invalid item name!", args[0]);
 				return;
 			}
 
@@ -49,7 +49,7 @@ public class Item extends BukkitCommand {
 				if (!this.hasPermissions(sender, "item")) return;
 
 				if (Config.isBlacklisted(player, item, "spawning")) {
-					this.getLog().error(sender, "You cannot spawn {%1$s}!", displayName);
+					this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
 					return;
 				}
 			}
@@ -69,7 +69,7 @@ public class Item extends BukkitCommand {
 					}
 				}
 			} catch (NumberFormatException ex) {
-				this.getLog().error(sender, "{%1$s} is not a number", args[1]);
+				this.getLog().error(sender, "{{0}} is not a number!", args[1]);
 				return;
 			}
 
@@ -85,7 +85,7 @@ public class Item extends BukkitCommand {
 			else
 				InventoryWorkaround.addItems(player.getInventory(), item);
 
-			this.getLog().message(sender, "Giving {%1$s} of {%2$s}.", item.getAmount(), displayName);
+			this.getLog().message(sender, "Giving {{0}} of {{1}}.", item.getAmount(), displayName);
 		} else
 			this.showUsage(sender);
 	}

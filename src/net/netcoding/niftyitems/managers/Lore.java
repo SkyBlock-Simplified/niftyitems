@@ -3,6 +3,9 @@ package net.netcoding.niftyitems.managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.netcoding.niftybukkit.util.RegexUtil;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +24,7 @@ public class Lore {
 					lores = itemMeta.getLore();
 				}
 
-				lores.add(lore + " | " + player.getName());
+				lores.add(String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, player.getName()));
 				itemMeta.setLore(lores);
 				item.setItemMeta(itemMeta);
 			}
@@ -41,11 +44,11 @@ public class Lore {
 
 				if (!(lore = isRestricted(item)).equalsIgnoreCase("none")) {
 					List<String> lores = item.getItemMeta().getLore();
-					String localized   = getLore(lore);
+					String localized = getLore(lore);
 
 					for (String cLore : lores) {
-						if (cLore.startsWith(localized))
-							return cLore.replace(localized + " | ", "");
+						String cLoref = RegexUtil.strip(cLore, RegexUtil.VANILLA_PATTERN);
+						if (cLoref.startsWith(localized)) return cLoref.replace(localized + " | ", "");
 					}
 				}
 			}
@@ -62,9 +65,11 @@ public class Lore {
 		if (i != null && i.getType() != Material.AIR) {
 			if (i.hasItemMeta() && i.getItemMeta().hasLore()) {
 				for (String s : i.getItemMeta().getLore()) {
-					if (s.startsWith(getLore("creative")))
+					String sf = RegexUtil.strip(s, RegexUtil.VANILLA_PATTERN);
+
+					if (sf.startsWith(getLore("creative")))
 						return "creative";
-					else if (s.startsWith(getLore("spawned")))
+					else if (sf.startsWith(getLore("spawned")))
 						return "spawned";
 				}
 			}

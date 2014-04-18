@@ -26,7 +26,6 @@ commands:
   itemdb:
     description: Shows information related to an item
     usage: "§c/<command> <type>[:datavalue]"
-    permission: niftyitems.itemdb
     aliases: idb
   itemreload:
     description: Reloads config

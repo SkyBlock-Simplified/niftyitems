@@ -20,7 +20,7 @@ public class ItemReload extends BukkitCommand {
 	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
 		NiftyBukkit.getItemDatabase().reload();
 		Cache.Config.reload();
-		this.getLog().message(sender, "%1$s reloaded.", this.getPluginDescription().getName());
+		this.getLog().message(sender, "{0} reloaded.", this.getPluginDescription().getName());
 	}
 
 }
