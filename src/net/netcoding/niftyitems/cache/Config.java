@@ -1,7 +1,6 @@
 package net.netcoding.niftyitems.cache;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -53,10 +52,6 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		return this.overStackedSize;
 	}
 
-	private List<ItemData> getParsedItems(String list) {
-		return NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list));
-	}
-
 	public boolean destroySpawnedDrops() {
 		return this.destroySpawned;
 	}
@@ -76,7 +71,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 			if ("store".equals(list))
 				return blacklisted;
 			else {
-				for (ItemData item : this.getParsedItems(list)) {
+				for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list))) {
 					if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
 						return blacklisted;
 				}
