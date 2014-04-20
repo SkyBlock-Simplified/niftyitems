@@ -4,7 +4,7 @@ import java.sql.SQLException;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.mojang.ProfileRepository;
+import net.netcoding.niftybukkit.mojang.MojangRepository;
 import net.netcoding.niftybukkit.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
@@ -26,7 +26,7 @@ public class GameMode extends BukkitCommand {
 				return;
 			}
 
-			ProfileRepository repository = NiftyBukkit.getMojangRepository();
+			MojangRepository repository = NiftyBukkit.getMojangRepository();
 			org.bukkit.GameMode mode;
 			String playerName;
 			String arg = StringUtil.isEmpty(args) ? "" : args[0];
