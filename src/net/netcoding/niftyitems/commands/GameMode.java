@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.mojang.MojangRepository;
+import net.netcoding.niftybukkit.util.ListUtil;
 import net.netcoding.niftybukkit.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,7 @@ public class GameMode extends BukkitCommand {
 			MojangRepository repository = NiftyBukkit.getMojangRepository();
 			org.bukkit.GameMode mode;
 			String playerName;
-			String arg = StringUtil.isEmpty(args) ? "" : args[0];
+			String arg = ListUtil.isEmpty(args) ? "" : args[0];
 			if (arg.matches("(?i)^(0|s|survival)$")) arg = "SURVIVAL";
 			if (arg.matches("(?i)^(1|c|creative)$")) arg = "CREATIVE";
 			if (arg.matches("(?i)^(2|a|adventure)$")) arg = "ADVENTURE";
