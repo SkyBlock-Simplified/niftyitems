@@ -9,27 +9,27 @@ depend: [NiftyBukkit]
 commands:
   clear:
     description: Clears the players inventory
-    usage: "§c/<command> [inv|armor|all]|<player> [inv|armor|all]"
+    usage: /<command> [inv|armor|all]|<player> [inv|armor|all]
     aliases: [clearinventory, clearinv, clear, ci]
   clearlore:
     description: Clears the creative/spawned lore of an item
-    usage: "§c/<command> [hand|all]"
+    usage: /<command> [hand|all]
     aliases: [clore, cl]
   gamemode:
     description: Changes the gamemode of a player
-    usage: "§c/<command> <survival|creative|adventure> [player]"
+    usage: /<command> <survival|creative|adventure> [player]
     aliases: [gm, adventure, creative, survival]
   item:
     description: Spawns an item
-    usage: "§c/<command> <type>[:datavalue] [amount]"
+    usage: /<command> <type>[:datavalue] [amount]
     aliases: i
   itemdb:
     description: Shows information related to an item
-    usage: "§c/<command> <type>[:datavalue]"
+    usage: /<command> <type>[:datavalue]
     aliases: idb
   itemreload:
     description: Reloads config
-    usage: "§c/<command>"
+    usage: /<command>
     permission: niftyitems.reload
     aliases: ireload
 
