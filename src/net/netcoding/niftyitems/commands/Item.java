@@ -1,9 +1,6 @@
 package net.netcoding.niftyitems.commands;
 
 import static net.netcoding.niftyitems.cache.Cache.Config;
-
-import java.sql.SQLException;
-
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftyitems.managers.InventoryWorkaround;
@@ -25,7 +22,7 @@ public class Item extends BukkitCommand {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		if (args.length > 0) {
 			Player player = (Player)sender;
 			ItemStack item;
@@ -77,7 +74,7 @@ public class Item extends BukkitCommand {
 				// TODO: Enchantments...
 			}
 
-			boolean nolore     = this.hasPermissions(sender, "bypass", "lore");
+			boolean nolore = this.hasPermissions(sender, "bypass", "lore");
 			if (!nolore) item  = Lore.apply(player, item, Lore.getLore("spawned"));
 
 			if (this.hasPermissions(sender, "bypass", "stacksize"))
