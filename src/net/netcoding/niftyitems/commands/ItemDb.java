@@ -1,6 +1,5 @@
 package net.netcoding.niftyitems.commands;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
@@ -23,7 +22,7 @@ public class ItemDb extends BukkitCommand {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void onCommand(CommandSender sender, String alias, String[] args) throws SQLException, Exception {
+	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		ItemStack stack = null;
 		boolean itemHeld = false;
 
