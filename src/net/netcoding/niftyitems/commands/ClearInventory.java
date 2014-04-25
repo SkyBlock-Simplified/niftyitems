@@ -40,7 +40,7 @@ public class ClearInventory extends BukkitCommand {
 			} else {
 				action = this.getAction(args[0]);
 
-				if (action.matches("^all|*$")) {
+				if (action.matches("^all|\\*$")) {
 					for (Player bplayer : this.getPlugin().getServer().getOnlinePlayers())
 						players.add(bplayer);
 				} else
@@ -49,7 +49,7 @@ public class ClearInventory extends BukkitCommand {
 		} else if (args.length == 2) {
 			action = this.getAction(args[1]);
 
-			if (this.getAction(args[0]).matches("^all|*$")) {
+			if (this.getAction(args[0]).matches("^all|\\*$")) {
 				for (Player bplayer : this.getPlugin().getServer().getOnlinePlayers())
 					players.add(bplayer);
 			} else {
