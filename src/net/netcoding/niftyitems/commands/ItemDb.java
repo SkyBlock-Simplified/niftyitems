@@ -17,7 +17,8 @@ public class ItemDb extends BukkitCommand {
 
 	public ItemDb(JavaPlugin plugin) {
 		super(plugin, "itemdb");
-		this.setRequireArgs(false);
+		this.setMinimumArgsLength(0);
+		this.setMaximumArgsLength(1);
 	}
 
 	@SuppressWarnings("deprecation")

@@ -14,7 +14,8 @@ public class ClearInventory extends BukkitCommand {
 
 	public ClearInventory(JavaPlugin plugin) {
 		super(plugin, "clear");
-		this.setRequireArgs(false);
+		this.setMinimumArgsLength(0);
+		this.setMaximumArgsLength(2);
 	}
 
 	@Override
