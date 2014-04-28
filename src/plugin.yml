@@ -9,7 +9,7 @@ depend: [NiftyBukkit]
 commands:
   clear:
     description: Clears the players inventory
-    usage: /<command> [inv|armor|all]|<player> [inv|armor|all]
+    usage: /<command> [player] [inv|armor|all]
     aliases: [clearinventory, clearinv, clear, ci]
   clearlore:
     description: Clears the creative/spawned lore of an item
