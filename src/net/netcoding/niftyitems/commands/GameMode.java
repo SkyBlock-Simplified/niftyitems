@@ -16,6 +16,9 @@ public class GameMode extends BukkitCommand {
 		super(plugin, "gamemode");
 		this.setMinimumArgsLength(0);
 		this.setMaximumArgsLength(2);
+		this.editUsage(0, "creative", "[player]");
+		this.editUsage(0, "survival", "[player]");
+		this.editUsage(0, "adventure", "[player]");
 	}
 
 	@Override
@@ -65,13 +68,20 @@ public class GameMode extends BukkitCommand {
 			}
 
 			if (StringUtil.notEmpty(playerName)) {
-				if (isPlayer(sender) && !sender.getName().equals(playerName) && !this.hasPermissions(sender, "gamemode", "other")) 
-					return;
-
+				boolean self = sender.getName().equals(playerName);
 				Player player = findPlayer(playerName);
-				player.setGameMode(mode);
-				this.getLog().message(player, "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
-				if (!sender.getName().equals(player.getName())) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), player.getName());
+
+				if (isPlayer(sender) && !self && !this.hasPermissions(sender, "gamemode", "other")) {
+					this.getLog().error(sender, "You are not allowed to change the gamemode of others!");
+					return;
+				}
+
+				if (player != null) {
+					player.setGameMode(mode);
+					this.getLog().message(player, "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
+					if (!self) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), player.getName());
+				} else
+					this.getLog().error(sender, "Unable to locate player {{0}}!", playerName);
 			} else
 				this.getLog().error(sender, "Unable to change gamemode for {{0}}.", playerName);
 		} catch (IllegalArgumentException ex) {
