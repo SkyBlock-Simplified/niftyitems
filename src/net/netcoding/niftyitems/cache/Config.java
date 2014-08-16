@@ -63,6 +63,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(Player player, ItemStack stack, String list) {
 		if (player == null) return true;
+		if (!this.blacklists.keySet().contains(list)) return false;
 
 		if (stack != null && stack.getType() != Material.AIR) {
 			String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH);
