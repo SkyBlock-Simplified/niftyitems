@@ -44,7 +44,7 @@ public class Item extends BukkitCommand {
 		if (!canBypass) {
 			if (!this.hasPermissions(sender, true, "item")) return;
 
-			if (Config.isBlacklisted(player, item, "spawning")) {
+			if (Config.isBlacklisted(player, item, "spawned")) {
 				this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
 				return;
 			}
