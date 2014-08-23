@@ -20,7 +20,6 @@ public class Item extends BukkitCommand {
 		this.setCheckPerms(false);
 	}
 
-	//@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		Player player = (Player)sender;
