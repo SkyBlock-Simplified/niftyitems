@@ -1,7 +1,7 @@
 package net.netcoding.niftyitems.cache;
 
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
@@ -66,8 +66,15 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (!this.blacklists.keySet().contains(list)) return false;
 
 		if (stack != null && stack.getType() != Material.AIR) {
-			String itemName = stack.getType().toString().toLowerCase(Locale.ENGLISH);
-			boolean blacklisted = (!this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) && !this.hasPermissions(player, "bypass", list, itemName));
+			boolean blacklisted = !this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId()));
+			List<String> names = NiftyBukkit.getItemDatabase().names(stack);
+
+			if (!blacklisted) {
+				for (String name : names) {
+					blacklisted = !this.hasPermissions(player, "bypass", list, name);
+					if (!blacklisted) break;
+				}
+			}
 
 			if ("store".equals(list))
 				return blacklisted;
