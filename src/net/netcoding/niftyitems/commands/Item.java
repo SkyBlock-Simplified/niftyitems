@@ -20,7 +20,7 @@ public class Item extends BukkitCommand {
 		this.setCheckPerms(false);
 	}
 
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		Player player = (Player)sender;
@@ -39,15 +39,11 @@ public class Item extends BukkitCommand {
 		}
 
 		String displayName = item.getType().toString().replace('_', ' ');
-		boolean canBypass = this.hasPermissions(player, "bypass", "spawning", String.valueOf(item.getType().getId()));
 
-		if (!canBypass) {
+		if (Config.isBlacklisted(player, item, "spawned")) {
 			if (!this.hasPermissions(sender, true, "item")) return;
-
-			if (Config.isBlacklisted(player, item, "spawned")) {
-				this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
-				return;
-			}
+			this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
+			return;
 		}
 
 		try {
