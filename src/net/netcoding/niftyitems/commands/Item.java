@@ -40,10 +40,10 @@ public class Item extends BukkitCommand {
 		String displayName = item.getType().toString().replace('_', ' ');
 
 		if (Config.isBlacklisted(player, item, "spawned")) {
-			if (!this.hasPermissions(sender, true, "item")) return;
 			this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
 			return;
-		}
+		} else if (!this.hasPermissions(player, true, "item"))
+			return;
 
 		try {
 			if (args.length > 1 && Integer.parseInt(args[1]) > 0)

@@ -65,7 +65,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (player == null) return true;
 		if (!this.blacklists.keySet().contains(list)) return false;
 
-		if (stack != null && stack.getType() != Material.AIR) {
+		if (stack != null && !Material.AIR.equals(stack.getType())) {
 			boolean blacklisted = !this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId()));
 			List<String> names = NiftyBukkit.getItemDatabase().names(stack);
 
