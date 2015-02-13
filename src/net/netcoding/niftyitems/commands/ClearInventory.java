@@ -18,6 +18,7 @@ public class ClearInventory extends BukkitCommand {
 		this.setMaximumArgsLength(2);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		if (isConsole(sender) && args.length == 0) {
