@@ -19,6 +19,7 @@ public class GameMode extends BukkitCommand {
 		this.editUsage(0, "creative", "[player]");
 		this.editUsage(0, "survival", "[player]");
 		this.editUsage(0, "adventure", "[player]");
+		this.editUsage(0, "spectator", "[player]");
 	}
 
 	@Override
@@ -35,9 +36,10 @@ public class GameMode extends BukkitCommand {
 		if (arg.matches("(?i)^(0|s|survival)$")) arg = "SURVIVAL";
 		if (arg.matches("(?i)^(1|c|creative)$")) arg = "CREATIVE";
 		if (arg.matches("(?i)^(2|a|adventure)$")) arg = "ADVENTURE";
+		if (arg.matches("(?i)^(3|e|spectator)$")) arg = "SPECTATOR";
 
 		try {
-			if (alias.matches("(?i)^adventure|creative|survival$")) {
+			if (alias.matches("^adventure|creative|survival|spectator$")) {
 				alias = alias.toUpperCase();
 
 				if (args.length == 2) {
