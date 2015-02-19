@@ -44,9 +44,9 @@ public class GameMode extends BukkitCommand {
 
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1])[0].getName();
+					playerName = repository.searchByUsername(args[1]).getName();
 				} else if (args.length == 1) {
-					if ((playerName = repository.searchByUsername(arg)[0].getName()) != null)
+					if ((playerName = repository.searchByUsername(arg).getName()) != null)
 						mode = org.bukkit.GameMode.valueOf(alias);
 					else {
 						mode = org.bukkit.GameMode.valueOf(arg);
@@ -59,7 +59,7 @@ public class GameMode extends BukkitCommand {
 			} else {
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1])[0].getName();
+					playerName = repository.searchByUsername(args[1]).getName();
 				} else if (args.length == 1) {
 					mode = org.bukkit.GameMode.valueOf(arg);
 					playerName = sender.getName();
