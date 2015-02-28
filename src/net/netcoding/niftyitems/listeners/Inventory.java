@@ -156,7 +156,7 @@ public class Inventory extends BukkitListener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
-		Player player   = event.getPlayer();
+		Player player = event.getPlayer();
 		boolean destroy = Config.destroyAllDrops();
 		ItemStack item  = event.getItemDrop().getItemStack();
 
