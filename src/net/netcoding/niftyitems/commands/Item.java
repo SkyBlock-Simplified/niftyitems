@@ -28,7 +28,7 @@ public class Item extends BukkitCommand {
 		try {
 			item = NiftyBukkit.getItemDatabase().get(args[0]);
 
-			if (item.getType() == Material.AIR) {
+			if (Material.AIR.equals(item.getType())) {
 				this.getLog().error(sender, "Air cannot be spawned!");
 				return;
 			}
