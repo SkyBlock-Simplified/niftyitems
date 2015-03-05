@@ -1,11 +1,7 @@
 package net.netcoding.niftyitems.listeners;
 
 import static net.netcoding.niftyitems.cache.Cache.Config;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
 import net.netcoding.niftyitems.cache.Cache;
@@ -77,24 +73,14 @@ public class Inventory extends BukkitListener {
 	@EventHandler(ignoreCancelled = true)
 	public void onInventoryClick(final InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
+		if (FakeInventory.isOpenAnywhere(NiftyBukkit.getMojangRepository().searchByPlayer(player))) return;
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
-			final ItemStack currentItem = FakeInventory.getClickedItem(event);
+			final ItemStack currentItem = event.isShiftClick() ? event.getCurrentItem() : event.getCursor();
 
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
-				List<InventoryType> inventorys = new ArrayList<InventoryType>(
-					Arrays.asList(
-						InventoryType.CHEST,
-						InventoryType.ENDER_CHEST,
-						InventoryType.FURNACE,
-						InventoryType.DISPENSER,
-						InventoryType.DROPPER,
-						InventoryType.HOPPER
-					)
-				);
-
-				if (inventorys.contains(invType)) {
+				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType))) {
 					if (event.getClick().isShiftClick()) {
 						final int amount = currentItem.getAmount();
 
