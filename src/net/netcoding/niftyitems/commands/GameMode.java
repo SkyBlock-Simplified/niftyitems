@@ -2,9 +2,9 @@ package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.mojang.MojangRepository;
+import net.netcoding.niftybukkit.mojang.MojangProfile;
+import net.netcoding.niftybukkit.mojang.exceptions.ProfileNotFoundException;
 import net.netcoding.niftybukkit.util.ListUtil;
-import net.netcoding.niftybukkit.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,9 +29,8 @@ public class GameMode extends BukkitCommand {
 			return;
 		}
 
-		MojangRepository repository = NiftyBukkit.getMojangRepository();
+		MojangProfile profile;
 		org.bukkit.GameMode mode;
-		String playerName;
 		String arg = ListUtil.isEmpty(args) ? "" : args[0];
 		if (arg.matches("(?i)^(0|s|survival)$")) arg = "SURVIVAL";
 		if (arg.matches("(?i)^(1|c|creative)$")) arg = "CREATIVE";
@@ -44,48 +43,45 @@ public class GameMode extends BukkitCommand {
 
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1]).getName();
+					profile = NiftyBukkit.getMojangRepository().searchByUsername(args[1]);
 				} else if (args.length == 1) {
-					if ((playerName = repository.searchByUsername(arg).getName()) != null)
+					try {
+						profile = NiftyBukkit.getMojangRepository().searchByUsername(arg);
 						mode = org.bukkit.GameMode.valueOf(alias);
-					else {
+					} catch (ProfileNotFoundException pfne) {
 						mode = org.bukkit.GameMode.valueOf(arg);
-						playerName = sender.getName();
+						profile = NiftyBukkit.getMojangRepository().searchByPlayer((Player)sender);
 					}
 				} else {
 					mode = org.bukkit.GameMode.valueOf(alias);
-					playerName = sender.getName();
+					profile = NiftyBukkit.getMojangRepository().searchByPlayer((Player)sender);
 				}
 			} else {
 				if (args.length == 2) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = repository.searchByUsername(args[1]).getName();
+					profile = NiftyBukkit.getMojangRepository().searchByUsername(args[1]);
 				} else if (args.length == 1) {
 					mode = org.bukkit.GameMode.valueOf(arg);
-					playerName = sender.getName();
+					profile = NiftyBukkit.getMojangRepository().searchByPlayer((Player)sender);
 				} else {
 					this.showUsage(sender);
 					return;
 				}
 			}
 
-			if (StringUtil.notEmpty(playerName)) {
-				boolean self = sender.getName().equals(playerName);
-				Player player = findPlayer(playerName);
+			if (profile.getOfflinePlayer().isOnline()) {
+				boolean self = sender.getName().equals(profile.getName());
 
 				if (isPlayer(sender) && !self && !this.hasPermissions(sender, "gamemode", "other")) {
 					this.getLog().error(sender, "You are not allowed to change the gamemode of others!");
 					return;
 				}
 
-				if (player != null) {
-					player.setGameMode(mode);
-					this.getLog().message(player, "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
-					if (!self) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), player.getName());
-				} else
-					this.getLog().error(sender, "Unable to locate player {{0}}!", playerName);
+				profile.getOfflinePlayer().getPlayer().setGameMode(mode);
+				this.getLog().message(profile.getOfflinePlayer().getPlayer(), "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
+				if (!self) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), profile.getName());
 			} else
-				this.getLog().error(sender, "Unable to change gamemode for {{0}}.", playerName);
+				this.getLog().error(sender, "Unable to change gamemode for offline player {{0}}.", profile.getName());
 		} catch (IllegalArgumentException ex) {
 			this.showUsage(sender);
 		}
