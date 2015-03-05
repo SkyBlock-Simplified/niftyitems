@@ -1,5 +1,5 @@
 name: NiftyItems
-version: 2.0.3
+version: 2.0.4
 website: https://netcoding.net/
 author: Brian Graham
 
@@ -17,8 +17,8 @@ commands:
     aliases: [clore, cl]
   gamemode:
     description: Changes the gamemode of a player
-    usage: /<command> <survival|creative|adventure> [player]
-    aliases: [gm, adventure, creative, survival]
+    usage: /<command> <survival|creative|adventure|spectator> [player]
+    aliases: [gm, adventure, creative, survival, spectator]
   item:
     description: Spawns an item
     usage: /<command> <type>[:datavalue] [amount]
