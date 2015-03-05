@@ -69,7 +69,7 @@ public class Item extends BukkitCommand {
 		}
 
 		boolean nolore = this.hasPermissions(sender, "bypass", "lore");
-		if (!nolore) item  = Lore.apply(player, item, Lore.getLore("spawned"));
+		if (!nolore) item = Lore.apply(player, item, Lore.getLore("spawned"));
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
 			InventoryWorkaround.addOversizedItems(player.getInventory(), Config.getOversizedStackSize(), item);

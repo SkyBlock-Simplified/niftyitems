@@ -15,7 +15,7 @@ public class Lore {
 
 	public static ItemStack apply(Player player, ItemStack item, String lore) {
 		if (isRestricted(item).equalsIgnoreCase("none")) {
-			if (item != null && item.getType() != Material.AIR) {
+			if (item != null && !Material.AIR.equals(item.getType())) {
 				ItemMeta itemMeta = item.getItemMeta();
 				List<String> lores = new ArrayList<>();
 
@@ -34,7 +34,7 @@ public class Lore {
 	}
 
 	public static String getLore(String type) {
-		return (type == "creative" ? "Creative" : (type == "spawned" ? "Spawned" : null));
+		return ("creative".equals(type) ? "Creative" : ("spawned".equals(type) ? "Spawned" : null));
 	}
 
 	public static String getOwner(ItemStack item) {
@@ -61,15 +61,15 @@ public class Lore {
 		return getOwner(item) == playerName;
 	}
 
-	public static String isRestricted(ItemStack i) {
-		if (i != null && i.getType() != Material.AIR) {
-			if (i.hasItemMeta() && i.getItemMeta().hasLore()) {
-				for (String s : i.getItemMeta().getLore()) {
-					String sf = RegexUtil.strip(s, RegexUtil.VANILLA_PATTERN);
+	public static String isRestricted(ItemStack item) {
+		if (item != null && !Material.AIR.equals(item.getType())) {
+			if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+				for (String lore : item.getItemMeta().getLore()) {
+					String safeLore = RegexUtil.strip(lore, RegexUtil.VANILLA_PATTERN);
 
-					if (sf.startsWith(getLore("creative")))
+					if (safeLore.startsWith(getLore("creative")))
 						return "creative";
-					else if (sf.startsWith(getLore("spawned")))
+					else if (safeLore.startsWith(getLore("spawned")))
 						return "spawned";
 				}
 			}
