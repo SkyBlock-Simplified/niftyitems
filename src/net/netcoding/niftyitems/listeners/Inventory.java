@@ -77,7 +77,7 @@ public class Inventory extends BukkitListener {
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
-			final ItemStack currentItem = event.isShiftClick() ? event.getCurrentItem() : event.getCursor();
+			final ItemStack currentItem = FakeInventory.getClickedItem(event, false);
 
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
 				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType))) {
