@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
 import net.netcoding.niftyitems.cache.Cache;
 import net.netcoding.niftyitems.managers.Lore;
@@ -79,7 +80,7 @@ public class Inventory extends BukkitListener {
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
-			final ItemStack currentItem = event.getClick().isShiftClick() ? event.getCurrentItem() : event.getCursor();
+			final ItemStack currentItem = FakeInventory.getClickedItem(event);
 
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
 				List<InventoryType> inventorys = new ArrayList<InventoryType>(
