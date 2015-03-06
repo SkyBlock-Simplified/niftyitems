@@ -2,8 +2,8 @@ package net.netcoding.niftyitems.commands;
 
 import static net.netcoding.niftyitems.cache.Cache.Config;
 import net.netcoding.niftybukkit.NiftyBukkit;
+import net.netcoding.niftybukkit.inventory.InventoryWorkaround;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftyitems.managers.InventoryWorkaround;
 import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.Material;
