@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
+import net.netcoding.niftybukkit.yaml.annotations.Comment;
 import net.netcoding.niftybukkit.yaml.annotations.Path;
 
 import org.bukkit.Material;
@@ -25,8 +26,10 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	private int overStackedSize = 100;
 
 	@Path("destroy-items.spawned")
+	@Comment("Destroy spawned items when dropped")
 	private boolean destroySpawned = true;
 
+	@Comment("Destroy all items when dropped")
 	@Path("destroy-items.all")
 	private boolean destroyAll = false;
 
@@ -63,7 +66,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(Player player, ItemStack stack, String list) {
 		if (player == null) return true;
-		if (!this.blacklists.keySet().contains(list)) return false;
+		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
 
 		if (stack != null && !Material.AIR.equals(stack.getType())) {
 			boolean blacklisted = !this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId()));
