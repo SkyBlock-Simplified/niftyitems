@@ -132,7 +132,7 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
 
@@ -142,7 +142,7 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
@@ -156,7 +156,7 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		Player player = event.getPlayer();
 
@@ -172,14 +172,14 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (Action.RIGHT_CLICK_AIR.equals(event.getAction()) || Action.RIGHT_CLICK_BLOCK.equals(event.getAction())) {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
 			if (Cache.Config.isBlacklisted(player, item, "placement")) {
-				this.getLog().error(player, "The item/block {{0}} cannot be placed/used!", item.getType().toString());
+				this.getLog().error(player, "The item/block {{0}} cannot be used/placed!", item.getType().toString());
 				event.setCancelled(true);
 			}
 		}
