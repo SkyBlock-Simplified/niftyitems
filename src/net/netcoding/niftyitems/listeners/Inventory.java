@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -131,7 +132,7 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		Player player = e.getEntity();
 
@@ -144,14 +145,14 @@ public class Inventory extends BukkitListener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
-		boolean destroy = Config.destroyAllDrops();
-		ItemStack item  = event.getItemDrop().getItemStack();
+		ItemStack item = event.getItemDrop().getItemStack();
 
-		if (destroy || Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
-			if (destroy || Config.destroySpawnedDrops() || (Config.isBlacklisted(player, item, "store") && Config.destroySpawnedDrops())) {
-				event.getItemDrop().remove();
-				item.setAmount(0);
-			}
+		if (Config.destroyAllDrops() || (Config.destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+			event.getItemDrop().remove();
+			item.setAmount(0);
+		} else if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
+			if (Config.isBlacklisted(player, item, "store"))
+				event.setCancelled(true);
 		}
 	}
 
@@ -159,7 +160,7 @@ public class Inventory extends BukkitListener {
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		Player player = event.getPlayer();
 
-		if (player.getGameMode() == GameMode.CREATIVE && event.getNewGameMode() != GameMode.CREATIVE) {
+		if (GameMode.CREATIVE.equals(player.getGameMode()) && GameMode.CREATIVE.equals(event.getNewGameMode())) {
 			ItemStack[] items = player.getInventory().getArmorContents();
 
 			for (ItemStack item : items) {
@@ -173,7 +174,7 @@ public class Inventory extends BukkitListener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (Action.RIGHT_CLICK_AIR.equals(event.getAction()) || Action.RIGHT_CLICK_BLOCK.equals(event.getAction())) {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
@@ -192,7 +193,7 @@ public class Inventory extends BukkitListener {
 			ItemStack item = event.getItem().getItemStack();
 
 			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
-				if (!(player.getGameMode() == GameMode.CREATIVE || Lore.isOwner(item, player.getName())))
+				if (!(GameMode.CREATIVE.equals(player.getGameMode()) || Lore.isOwner(item, player.getName())))
 					event.setCancelled(true);
 			}
 		}
