@@ -11,6 +11,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
@@ -71,7 +72,7 @@ public class Inventory extends BukkitListener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(final InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
 		if (FakeInventory.isOpenAnywhere(NiftyBukkit.getMojangRepository().searchByPlayer(player))) return;
@@ -83,41 +84,21 @@ public class Inventory extends BukkitListener {
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
 				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType))) {
 					if (event.getClick().isShiftClick()) {
-						final int amount = currentItem.getAmount();
-
-						this.getPlugin().getServer().getScheduler().runTaskLater(this.getPlugin(), new Runnable() {
-							@Override
-							public void run() {
-								for (ItemStack items : event.getInventory().getContents()) {
-									if (items != null && items.isSimilar(currentItem)) {
-										if (items.getAmount() == amount)
-											event.getInventory().removeItem(items);
-										else if (items.getAmount() > amount)
-											items.setAmount(items.getAmount() - amount);
-
-										ItemStack in = new ItemStack(currentItem.getType(), amount, currentItem.getDurability());
-										if (Lore.isRestricted(items).equalsIgnoreCase("spawned")) in = Lore.apply(player, in, Lore.getLore("spawned"));
-										player.getInventory().addItem(in);
-										break;
-									}
-								}
-							}
-						}, 2L);
-					} else {
-						if (event.getRawSlot() < event.getInventory().getSize()) {
-							event.getInventory().setItem(event.getRawSlot(), new ItemStack(Material.AIR));
-							player.getInventory().addItem(currentItem);
-							currentItem.setAmount(0);
-							event.setCursor(new ItemStack(Material.AIR));
-							player.updateInventory();
-						}
+						event.setResult(Result.DENY);
+						event.setCancelled(true);
+					} else if (event.getRawSlot() < event.getInventory().getSize()) {
+						event.getInventory().setItem(event.getRawSlot(), new ItemStack(Material.AIR));
+						player.getInventory().addItem(currentItem);
+						currentItem.setAmount(0);
+						event.setCursor(new ItemStack(Material.AIR));
+						player.updateInventory();
 					}
 				}
 			}
 		}
 	}
 
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryCreative(InventoryCreativeEvent event) {
 		Player player = (Player)event.getWhoClicked();
 		ItemStack item = event.getCursor();
