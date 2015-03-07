@@ -53,19 +53,17 @@ permissions:
           niftyitems.bypass.store.*:
             description: Allows you to store/drop spawned items
       niftychat.clear.*:
-        description: Allows you to access all clear features
+        description: Allows you to clear your own inventory
         children:
-          niftyitems.clear:
-            description: Allows you to clear your own inventory
+          niftyitems.clear: true
           niftyitems.clear.other:
             description: Allows you to clear another players inventory
       niftyitems.clearlore:
         description: Allows you to clear the lore on one or all items
       niftyitems.gamemode.*:
-        description: Allows you to access all gamemode features
+        description: Allows you to change your own gamemode
         children:
-          niftyitems.gamemode:
-            description: Allows you to change your gamemodes
+          niftyitems.gamemode: true
           niftyitems.gamemode.other:
             description: Allows you to change another players gamemode
       niftyitems.item:
