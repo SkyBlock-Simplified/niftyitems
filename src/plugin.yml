@@ -46,7 +46,7 @@ permissions:
             description: Allows you to spawn or pull items from the creative inventory, without lore
           niftyitems.bypass.placement.*:
             description: Allows you to place and use blacklisted items
-          niftyitems.bypass.spawning.*:
+          niftyitems.bypass.spawned.*:
             description: Allows you to spawn blacklisted items
           niftyitems.bypass.stacksize:
             description: Allows you to bypass stacksize limit on item spawning
