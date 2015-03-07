@@ -71,7 +71,7 @@ public class Inventory extends BukkitListener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onInventoryClick(final InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
 		if (FakeInventory.isOpenAnywhere(NiftyBukkit.getMojangRepository().searchByPlayer(player))) return;
@@ -117,7 +117,7 @@ public class Inventory extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = false)
 	public void onInventoryCreative(InventoryCreativeEvent event) {
 		Player player = (Player)event.getWhoClicked();
 		ItemStack item = event.getCursor();
