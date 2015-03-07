@@ -52,16 +52,22 @@ permissions:
             description: Allows you to bypass stacksize limit on item spawning
           niftyitems.bypass.store.*:
             description: Allows you to store/drop spawned items
-      niftyitems.clear:
-        description: Allows you to clear your own inventory
-      niftyitems.clear.other:
-        description: Allows you to clear another players inventory
+      niftychat.clear.*:
+        description: Allows you to access all clear features
+        children:
+          niftyitems.clear:
+            description: Allows you to clear your own inventory
+          niftyitems.clear.other:
+            description: Allows you to clear another players inventory
       niftyitems.clearlore:
         description: Allows you to clear the lore on one or all items
-      niftyitems.gamemode:
-        description: Allows you to change your gamemodes
-      niftyitems.gamemode.other:
-        description: Allows you to change another players gamemode
+      niftyitems.gamemode.*:
+        description: Allows you to access all gamemode features
+        children:
+          niftyitems.gamemode:
+            description: Allows you to change your gamemodes
+          niftyitems.gamemode.other:
+            description: Allows you to change another players gamemode
       niftyitems.item:
         description: Allows you to spawn items
       niftyitems.itemdb:
