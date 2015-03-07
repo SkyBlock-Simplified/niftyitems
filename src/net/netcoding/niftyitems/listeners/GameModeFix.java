@@ -27,7 +27,7 @@ public class GameModeFix extends BukkitListener {
 
 		if (!player.getGameMode().equals(this.getPlugin().getServer().getDefaultGameMode())) {
 			if (!this.hasPermissions(player, "gamemode", "maintain")) {
-				this.getPlugin().getServer().getScheduler().runTaskLaterAsynchronously(this.getPlugin(), new Runnable() {
+				this.getPlugin().getServer().getScheduler().runTaskLater(this.getPlugin(), new Runnable() {
 					@Override
 					public void run() {
 						player.setGameMode(getPlugin().getServer().getDefaultGameMode());
