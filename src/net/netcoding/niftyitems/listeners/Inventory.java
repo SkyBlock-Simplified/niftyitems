@@ -82,7 +82,7 @@ public class Inventory extends BukkitListener {
 			final ItemStack currentItem = FakeInventory.getClickedItem(event, false);
 
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
-				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType))) {
+				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType) || InventoryType.ENDER_CHEST.equals(invType))) {
 					if (event.getClick().isShiftClick()) {
 						event.setResult(Result.DENY);
 						event.setCancelled(true);
