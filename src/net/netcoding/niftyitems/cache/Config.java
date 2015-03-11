@@ -6,6 +6,7 @@ import java.util.Map;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
+import net.netcoding.niftybukkit.util.StringUtil;
 import net.netcoding.niftybukkit.yaml.annotations.Comment;
 import net.netcoding.niftybukkit.yaml.annotations.Path;
 
@@ -69,12 +70,12 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
 
 		if (stack != null && !Material.AIR.equals(stack.getType())) {
-			boolean blacklisted = !this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId()));
+			boolean blacklisted = !(this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability())));
 			List<String> names = NiftyBukkit.getItemDatabase().names(stack);
 
 			if (!blacklisted) {
 				for (String name : names) {
-					blacklisted = !this.hasPermissions(player, "bypass", list, name);
+					blacklisted = !(this.hasPermissions(player, "bypass", list, name) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", name, stack.getDurability())));
 					if (!blacklisted) break;
 				}
 			}
