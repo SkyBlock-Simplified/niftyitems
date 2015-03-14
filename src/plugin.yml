@@ -52,7 +52,7 @@ permissions:
             description: Allows you to bypass stacksize limit on item spawning
           niftyitems.bypass.store.*:
             description: Allows you to store/drop spawned items
-      niftychat.clear.*:
+      niftyitems.clear.*:
         description: Allows you to access all clear features
         children:
           niftyitems.clear:
