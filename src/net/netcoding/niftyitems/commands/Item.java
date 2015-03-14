@@ -18,6 +18,7 @@ public class Item extends BukkitCommand {
 		super(plugin, "item");
 		this.setPlayerOnly();
 		this.setCheckPerms(false);
+		this.setCheckHelp(false);
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class Item extends BukkitCommand {
 			item = NiftyBukkit.getItemDatabase().get(args[0]);
 
 			if (Material.AIR.equals(item.getType())) {
-				this.getLog().error(sender, "Air cannot be spawned!");
+				this.getLog().error(sender, "You cannot spawn {0}!", "AIR");
 				return;
 			}
 		} catch (Exception ex) {
@@ -39,11 +40,10 @@ public class Item extends BukkitCommand {
 
 		String displayName = item.getType().toString().replace('_', ' ');
 
-		if (Config.isBlacklisted(player, item, "spawned")) {
+		if (Config.isBlacklisted(player, item, "spawned") || (!this.hasPermissions(sender, "item") && !Config.hasBypass(player, item, "spawned"))) {
 			this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
 			return;
-		} else if (!this.hasPermissions(player, true, "item"))
-			return;
+		}
 
 		try {
 			if (args.length > 1 && Integer.parseInt(args[1]) > 0)

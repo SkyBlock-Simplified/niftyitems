@@ -65,27 +65,39 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	}
 
 	@SuppressWarnings("deprecation")
+	public boolean hasBypass(Player player, ItemStack stack, String list) {
+		if (player == null) return true;
+		if (stack == null) return true;
+		if (Material.AIR.equals(stack.getType())) return false;
+		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
+		boolean hasBypass = this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
+		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
+
+		if (!hasBypass) {
+			for (String name : names) {
+				if (hasBypass = this.hasPermissions(player, "bypass", list, name) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", name, stack.getDurability())))
+					break;
+			}
+		}
+
+		return hasBypass;
+	}
+
+	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(Player player, ItemStack stack, String list) {
 		if (player == null) return true;
+		if (stack == null) return true;
+		if (Material.AIR.equals(stack.getType())) return false;
 		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
+		boolean hasBypass = this.hasBypass(player, stack, list);
 
-		if (stack != null && !Material.AIR.equals(stack.getType())) {
-			boolean blacklisted = !(this.hasPermissions(player, "bypass", list, String.valueOf(stack.getTypeId())) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability())));
-			List<String> names = NiftyBukkit.getItemDatabase().names(stack);
-
-			if (!blacklisted) {
-				for (String name : names) {
-					blacklisted = !(this.hasPermissions(player, "bypass", list, name) || this.hasPermissions(player, "bypass", list, StringUtil.format("{0}:{1}", name, stack.getDurability())));
-					if (!blacklisted) break;
-				}
-			}
-
-			if ("store".equals(list))
-				return blacklisted;
-			else {
+		if ("store".equals(list))
+			return !hasBypass;
+		else {
+			if (!hasBypass) {
 				for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list))) {
 					if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
-						return blacklisted;
+						return true;
 				}
 			}
 		}
