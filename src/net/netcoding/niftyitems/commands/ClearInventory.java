@@ -45,8 +45,9 @@ public class ClearInventory extends BukkitCommand {
 				if (isConsole(action) && args.length < 1) {
 					this.getLog().error(sender, "You must provide a player name from console!");
 					return;
-				} else
-					players.add((Player)sender);
+				}
+
+				players.add((Player)sender);
 			}
 		} else if (args.length == 2) {
 			action = this.getAction(args[1]);
@@ -60,12 +61,12 @@ public class ClearInventory extends BukkitCommand {
 				if (player == null) {
 					this.getLog().error(sender, "Cannot clear inventory of unknown player {{0}}!", args[0]);
 					return;
-				} else {
-					if (!sender.getName().equals(player.getName()) && !this.hasPermissions(sender, "clear", "other"))
-						return;
-
-					players.add(player);
 				}
+
+				if (!sender.getName().equals(player.getName()) && !this.hasPermissions(sender, "clear", "other"))
+					return;
+
+				players.add(player);
 			}
 		}
 

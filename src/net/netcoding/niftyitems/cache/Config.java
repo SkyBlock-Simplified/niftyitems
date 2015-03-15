@@ -90,15 +90,12 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (Material.AIR.equals(stack.getType())) return false;
 		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
 		boolean hasBypass = this.hasBypass(player, stack, list);
+		if ("store".equals(list)) return !hasBypass;
 
-		if ("store".equals(list))
-			return !hasBypass;
-		else {
-			if (!hasBypass) {
-				for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list))) {
-					if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
-						return true;
-				}
+		if (!hasBypass) {
+			for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list))) {
+				if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
+					return true;
 			}
 		}
 
