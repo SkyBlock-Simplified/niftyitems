@@ -27,11 +27,11 @@ commands:
     description: Shows information related to an item
     usage: /<command> <type>[:datavalue]
     aliases: idb
-  itemreload:
-    description: Reloads config
-    usage: /<command>
-    permission: niftyitems.reload
-    aliases: ireload
+#  itemreload:
+#    description: Reloads config
+#    usage: /<command>
+#    permission: niftyitems.reload
+#    aliases: ireload
 
 permissions:
   niftyitems.*:

@@ -8,7 +8,6 @@ import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
-import net.netcoding.niftyitems.commands.ItemReload;
 import net.netcoding.niftyitems.listeners.GameModeFix;
 import net.netcoding.niftyitems.listeners.Inventory;
 
@@ -19,6 +18,7 @@ public class NiftyItems extends BukkitPlugin {
 		this.getLog().console("Loading Cache");
 		Cache.Config = new Config(this);
 		Cache.Config.init();
+		Cache.Config.startWatcher();
 
 		this.getLog().console("Registering Commands");
 		new ClearInventory(this);
@@ -26,7 +26,7 @@ public class NiftyItems extends BukkitPlugin {
 		new GameMode(this);
 		new Item(this);
 		new ItemDb(this);
-		new ItemReload(this);
+		//new ItemReload(this);
 
 		this.getLog().console("Registering Listeners");
 		new Inventory(this);
