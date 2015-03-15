@@ -21,7 +21,7 @@ public class ClearInventory extends BukkitCommand {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
-		if (isConsole(sender) && args.length == 0) {
+		if (isConsole(sender) && args.length < 1) {
 			this.getLog().error(sender, "You must provide a player name from console!");
 			return;
 		}
@@ -40,13 +40,13 @@ public class ClearInventory extends BukkitCommand {
 
 				players.add(player);
 			} else {
-				action = this.getAction(args[0]);
+				if (isConsole(sender) && args.length < 1) {
+					this.getLog().error(sender, "You must provide a player name from console!");
+					return;
+				}
 
-				if (action.matches("^all|\\*$")) {
-					for (Player bplayer : this.getPlugin().getServer().getOnlinePlayers())
-						players.add(bplayer);
-				} else
-					players.add((Player)sender);
+				action = this.getAction(args[0]);
+				players.add((Player)sender);
 			}
 		} else if (args.length == 2) {
 			action = this.getAction(args[1]);
