@@ -40,13 +40,13 @@ public class ClearInventory extends BukkitCommand {
 
 				players.add(player);
 			} else {
-				if (isConsole(sender) && args.length < 1) {
+				action = this.getAction(args[0]);
+
+				if (isConsole(action) && args.length < 1) {
 					this.getLog().error(sender, "You must provide a player name from console!");
 					return;
-				}
-
-				action = this.getAction(args[0]);
-				players.add((Player)sender);
+				} else
+					players.add((Player)sender);
 			}
 		} else if (args.length == 2) {
 			action = this.getAction(args[1]);
