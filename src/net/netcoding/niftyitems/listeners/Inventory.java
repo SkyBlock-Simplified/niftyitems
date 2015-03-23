@@ -1,10 +1,9 @@
 package net.netcoding.niftyitems.listeners;
 
-import static net.netcoding.niftyitems.cache.Cache.Config;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
-import net.netcoding.niftyitems.cache.Cache;
+import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.GameMode;
@@ -65,7 +64,7 @@ public class Inventory extends BukkitListener {
 			}
 		}
 
-		if (Config.isBlacklisted(player, item, "placement")) {
+		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "placement")) {
 			this.getLog().error(player, "The item/block {{0}} cannot be placed/used!", item.getType().toString());
 			event.setCancelled(true);
 		}
@@ -81,7 +80,7 @@ public class Inventory extends BukkitListener {
 			InventoryType invType = event.getInventory().getType();
 			final ItemStack currentItem = FakeInventory.getClickedItem(event, false);
 
-			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, currentItem, "store")) {
+			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && NiftyItems.getPluginConfig().isBlacklisted(player, currentItem, "store")) {
 				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType) || InventoryType.ENDER_CHEST.equals(invType))) {
 					if (event.getClick().isShiftClick()) {
 						event.setResult(Result.DENY);
@@ -103,7 +102,7 @@ public class Inventory extends BukkitListener {
 		Player player = (Player)event.getWhoClicked();
 		ItemStack item = event.getCursor();
 
-		if (Config.isBlacklisted(player, item, "creative")) {
+		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "creative")) {
 			this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", item.getType().toString());
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
@@ -118,7 +117,7 @@ public class Inventory extends BukkitListener {
 		Player player = e.getEntity();
 
 		for (ItemStack item : e.getDrops()) {
-			if (Lore.isRestricted(item).equalsIgnoreCase("spawned") && Cache.Config.isBlacklisted(player, item, "store"))
+			if (Lore.isRestricted(item).equalsIgnoreCase("spawned") && NiftyItems.getPluginConfig().isBlacklisted(player, item, "store"))
 				item.setAmount(0);
 		}
 	}
@@ -128,11 +127,11 @@ public class Inventory extends BukkitListener {
 		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
 
-		if (Config.destroyAllDrops() || (Config.destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 			event.getItemDrop().remove();
 			item.setAmount(0);
 		} else if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
-			if (Config.isBlacklisted(player, item, "store"))
+			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "store"))
 				event.setCancelled(true);
 		}
 	}
@@ -159,7 +158,7 @@ public class Inventory extends BukkitListener {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
-			if (Cache.Config.isBlacklisted(player, item, "placement")) {
+			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "placement")) {
 				this.getLog().error(player, "The item/block {{0}} cannot be used/placed!", item.getType().toString());
 				event.setCancelled(true);
 			}

@@ -1,9 +1,9 @@
 package net.netcoding.niftyitems.commands;
 
-import static net.netcoding.niftyitems.cache.Cache.Config;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.InventoryWorkaround;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
 
 import org.bukkit.Material;
@@ -40,7 +40,7 @@ public class Item extends BukkitCommand {
 
 		String displayName = item.getType().toString().replace('_', ' ');
 
-		if (Config.isBlacklisted(player, item, "spawned") || (!this.hasPermissions(sender, "item") && !Config.hasBypass(player, item, "spawned"))) {
+		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "spawned") || (!this.hasPermissions(sender, "item") && !NiftyItems.getPluginConfig().hasBypass(player, item, "spawned"))) {
 			this.getLog().error(sender, "You cannot spawn {{0}}!", displayName);
 			return;
 		}
@@ -50,13 +50,13 @@ public class Item extends BukkitCommand {
 				item.setAmount(Integer.parseInt(args[1]));
 			else {
 				if (item.getType().isBlock()) {
-					if (Config.getBlockStackSize() > 0)
-						item.setAmount(Config.getBlockStackSize());
-					else if (Config.getOversizedStackSize() > 0 && this.hasPermissions(sender, "bypass", "stacksize"))
-						item.setAmount(Config.getOversizedStackSize());
+					if (NiftyItems.getPluginConfig().getBlockStackSize() > 0)
+						item.setAmount(NiftyItems.getPluginConfig().getBlockStackSize());
+					else if (NiftyItems.getPluginConfig().getOversizedStackSize() > 0 && this.hasPermissions(sender, "bypass", "stacksize"))
+						item.setAmount(NiftyItems.getPluginConfig().getOversizedStackSize());
 				} else {
-					if (Config.getItemStackSize() > 0)
-						item.setAmount(Config.getItemStackSize());
+					if (NiftyItems.getPluginConfig().getItemStackSize() > 0)
+						item.setAmount(NiftyItems.getPluginConfig().getItemStackSize());
 				}
 			}
 		} catch (NumberFormatException ex) {
@@ -72,7 +72,7 @@ public class Item extends BukkitCommand {
 		if (!nolore) item = Lore.apply(player, item, Lore.getLore("spawned"));
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
-			InventoryWorkaround.addOversizedItems(player.getInventory(), Config.getOversizedStackSize(), item);
+			InventoryWorkaround.addOversizedItems(player.getInventory(), NiftyItems.getPluginConfig().getOversizedStackSize(), item);
 		else
 			InventoryWorkaround.addItems(player.getInventory(), item);
 
