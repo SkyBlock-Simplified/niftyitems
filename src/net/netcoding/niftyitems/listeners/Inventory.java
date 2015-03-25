@@ -1,5 +1,8 @@
 package net.netcoding.niftyitems.listeners;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
@@ -79,9 +82,10 @@ public class Inventory extends BukkitListener {
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
 			final ItemStack currentItem = FakeInventory.getClickedItem(event, false);
+			List<InventoryType> allowed = Arrays.asList(InventoryType.CREATIVE, InventoryType.PLAYER, InventoryType.ENDER_CHEST);
 
 			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && NiftyItems.getPluginConfig().isBlacklisted(player, currentItem, "store")) {
-				if (!(InventoryType.CREATIVE.equals(invType) || InventoryType.PLAYER.equals(invType) || InventoryType.ENDER_CHEST.equals(invType))) {
+				if (!allowed.contains(invType)) {
 					if (event.getClick().isShiftClick()) {
 						event.setResult(Result.DENY);
 						event.setCancelled(true);
