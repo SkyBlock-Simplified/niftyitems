@@ -15,6 +15,10 @@ commands:
     description: Clears the creative/spawned lore of an item
     usage: /<command> [hand|all]
     aliases: [clore, cl]
+  enchant:
+    description: Apply enchantments to item in your hand
+    usage: /<command> [enchantments]
+    aliases: [uenchant, e, ue]
   gamemode:
     description: Changes the gamemode of a player
     usage: /<command> <survival|creative|adventure|spectator> [player]
@@ -56,6 +60,13 @@ permissions:
             description: Allows you to clear another players inventory
       niftyitems.clearlore:
         description: Allows you to clear the lore on one or all items
+      niftyitems.enchant.*:
+        description: Allows you to unsafely enchant items
+        children:
+          niftyitems.enchant:
+            description: Allows you to enchant items
+          niftyitems.enchant.unsafe:
+            description: Allows you to unsafely enchant items
       niftyitems.gamemode.*:
         description: Allows you to access all gamemode features
         children:

@@ -2,6 +2,7 @@ package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.InventoryWorkaround;
+import net.netcoding.niftybukkit.inventory.enchantments.EnchantmentData;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.util.NumberUtil;
 import net.netcoding.niftybukkit.util.StringUtil;
@@ -40,7 +41,7 @@ public class Give extends BukkitCommand {
 		String user = (isGive ? args[0] : sender.getName());
 		Player player = findPlayer(user);
 		if (isGive) args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
-		ItemStack item;
+		ItemStack stack;
 
 		if (isGive && !sender.getName().equalsIgnoreCase(player.getName()) && !this.hasPermissions(sender, "item", "give")) {
 			this.getLog().error(sender, "You are not allowed to give items!");
@@ -53,9 +54,9 @@ public class Give extends BukkitCommand {
 		}
 
 		try {
-			item = NiftyBukkit.getItemDatabase().get(args[0]);
+			stack = NiftyBukkit.getItemDatabase().get(args[0]);
 
-			if (Material.AIR.equals(item.getType())) {
+			if (Material.AIR.equals(stack.getType())) {
 				this.getLog().error(sender, "You cannot spawn {0}!", "AIR");
 				return;
 			}
@@ -64,37 +65,38 @@ public class Give extends BukkitCommand {
 			return;
 		}
 
-		String displayName = NiftyBukkit.getItemDatabase().name(item);
+		String displayName = NiftyBukkit.getItemDatabase().name(stack);
 		args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
 		int amount = 1;
 
 		if (isItem || NiftyItems.getPluginConfig().giveEnforcesBlacklist()) {
-			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "spawned") || (!this.hasPermissions(player, "item") && !NiftyItems.getPluginConfig().hasBypass(player, item, "spawned"))) {
+			if (NiftyItems.getPluginConfig().isBlacklisted(player, stack, "spawned") || (!this.hasPermissions(player, "item") && !NiftyItems.getPluginConfig().hasBypass(player, stack, "spawned"))) {
 				this.getLog().error(sender, "You cannot spawn {{0}}{1}!", displayName, (isGive ? StringUtil.format(" for {{0}}", player.getName()) : ""));
 				return;
 			}
 		}
 
 		if (args.length == 0)
-			amount = item.getType().isBlock() ? NiftyItems.getPluginConfig().getBlockStackSize() : NiftyItems.getPluginConfig().getItemStackSize();
+			amount = stack.getType().isBlock() ? NiftyItems.getPluginConfig().getBlockStackSize() : NiftyItems.getPluginConfig().getItemStackSize();
 		else if (NumberUtil.isInt(args[0])) {
 			int passedAmount = Integer.parseInt(args[0]);
 			amount = passedAmount < 0 ? amount : passedAmount;
 		}
 
-		item.setAmount(amount);
+		stack.setAmount(amount);
 		args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
-		if (!this.hasPermissions(sender, "bypass", "lore")) item = Lore.apply(sender, item, Lore.getLore("spawned"));
+		if (!this.hasPermissions(sender, "bypass", "lore")) stack = Lore.apply(sender, stack, Lore.getLore("spawned"));
 
-		if (args.length > 2) {
-			// TODO: Enchantments...
+		if (args.length > 1) {
+			for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args))
+				data.apply(stack);
 		}
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
-			InventoryWorkaround.addOversizedItems(player.getInventory(), Config.MAXIMUM_OVERSTACKED_SIZE, item);
+			InventoryWorkaround.addOversizedItems(player.getInventory(), Config.MAXIMUM_OVERSTACKED_SIZE, stack);
 		else
-			InventoryWorkaround.addItems(player.getInventory(), item);
+			InventoryWorkaround.addItems(player.getInventory(), stack);
 
-		this.getLog().message(sender, "Giving {{0}} of {{1}}.", item.getAmount(), displayName);
+		this.getLog().message(sender, "Giving {{0}} of {{1}}.", stack.getAmount(), displayName);
 	}
 }
