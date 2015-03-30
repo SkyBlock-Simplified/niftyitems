@@ -18,9 +18,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
-	private static final int DEFAULT_ITEMSTACK_SIZE = 1;
-	private static final int DEFAULT_BLOCKSTACK_SIZE = 64;
-	private static final int MAXIMUM_OVERSTACKED_SIZE = 100;
+	public static final int DEFAULT_ITEMSTACK_SIZE = 1;
+	public static final int DEFAULT_BLOCKSTACK_SIZE = 64;
+	public static final int MAXIMUM_OVERSTACKED_SIZE = 100;
 
 	@Path("stack-size.item")
 	private int itemStackSize = DEFAULT_ITEMSTACK_SIZE;
@@ -39,6 +39,10 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	@Path("destroy-items.all")
 	private boolean destroyAll = false;
 
+	@Comment("Give command enforced blacklist for receiving player")
+	@Path("give-enforces-blacklist")
+	private boolean giveEnforcesBlacklist = false;
+
 	private Map<String, String> blacklists = new HashMap<>();
 
 	public Config(JavaPlugin plugin) {
@@ -47,6 +51,10 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		this.blacklists.put("spawned", blacklisted);
 		this.blacklists.put("creative", blacklisted);
 		this.blacklists.put("placement", "7,8,9,10,11,51,52,119,120,137,138,166,259,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54-62,65,66],384,385,397:1,401,407,422");
+	}
+
+	public boolean giveEnforcesBlacklist() {
+		return this.giveEnforcesBlacklist;
 	}
 
 	public int getItemStackSize() {
