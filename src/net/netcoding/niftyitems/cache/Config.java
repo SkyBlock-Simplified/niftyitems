@@ -7,6 +7,7 @@ import java.util.Map;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftybukkit.util.StringUtil;
+import net.netcoding.niftybukkit.yaml.ConfigSection;
 import net.netcoding.niftybukkit.yaml.annotations.Comment;
 import net.netcoding.niftybukkit.yaml.annotations.Path;
 import net.netcoding.niftybukkit.yaml.exceptions.InvalidConfigurationException;
@@ -27,9 +28,6 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
 	@Path("stack-size.block")
 	private int blockStackSize = DEFAULT_BLOCKSTACK_SIZE;
-
-	@Path("stack-size.overstacked")
-	private int overStackedSize = MAXIMUM_OVERSTACKED_SIZE;
 
 	@Path("destroy-items.spawned")
 	@Comment("Destroy spawned items when dropped")
@@ -63,10 +61,6 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
 	public int getBlockStackSize() {
 		return this.blockStackSize;
-	}
-
-	public int getOversizedStackSize() {
-		return this.overStackedSize;
 	}
 
 	public boolean destroySpawnedDrops() {
@@ -130,12 +124,17 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 			save = true;
 		}
 
-		if (this.overStackedSize < 0 || this.overStackedSize > MAXIMUM_OVERSTACKED_SIZE) {
-			this.overStackedSize = MAXIMUM_OVERSTACKED_SIZE;
-			save = true;
+		if (save) this.save();
+	}
+
+	@Override
+	public boolean update(ConfigSection root) throws InvalidConfigurationException {
+		if (root.has("stack-size.overstacked")) {
+			root.remove("stack-size.overstacked");
+			return true;
 		}
 
-		if (save) this.save();
+		return false;
 	}
 
 }
