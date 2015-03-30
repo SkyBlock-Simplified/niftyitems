@@ -17,7 +17,7 @@ public class NiftyItems extends BukkitPlugin {
 	@Override
 	public void onEnable() {
 		this.getLog().console("Loading Config");
-		pluginConfig = new Config(this);
+		(pluginConfig = new Config(this)).init();
 		pluginConfig.startWatcher();
 
 		this.getLog().console("Registering Commands");
