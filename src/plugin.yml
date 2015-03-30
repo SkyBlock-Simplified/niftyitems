@@ -19,19 +19,14 @@ commands:
     description: Changes the gamemode of a player
     usage: /<command> <survival|creative|adventure|spectator> [player]
     aliases: [gm, adventure, creative, survival, spectator]
-  item:
+  give:
     description: Spawns an item
-    usage: /<command> <type>[:datavalue] [amount]
-    aliases: i
+    usage: /<command> <player> <type>[:datavalue] [amount] [enchantments]
+    aliases: [item, g, i]
   itemdb:
     description: Shows information related to an item
     usage: /<command> <type>[:datavalue]
     aliases: idb
-#  itemreload:
-#    description: Reloads config
-#    usage: /<command>
-#    permission: niftyitems.reload
-#    aliases: ireload
 
 permissions:
   niftyitems.*:
@@ -68,8 +63,13 @@ permissions:
             description: Allows you to change your own gamemode
           niftyitems.gamemode.other:
             description: Allows you to change another players gamemode
-      niftyitems.item:
-        description: Allows you to spawn items
+      niftyitems.item.*:
+        description: Allows you to spawn and give items
+        children:
+          niftyitems.item:
+            description: Allows you to spawn items
+          niftyitems.item.give:
+            description: Allows you to give items
       niftyitems.itemdb:
         description: Allows you to check item information
       niftyitems.reload:

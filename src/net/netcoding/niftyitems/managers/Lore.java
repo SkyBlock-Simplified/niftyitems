@@ -7,13 +7,13 @@ import net.netcoding.niftybukkit.util.RegexUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class Lore {
 
-	public static ItemStack apply(Player player, ItemStack item, String lore) {
+	public static ItemStack apply(CommandSender sender, ItemStack item, String lore) {
 		if (isRestricted(item).equalsIgnoreCase("none")) {
 			if (item != null && !Material.AIR.equals(item.getType())) {
 				ItemMeta itemMeta = item.getItemMeta();
@@ -24,7 +24,7 @@ public class Lore {
 					lores = itemMeta.getLore();
 				}
 
-				lores.add(String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, player.getName()));
+				lores.add(String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
 				itemMeta.setLore(lores);
 				item.setItemMeta(itemMeta);
 			}

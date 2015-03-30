@@ -5,7 +5,7 @@ import net.netcoding.niftyitems.cache.Config;
 import net.netcoding.niftyitems.commands.ClearInventory;
 import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.GameMode;
-import net.netcoding.niftyitems.commands.Item;
+import net.netcoding.niftyitems.commands.Give;
 import net.netcoding.niftyitems.commands.ItemDb;
 import net.netcoding.niftyitems.listeners.GameModeFix;
 import net.netcoding.niftyitems.listeners.Inventory;
@@ -24,7 +24,7 @@ public class NiftyItems extends BukkitPlugin {
 		new ClearInventory(this);
 		new ClearLore(this);
 		new GameMode(this);
-		new Item(this);
+		new Give(this);
 		new ItemDb(this);
 
 		this.getLog().console("Registering Listeners");
