@@ -45,10 +45,13 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
 	public Config(JavaPlugin plugin) {
 		super(plugin, "config");
-		String blacklisted = "7,8,9,10,11,14,15,16,19,21,22,30,41,42,43,46,51,52,56,57,62,73,78,79,90,97,99,100,119,120,122,125,127,129,133,137,141,142,155,166,259,263,264,265,266,327,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54-62,65,66],384,385,388,397,401,407,422";
+		String defaultStart = "7,8,9,10,11";
+		String harmfulPotions = "373:[16388,16420,16452,16424,16426,16428,16456,16458,16460]";
+		String monsterEggs = "383:[51,52,54-62,65-68]";
+		String blacklisted = StringUtil.format("{0},14,15,16,19,21,22,30,41,42,43,46,52,56,57,62,73,78,79,90,97,99,100,119,120,122,125,127,129,133,137,141,142,155,166,259,263-266,327,{1},381,{2},384,385,388,397,401,407,422", defaultStart, harmfulPotions, monsterEggs);
 		this.blacklists.put("spawned", blacklisted);
 		this.blacklists.put("creative", blacklisted);
-		this.blacklists.put("place", "7,8,9,10,11,51,52,119,120,137,138,166,259,373:[16388,16420,16452,16424,16426,16428,16456,16458,16460],381,383:[51,52,54-62,65,66],384,385,397:1,401,407,422");
+		this.blacklists.put("place", StringUtil.format("{0},52,119,120,137,138,166,259,{1},381,{2},384,385,397:1,401,407,422", defaultStart, harmfulPotions, monsterEggs));
 		this.blacklists.put("break", "7,166");
 	}
 
