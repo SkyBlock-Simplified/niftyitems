@@ -7,8 +7,10 @@ import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.Give;
 import net.netcoding.niftyitems.commands.ItemDb;
+import net.netcoding.niftyitems.listeners.Blocks;
 import net.netcoding.niftyitems.listeners.GameModeFix;
 import net.netcoding.niftyitems.listeners.Inventory;
+import net.netcoding.niftyitems.listeners.Players;
 
 public class NiftyItems extends BukkitPlugin {
 
@@ -28,8 +30,10 @@ public class NiftyItems extends BukkitPlugin {
 		new ItemDb(this);
 
 		this.getLog().console("Registering Listeners");
-		new Inventory(this);
+		new Blocks(this);
 		new GameModeFix(this);
+		new Inventory(this);
+		new Players(this);
 	}
 
 	public final static Config getPluginConfig() {
