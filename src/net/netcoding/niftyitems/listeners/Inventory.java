@@ -6,6 +6,7 @@ import java.util.List;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftybukkit.mojang.MojangProfile;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
 
@@ -30,7 +31,17 @@ public class Inventory extends BukkitListener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
-		if (FakeInventory.isOpenAnywhere(NiftyBukkit.getMojangRepository().searchByPlayer(player))) return;
+		MojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
+
+		if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
+			MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+			targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getArmorContents());
+		} else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
+			MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+			targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getContents());
+		}
+
+		if (FakeInventory.isOpenAnywhere(profile)) return;
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
@@ -65,6 +76,7 @@ public class Inventory extends BukkitListener {
 
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
+			event.setResult(Result.DENY);
 		} else if (!this.hasPermissions(player, "bypass", "lore"))
 			event.setCursor(Lore.apply(player, item, Lore.getLore("creative")));
 	}

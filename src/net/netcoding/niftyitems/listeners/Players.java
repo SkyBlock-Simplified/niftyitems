@@ -49,7 +49,6 @@ public class Players extends BukkitListener {
 		if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 			event.getItemDrop().remove();
 			item.setAmount(0);
-			event.setCancelled(true);
 		}
 	}
 

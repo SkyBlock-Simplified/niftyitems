@@ -27,6 +27,10 @@ commands:
     description: Spawns an item
     usage: /<command> <player> <type>[:datavalue] [amount [itemdata]]
     aliases: [item, g, i]
+  invsee:
+    description: View other players inventories and armor
+    usage: /<command> <player> [armor]
+    aliases: inspect
   itemdb:
     description: Shows information related to an item
     usage: /<command> <type>[:datavalue]
@@ -80,6 +84,20 @@ permissions:
             description: Allows you to maintain the non-default gamemode across logins
           niftyitems.gamemode.other:
             description: Allows you to change another players gamemode
+      niftyitems.invsee.*:
+        description: Allows you to see and modify all inventories
+        children:
+          niftyitems.invsee:
+            description: Allows you to see player inventories
+          niftyitems.invsee.admin:
+            description: Protects your inventory from being modified
+          niftyitems.invsee.modify.*:
+            description: Allows you to modify all inventories
+            children:
+              niftyitems.invsee.modify:
+                description: Allows you to modify player inventories
+              niftyitems.invsee.modify.admin:
+                description: Allows you to modify admin inventories
       niftyitems.item.*:
         description: Allows you to spawn and give items
         children:
