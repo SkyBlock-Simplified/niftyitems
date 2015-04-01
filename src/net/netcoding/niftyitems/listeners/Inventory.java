@@ -33,15 +33,27 @@ public class Inventory extends BukkitListener {
 		final Player player = (Player)event.getWhoClicked();
 		MojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
 
-		if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
-			MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
-			targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getArmorContents());
-		} else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
-			MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
-			targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getContents());
-		}
+		if (FakeInventory.isOpenAnywhere(profile)) {
+			/*if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
+				MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+				targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getArmorContents());
+			} else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
+				MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+				targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getContents());
+			}*/
 
-		if (FakeInventory.isOpenAnywhere(profile)) return;
+			/**
+			 * InventoryInteractEvent
+			 * InventoryDragEvent
+			 * InventoryClickEvent
+			 * InventoryPickupItemEvent
+			 * PlayerItemConsumeEvent
+			 * PlayerItemBreakEvent
+			 * PlayerPickupItemEvent
+			 * PlayerDropItemEvent
+			 */
+			return;
+		}
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();

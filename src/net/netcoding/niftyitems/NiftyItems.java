@@ -8,7 +8,7 @@ import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.Enchant;
 import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.Give;
-import net.netcoding.niftyitems.commands.InventorySee;
+import net.netcoding.niftyitems.commands.Invsee;
 import net.netcoding.niftyitems.commands.ItemDb;
 import net.netcoding.niftyitems.listeners.ArmorInventory;
 import net.netcoding.niftyitems.listeners.Blocks;
@@ -35,7 +35,7 @@ public class NiftyItems extends BukkitPlugin {
 		new Enchant(this);
 		new GameMode(this);
 		new Give(this);
-		new InventorySee(this);
+		new Invsee(this);
 		new ItemDb(this);
 
 		this.getLog().console("Registering Listeners");

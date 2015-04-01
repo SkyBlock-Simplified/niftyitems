@@ -43,8 +43,10 @@ public class Players extends BukkitListener {
 		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
 
-		if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+		if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 			event.setCancelled(true);
+			return;
+		}
 
 		if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 			event.getItemDrop().remove();

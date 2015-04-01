@@ -164,7 +164,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 			save = true;
 		}
 
-		this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), StringUtil.format("gamerule noTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
+		this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), StringUtil.format("gamerule doTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
 		if (save) this.save();
 	}
 
