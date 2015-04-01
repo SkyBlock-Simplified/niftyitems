@@ -32,8 +32,8 @@ public class Enchant extends BukkitCommand {
 
 		for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
 			try {
-				data.apply(stack, alias.matches("^ue(nchant)?$"));
-				enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
+				if (data.apply(stack, alias.matches("^ue(nchant)?$")))
+					enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
 			} catch (Exception ex) { }
 		}
 
