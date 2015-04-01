@@ -14,6 +14,7 @@ import net.netcoding.niftybukkit.yaml.exceptions.InvalidConfigurationException;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,7 +49,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	private ConfigSection destroyItems;
 
 	@Path("destroy-items.spawned")
-	private boolean destroySpawned = true;
+	private boolean destroySpawned = false;
 
 	@Path("destroy-items.all")
 	private boolean destroyAll = false;
@@ -94,8 +95,16 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		return this.destroySpawned;
 	}
 
+	public boolean destroySpawnedDrops(Player player, ItemStack stack) {
+		return this.isBlacklisted(player, stack, "drop") ? false : this.destroySpawnedDrops();
+	}
+
 	public boolean destroyAllDrops() {
 		return this.destroyAll;
+	}
+
+	public boolean destroyAllDrops(Player player, ItemStack stack) {
+		return !this.hasBypass(player, stack, "drop") ? false : this.destroyAllDrops();
 	}
 
 	public boolean isSilent(String blacklist) {
@@ -107,7 +116,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (sender == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR.equals(stack.getType())) return false;
-		if (!(this.blacklists.keySet().contains(blacklist) || "store".equals(blacklist))) return false;
+		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
 		boolean hasBypass = this.hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || this.hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
 		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
 
@@ -126,9 +135,9 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (sender == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR.equals(stack.getType())) return false;
-		if (!(this.blacklists.keySet().contains(blacklist) || "store".equals(blacklist))) return false;
+		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
 		boolean hasBypass = this.hasBypass(sender, stack, blacklist);
-		if ("store".equals(blacklist)) return !hasBypass;
+		if (blacklist.matches("^store|drop$")) return !hasBypass;
 
 		if (!hasBypass) {
 			for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(blacklist))) {
@@ -159,12 +168,12 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (save) this.save();
 	}
 
-	public boolean preventSpawnedDrops() {
-		return this.preventSpawned;
+	public boolean preventSpawnedDrops(Player player, ItemStack stack) {
+		return this.isBlacklisted(player, stack, "drop") ? false : this.preventSpawned;
 	}
 
-	public boolean preventAllDrops() {
-		return this.preventAll;
+	public boolean preventAllDrops(Player player, ItemStack stack) {
+		return !this.hasBypass(player, stack, "drop") ? false : this.preventAll;
 	}
 
 	@Override

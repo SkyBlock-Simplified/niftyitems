@@ -29,13 +29,10 @@ public class Players extends BukkitListener {
 		Player player = event.getEntity();
 
 		for (ItemStack item : event.getDrops()) {
-			if (NiftyItems.getPluginConfig().preventAllDrops() || (NiftyItems.getPluginConfig().preventSpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+			if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
 				item.setAmount(0);
-			else if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+			else if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 				item.setAmount(0);
-			} else if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
-				if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "store"))
-					item.setAmount(0);
 			} else if (Lore.isRestricted(item).equalsIgnoreCase("creative"))
 				item.setAmount(0);
 		}
@@ -43,12 +40,13 @@ public class Players extends BukkitListener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
 
-		if (NiftyItems.getPluginConfig().preventAllDrops() || (NiftyItems.getPluginConfig().preventSpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+		if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
 			event.setCancelled(true);
 
-		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+		if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 			event.getItemDrop().remove();
 			item.setAmount(0);
 			event.setCancelled(true);
@@ -77,8 +75,8 @@ public class Players extends BukkitListener {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
-			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "placement")) {
-				this.getLog().error(player, "The {0} {{1}} cannot be used/placed!", (item.getType().isBlock() ? "block" : "item"), item.getType().toString());
+			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "place")) {
+				this.getLog().error(player, "The item {{0}} cannot be used!", item.getType().toString());
 				event.setCancelled(true);
 			}
 		}

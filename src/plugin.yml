@@ -51,8 +51,10 @@ permissions:
             description: Allows you to spawn blacklisted items
           niftyitems.bypass.stacksize:
             description: Allows you to bypass stacksize limit on item spawning
+          niftyitems.bypass.drop.*:
+            description: Allows you to drop items when disabled in config
           niftyitems.bypass.store.*:
-            description: Allows you to store/drop spawned items
+            description: Allows you to store spawned items
       niftyitems.clear.*:
         description: Allows you to access all clear features
         children:

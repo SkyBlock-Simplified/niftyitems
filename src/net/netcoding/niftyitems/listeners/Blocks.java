@@ -1,5 +1,9 @@
 package net.netcoding.niftyitems.listeners;
 
+import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftyitems.NiftyItems;
+import net.netcoding.niftyitems.managers.Lore;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,10 +16,6 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import net.netcoding.niftybukkit.minecraft.BukkitListener;
-import net.netcoding.niftyitems.NiftyItems;
-import net.netcoding.niftyitems.managers.Lore;
 
 public class Blocks extends BukkitListener {
 
@@ -31,7 +31,7 @@ public class Blocks extends BukkitListener {
 		for (ItemStack stack : block.getDrops()) {
 			if (NiftyItems.getPluginConfig().isBlacklisted(player, stack, "break")) {
 				if (!NiftyItems.getPluginConfig().isSilent("break"))
-					this.getLog().error(player, "The block {{1}} cannot be broken!", block.getType().toString());
+					this.getLog().error(player, "The block {{0}} cannot be broken!", block.getType().toString());
 
 				event.setCancelled(true);
 				return;
@@ -69,7 +69,7 @@ public class Blocks extends BukkitListener {
 
 		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "place")) {
 			if (!NiftyItems.getPluginConfig().isSilent("place"))
-				this.getLog().error(player, "The {0} {{1}} cannot be placed/used!", (item.getType().isBlock() ? "block" : "item"), item.getType().toString());
+				this.getLog().error(player, "The block {{0}} cannot be placed/used!", item.getType().toString());
 
 			event.setCancelled(true);
 			return;
