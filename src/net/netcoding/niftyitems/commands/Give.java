@@ -69,9 +69,11 @@ public class Give extends BukkitCommand {
 		args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
 		int amount = 1;
 
-		if (isItem || NiftyItems.getPluginConfig().giveEnforcesBlacklist()) {
+		if (isItem || (NiftyItems.getPluginConfig().giveEnforcesBlacklist() && !this.hasPermissions(sender, "bypass", "give"))) {
 			if (NiftyItems.getPluginConfig().isBlacklisted(player, stack, "spawned") || (!this.hasPermissions(player, "item") && !NiftyItems.getPluginConfig().hasBypass(player, stack, "spawned"))) {
-				this.getLog().error(sender, "You cannot spawn {{0}}{1}!", displayName, (isGive ? StringUtil.format(" for {{0}}", player.getName()) : ""));
+				if (!NiftyItems.getPluginConfig().isSilent("spawned"))
+					this.getLog().error(sender, "You cannot spawn {{0}}{1}!", displayName, (isGive ? StringUtil.format(" for {{0}}", player.getName()) : ""));
+
 				return;
 			}
 		}
