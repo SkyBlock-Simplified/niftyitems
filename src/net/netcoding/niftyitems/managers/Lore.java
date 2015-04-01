@@ -54,7 +54,7 @@ public class Lore {
 	public static String isRestricted(ItemStack stack) {
 		String none = "none";
 		if (stack == null || Material.AIR.equals(stack)) return none;
-		if (!(stack.hasItemMeta() || stack.getItemMeta().hasLore())) return none;
+		if (!stack.hasItemMeta() || !stack.getItemMeta().hasLore()) return none;
 
 		for (String lore : stack.getItemMeta().getLore()) {
 			String strippedLore = RegexUtil.strip(lore, RegexUtil.VANILLA_PATTERN);
