@@ -31,12 +31,19 @@ public class Enchant extends BukkitCommand {
 		}
 
 		for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
-			data.apply(stack, alias.matches("^ue(nchant)?$"));
-			enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
+			try {
+				data.apply(stack, alias.matches("^ue(nchant)?$"));
+				enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
+			} catch (Exception ex) { }
 		}
 
-		this.getLog().message(sender, "Your {{0}} has been given the following enchantments:", NiftyBukkit.getItemDatabase().name(stack));
-		for (String enchant : enchants) this.getLog().message(sender, enchant);
+		if (enchants.size() == 0)
+			this.getLog().error(sender, "Unable to apply any enchants, please check your previous command!");
+		else {
+			this.getLog().message(sender, "Your {{0}} has been given the following enchantments:", NiftyBukkit.getItemDatabase().name(stack));
+			for (String enchant : enchants)
+				this.getLog().message(sender, enchant);
+		}
 	}
 
 }
