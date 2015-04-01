@@ -21,7 +21,6 @@ public class ItemDb extends BukkitCommand {
 		this.setMaximumArgsLength(1);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		ItemStack stack = null;

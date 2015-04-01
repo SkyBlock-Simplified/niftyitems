@@ -26,7 +26,6 @@ public class Give extends BukkitCommand {
 		this.editUsage(0, "i", "<type>[:datavalue] [amount] [enchantments]");
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
 		boolean isGive = alias.matches("^g(ive)?$");
