@@ -13,7 +13,7 @@ commands:
     aliases: [clearinventory, clearinv, clear, ci]
   clearlore:
     description: Clears the creative/spawned lore of an item
-    usage: /<command> [hand|all]
+    usage: /<command> [player] [hand|all]
     aliases: [clore, cl]
   enchant:
     description: Apply enchantments to item in your hand
@@ -41,6 +41,8 @@ permissions:
         children:
           niftyitems.bypass.creative.*:
             description: Allows you to pull blacklisted items out of the creative inventory
+          niftyitems.bypass.give:
+            description: Allows you to give players anything regardless of blacklist settings
           niftyitems.bypass.lore:
             description: Allows you to spawn or pull items from the creative inventory, without lore
           niftyitems.bypass.placement.*:
@@ -72,6 +74,8 @@ permissions:
         children:
           niftyitems.gamemode:
             description: Allows you to change your own gamemode
+          niftyitems.gamemode.maintain:
+            description: Allows you to maintain the non-default gamemode across logins
           niftyitems.gamemode.other:
             description: Allows you to change another players gamemode
       niftyitems.item.*:
