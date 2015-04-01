@@ -4,6 +4,7 @@ import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
 import net.netcoding.niftyitems.cache.Config;
 import net.netcoding.niftyitems.commands.ClearInventory;
 import net.netcoding.niftyitems.commands.ClearLore;
+import net.netcoding.niftyitems.commands.Enchant;
 import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.Give;
 import net.netcoding.niftyitems.commands.ItemDb;
@@ -25,6 +26,7 @@ public class NiftyItems extends BukkitPlugin {
 		this.getLog().console("Registering Commands");
 		new ClearInventory(this);
 		new ClearLore(this);
+		new Enchant(this);
 		new GameMode(this);
 		new Give(this);
 		new ItemDb(this);
