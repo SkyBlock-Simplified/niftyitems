@@ -34,11 +34,11 @@ public class Inventory extends BukkitListener {
 		MojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
 
 		if (FakeInventory.isOpenAnywhere(profile)) {
-			/*if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
+			if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
 				MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
 				targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getArmorContents());
-			} else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
-				MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+			}/* else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
+				MojangProfile targeter = NiftyItems.getFakePlayerInventory().getTargeter(profile);
 				targeter.getOfflinePlayer().getPlayer().getOpenInventory().getTopInventory().setContents(player.getInventory().getContents());
 			}*/
 
