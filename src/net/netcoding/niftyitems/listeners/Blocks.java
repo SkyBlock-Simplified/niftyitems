@@ -30,7 +30,9 @@ public class Blocks extends BukkitListener {
 
 		for (ItemStack stack : block.getDrops()) {
 			if (NiftyItems.getPluginConfig().isBlacklisted(player, stack, "break")) {
-				this.getLog().error(player, "The block {{1}} cannot be broken!", block.getType().toString());
+				if (!NiftyItems.getPluginConfig().isSilent("break"))
+					this.getLog().error(player, "The block {{1}} cannot be broken!", block.getType().toString());
+
 				event.setCancelled(true);
 				return;
 			}
@@ -66,7 +68,9 @@ public class Blocks extends BukkitListener {
 		ItemStack item = event.getItemInHand();
 
 		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "place")) {
-			this.getLog().error(player, "The {0} {{1}} cannot be placed/used!", (item.getType().isBlock() ? "block" : "item"), item.getType().toString());
+			if (!NiftyItems.getPluginConfig().isSilent("place"))
+				this.getLog().error(player, "The {0} {{1}} cannot be placed/used!", (item.getType().isBlock() ? "block" : "item"), item.getType().toString());
+
 			event.setCancelled(true);
 			return;
 		}

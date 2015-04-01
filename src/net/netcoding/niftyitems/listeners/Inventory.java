@@ -60,7 +60,9 @@ public class Inventory extends BukkitListener {
 		ItemStack item = event.getCursor();
 
 		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "creative")) {
-			this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", NiftyBukkit.getItemDatabase().name(item));
+			if (!NiftyItems.getPluginConfig().isSilent("creative"))
+				this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", NiftyBukkit.getItemDatabase().name(item));
+
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 		} else if (!this.hasPermissions(player, "bypass", "lore"))

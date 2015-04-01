@@ -41,7 +41,11 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	@Path("give-enforces-blacklist")
 	private boolean giveEnforcesBlacklist = false;
 
+	@Comment("Prevent the access, use and breaking of blocks/items")
 	private Map<String, String> blacklists = new HashMap<>();
+
+	@Comment("Silence messages sent to players when prevented by a blacklist")
+	private Map<String, Boolean> silent = new HashMap<>();
 
 	public Config(JavaPlugin plugin) {
 		super(plugin, "config");
@@ -53,6 +57,9 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		this.blacklists.put("creative", blacklisted);
 		this.blacklists.put("place", StringUtil.format("{0},52,119,120,137,138,166,259,{1},381,{2},384,385,397:1,401,407,422", defaultStart, harmfulPotions, monsterEggs));
 		this.blacklists.put("break", "7,166");
+
+		for (String blacklist : this.blacklists.keySet())
+			this.silent.put(blacklist, false);
 	}
 
 	public boolean giveEnforcesBlacklist() {
@@ -75,18 +82,22 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		return this.destroyAll;
 	}
 
+	public boolean isSilent(String blacklist) {
+		return this.silent.keySet().contains(blacklist) ? this.silent.get(blacklist) : false;
+	}
+
 	@SuppressWarnings("deprecation")
-	public boolean hasBypass(CommandSender sender, ItemStack stack, String list) {
+	public boolean hasBypass(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR.equals(stack.getType())) return false;
-		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
-		boolean hasBypass = this.hasPermissions(sender, "bypass", list, String.valueOf(stack.getTypeId())) || this.hasPermissions(sender, "bypass", list, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
+		if (!(this.blacklists.keySet().contains(blacklist) || "store".equals(blacklist))) return false;
+		boolean hasBypass = this.hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || this.hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
 		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
 
 		if (!hasBypass) {
 			for (String name : names) {
-				if (hasBypass = this.hasPermissions(sender, "bypass", list, name) || this.hasPermissions(sender, "bypass", list, StringUtil.format("{0}:{1}", name, stack.getDurability())))
+				if (hasBypass = this.hasPermissions(sender, "bypass", blacklist, name) || this.hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", name, stack.getDurability())))
 					break;
 			}
 		}
@@ -95,16 +106,16 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean isBlacklisted(CommandSender sender, ItemStack stack, String list) {
+	public boolean isBlacklisted(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR.equals(stack.getType())) return false;
-		if (!(this.blacklists.keySet().contains(list) || "store".equals(list))) return false;
-		boolean hasBypass = this.hasBypass(sender, stack, list);
-		if ("store".equals(list)) return !hasBypass;
+		if (!(this.blacklists.keySet().contains(blacklist) || "store".equals(blacklist))) return false;
+		boolean hasBypass = this.hasBypass(sender, stack, blacklist);
+		if ("store".equals(blacklist)) return !hasBypass;
 
 		if (!hasBypass) {
-			for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(list))) {
+			for (ItemData item : NiftyBukkit.getItemDatabase().parse(this.blacklists.get(blacklist))) {
 				if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
 					return true;
 			}
