@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.enchantments.EnchantmentData;
+import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.util.StringUtil;
 
@@ -30,19 +31,24 @@ public class Enchant extends BukkitCommand {
 			return;
 		}
 
-		for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
-			try {
-				if (data.apply(stack, alias.matches("^ue(nchant)?$")))
-					enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
-			} catch (Exception ex) { }
-		}
+		if (args[0].matches("^fake|hidden|glow$")) {
+			stack = ItemData.addGlow(stack);
+			this.getLog().message(sender, "Your item now glows!");
+		} else {
+			for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
+				try {
+					if (data.apply(stack, alias.matches("^ue(nchant)?$")))
+						enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
+				} catch (Exception ex) { }
+			}
 
-		if (enchants.size() == 0)
-			this.getLog().error(sender, "Unable to apply any enchants, please check your previous command!");
-		else {
-			this.getLog().message(sender, "Your {{0}} has been given the following enchantments:", NiftyBukkit.getItemDatabase().name(stack));
-			for (String enchant : enchants)
-				this.getLog().message(sender, enchant);
+			if (enchants.size() == 0)
+				this.getLog().error(sender, "Unable to apply any enchants, please check your previous command!");
+			else {
+				this.getLog().message(sender, "Your {{0}} has been given the following enchantments:", NiftyBukkit.getItemDatabase().name(stack));
+				for (String enchant : enchants)
+					this.getLog().message(sender, enchant);
+			}
 		}
 	}
 
