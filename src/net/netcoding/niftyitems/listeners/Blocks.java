@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,14 +45,18 @@ public class Blocks extends BukkitListener {
 			return;
 		}
 
-		if (event.getBlock() instanceof Chest) {
-			Chest chest = (Chest)block.getState();
+		try {
+			InventoryType.valueOf(block.getType().name());
 
-			for (ItemStack item : chest.getInventory().getContents()) {
-				if (Lore.isRestricted(item).equalsIgnoreCase("spawned"))
-					chest.getInventory().removeItem(item);
+			if (event.getBlock() instanceof Chest) {
+				Chest chest = (Chest)block.getState();
+
+				for (ItemStack item : chest.getInventory().getContents()) {
+					if (Lore.isRestricted(item).equalsIgnoreCase("spawned"))
+						chest.getInventory().removeItem(item);
+				}
 			}
-		}
+		} catch (Exception ex) { }
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
