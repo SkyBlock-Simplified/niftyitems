@@ -23,17 +23,23 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	public static final int DEFAULT_BLOCKSTACK_SIZE = 64;
 	public static final int MAXIMUM_OVERSTACKED_SIZE = 100;
 
+	@Comment("Default stack sizes of items and blocks")
+	@Path("stack-size")
+	private ConfigSection stackSize;
+
 	@Path("stack-size.item")
 	private int itemStackSize = DEFAULT_ITEMSTACK_SIZE;
 
 	@Path("stack-size.block")
 	private int blockStackSize = DEFAULT_BLOCKSTACK_SIZE;
 
+	@Comment("Destroy items when dropped")
+	@Path("destroy-items")
+	private ConfigSection destroyItems;
+
 	@Path("destroy-items.spawned")
-	@Comment("Destroy spawned items when dropped")
 	private boolean destroySpawned = true;
 
-	@Comment("Destroy all items when dropped")
 	@Path("destroy-items.all")
 	private boolean destroyAll = false;
 
