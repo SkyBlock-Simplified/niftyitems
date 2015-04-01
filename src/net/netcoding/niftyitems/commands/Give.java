@@ -2,7 +2,6 @@ package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.InventoryWorkaround;
-import net.netcoding.niftybukkit.inventory.enchantments.EnchantmentData;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.util.NumberUtil;
 import net.netcoding.niftybukkit.util.StringUtil;
@@ -65,7 +64,7 @@ public class Give extends BukkitCommand {
 		}
 
 		String displayName = NiftyBukkit.getItemDatabase().name(stack);
-		args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
+		args = StringUtil.split(",", StringUtil.implode(",", args, 1, args.length));
 		int amount = 1;
 
 		if (isItem || (NiftyItems.getPluginConfig().giveEnforcesBlacklist() && !this.hasPermissions(sender, "bypass", "give"))) {
@@ -82,15 +81,14 @@ public class Give extends BukkitCommand {
 		else if (NumberUtil.isInt(args[0])) {
 			int passedAmount = Integer.parseInt(args[0]);
 			amount = passedAmount < 0 ? amount : passedAmount;
+			args = StringUtil.split(",", StringUtil.implode(",", args, 1, args.length));
 		}
 
 		stack.setAmount(amount);
-		args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
 		if (!this.hasPermissions(sender, "bypass", "lore")) stack = Lore.apply(sender, stack, Lore.getLore("spawned"));
 
-		if (args.length > 1) {
-			for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args))
-				data.apply(stack);
+		if (args.length > 0 && this.hasPermissions(sender, "item", "data")) {
+			// TODO: Item Data
 		}
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
