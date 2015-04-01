@@ -46,18 +46,20 @@ public class ItemDb extends BukkitCommand {
 			}
 		}
 
-		this.getLog().message(sender, "Item: {{0}} - {{1}}:{{2}}", stack.getType().toString(), stack.getTypeId(), stack.getDurability());
+		this.getLog().message(sender, "Item: {{0}} - {{1}}:{{2}}.", stack.getType().name(), stack.getTypeId(), stack.getDurability());
 		List<String> itemNameList = NiftyBukkit.getItemDatabase().names(stack);
 
-		if (itemHeld && stack.getType() != Material.AIR) {
+		if (itemHeld && !Material.AIR.equals(stack.getType()) && !stack.getType().isBlock()) {
 			int maxuses = stack.getType().getMaxDurability();
-			int durability = ((maxuses + 1) - stack.getDurability());
-			this.getLog().message(sender, "This tool has {{0}} uses left", Integer.toString(durability));
+			int durability = (maxuses - stack.getDurability());
+
+			if (durability > 0)
+				this.getLog().message(sender, "This tool has {{0}} uses left.", (durability + 1));
 		}
 
 		if (itemNameList.size() > 0) {
 			String itemNames = StringUtil.implode((ChatColor.GRAY + ", " + ChatColor.RED), itemNameList);
-			this.getLog().message(sender, "Item aliases: {{0}}", itemNames);
+			this.getLog().message(sender, "Item aliases: {{0}}.", itemNames);
 		}
 	}
 
