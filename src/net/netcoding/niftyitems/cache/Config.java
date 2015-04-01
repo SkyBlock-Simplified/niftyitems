@@ -33,6 +33,16 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	@Path("stack-size.block")
 	private int blockStackSize = DEFAULT_BLOCKSTACK_SIZE;
 
+	@Comment("Prevent items from being dropped")
+	@Path("destroy-items")
+	private ConfigSection preventDrop;
+
+	@Path("prevent-drop.spawned")
+	private boolean preventSpawned = true;
+
+	@Path("prevent-drop.all")
+	private boolean preventAll = false;
+
 	@Comment("Destroy items when dropped")
 	@Path("destroy-items")
 	private ConfigSection destroyItems;
@@ -147,6 +157,14 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
 		this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), StringUtil.format("gamerule noTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
 		if (save) this.save();
+	}
+
+	public boolean preventSpawnedDrops() {
+		return this.preventSpawned;
+	}
+
+	public boolean preventAllDrops() {
+		return this.preventAll;
 	}
 
 	@Override

@@ -29,7 +29,9 @@ public class Players extends BukkitListener {
 		Player player = event.getEntity();
 
 		for (ItemStack item : event.getDrops()) {
-			if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+			if (NiftyItems.getPluginConfig().preventAllDrops() || (NiftyItems.getPluginConfig().preventSpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+				item.setAmount(0);
+			else if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
 				item.setAmount(0);
 			} else if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
 				if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "store"))
@@ -41,17 +43,15 @@ public class Players extends BukkitListener {
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
-		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
 
+		if (NiftyItems.getPluginConfig().preventAllDrops() || (NiftyItems.getPluginConfig().preventSpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+			event.setCancelled(true);
+
 		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
-			event.getItemDrop().setItemStack(new ItemStack(Material.AIR));
 			event.getItemDrop().remove();
 			item.setAmount(0);
 			event.setCancelled(true);
-		} else if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
-			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "store"))
-				event.setCancelled(true);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class Players extends BukkitListener {
 
 	@EventHandler(ignoreCancelled = false)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (Action.RIGHT_CLICK_AIR.equals(event.getAction()) || Action.RIGHT_CLICK_BLOCK.equals(event.getAction())) {
+		if (!Action.PHYSICAL.equals(event.getAction())) {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
