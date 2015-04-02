@@ -44,18 +44,14 @@ public class Blocks extends BukkitListener {
 			return;
 		}
 
-		//try {
-			//InventoryType.valueOf(block.getType().name());
+		if (event.getBlock() instanceof Chest) {
+			Chest chest = (Chest)block.getState();
 
-			if (event.getBlock() instanceof Chest) {
-				Chest chest = (Chest)block.getState();
-
-				for (ItemStack item : chest.getInventory().getContents()) {
-					if (Lore.isRestricted(item).equalsIgnoreCase("spawned"))
-						chest.getInventory().removeItem(item);
-				}
+			for (ItemStack item : chest.getInventory().getContents()) {
+				if (Lore.isRestricted(item).equalsIgnoreCase("spawned"))
+					chest.getInventory().removeItem(item);
 			}
-		//} catch (Exception ex) { }
+		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
