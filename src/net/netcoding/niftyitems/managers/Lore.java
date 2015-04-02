@@ -17,18 +17,22 @@ public class Lore {
 
 	public static ItemStack apply(CommandSender sender, ItemStack stack, String lore) {
 		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return stack;
+		ItemMeta factory = Bukkit.getItemFactory().getItemMeta(stack.getType());
 
-		// Fix ItemMeta
-		ItemMeta itemMeta = Bukkit.getItemFactory().getItemMeta(stack.getType());
-		itemMeta = stack.hasItemMeta() && stack.getItemMeta() != null ? stack.getItemMeta() : itemMeta;
+		if (!stack.hasItemMeta() || stack.getItemMeta() == null && factory != null)
+			stack.setItemMeta(factory);
 
-		// Fix Lore
-		List<String> lores = new ArrayList<>();
-		lores = itemMeta.hasLore() && ListUtil.notEmpty(itemMeta.getLore()) ? itemMeta.getLore() : lores;
+		if (stack.hasItemMeta()) {
+			if (!stack.getItemMeta().hasLore() || ListUtil.isEmpty(stack.getItemMeta().getLore()))
+				stack.getItemMeta().setLore(new ArrayList<String>());
 
-		lores.add(0, String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
-		itemMeta.setLore(lores);
-		stack.setItemMeta(itemMeta);
+			ItemMeta itemMeta = stack.getItemMeta();
+			List<String> lores = itemMeta.getLore();
+			lores.add(0, String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
+			itemMeta.setLore(lores);
+			stack.setItemMeta(itemMeta);
+		}
+
 		return stack;
 	}
 
