@@ -3,6 +3,7 @@ package net.netcoding.niftyitems.managers;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.netcoding.niftybukkit.util.ListUtil;
 import net.netcoding.niftybukkit.util.RegexUtil;
 
 import org.bukkit.Bukkit;
@@ -16,8 +17,15 @@ public class Lore {
 
 	public static ItemStack apply(CommandSender sender, ItemStack stack, String lore) {
 		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return stack;
-		ItemMeta itemMeta = stack.hasItemMeta() ? stack.getItemMeta() : Bukkit.getItemFactory().getItemMeta(stack.getType());
-		List<String> lores = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<String>();
+
+		// Fix ItemMeta
+		ItemMeta itemMeta = Bukkit.getItemFactory().getItemMeta(stack.getType());
+		itemMeta = stack.hasItemMeta() && stack.getItemMeta() != null ? stack.getItemMeta() : itemMeta;
+
+		// Fix Lore
+		List<String> lores = new ArrayList<>();
+		lores = itemMeta.hasLore() && ListUtil.notEmpty(itemMeta.getLore()) ? itemMeta.getLore() : lores;
+
 		lores.add(0, String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
 		itemMeta.setLore(lores);
 		stack.setItemMeta(itemMeta);
