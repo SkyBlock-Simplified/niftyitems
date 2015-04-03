@@ -41,7 +41,7 @@ public class Give extends BukkitCommand {
 		if (isGive) args = StringUtil.implode(",", args, 1, args.length - 1).split(",");
 		ItemStack stack;
 
-		if (isGive && !sender.getName().equalsIgnoreCase(player.getName()) && !this.hasPermissions(sender, "item", "give")) {
+		if (isGive && !this.hasPermissions(sender, "item", "give")) {
 			this.getLog().error(sender, "You are not allowed to give items!");
 			return;
 		}
