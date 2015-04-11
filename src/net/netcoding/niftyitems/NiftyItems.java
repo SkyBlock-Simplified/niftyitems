@@ -51,6 +51,15 @@ public class NiftyItems extends BukkitPlugin {
 		fakeArmorInventory.setTitle("Player Inventory");
 	}
 
+	@Override
+	public void onDisable() {
+		if (fakeArmorInventory != null)
+			fakeArmorInventory.closeAll();
+
+		if (fakePlayerInventory != null)
+			fakePlayerInventory.closeAll();
+	}
+
 	public final static FakeInventory getFakeArmorInventory() {
 		return fakeArmorInventory;
 	}

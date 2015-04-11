@@ -17,6 +17,7 @@ public class Invsee extends BukkitCommand {
 	public Invsee(JavaPlugin plugin) {
 		super(plugin, "invsee");
 		this.setPlayerOnly();
+		this.setPlayerTabComplete();
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class Invsee extends BukkitCommand {
 			return;
 		}
 
-		if (args.length == 1 || !args[1].matches("^inv(entory)?$"))
+		if (args.length == 1 || args[1].matches("^inv(entory)?$"))
 			profile.getOfflinePlayer().getPlayer().openInventory(target.getOfflinePlayer().getPlayer().getInventory());
 		else {
 			FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(profile);

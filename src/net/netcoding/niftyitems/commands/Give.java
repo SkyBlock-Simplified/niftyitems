@@ -18,11 +18,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Give extends BukkitCommand {
 
 	public Give(JavaPlugin plugin) {
-		super(plugin, "item");
+		super(plugin, "give");
 		this.setCheckPerms(false);
 		this.setCheckHelp(false);
-		this.editUsage(0, "item", "<type>[:datavalue] [amount] [enchantments]");
-		this.editUsage(0, "i", "<type>[:datavalue] [amount] [enchantments]");
+		this.editUsage(0, "item", "<type>[:datavalue] [amount]");
+		this.editUsage(0, "i", "<type>[:datavalue] [amount]");
 	}
 
 	@Override

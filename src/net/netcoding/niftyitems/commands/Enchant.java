@@ -26,8 +26,14 @@ public class Enchant extends BukkitCommand {
 
 	@Override
 	protected void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
-		ItemStack stack = ((Player)sender).getItemInHand();
+		Player player = (Player)sender;
+		ItemStack stack = player.getItemInHand();
 		List<String> enchants = new ArrayList<>();
+
+		if (stack == null) {
+			this.getLog().error(sender, "You must be holding an item in order to list or apply enchantments!");
+			return;
+		}
 
 		if (alias.matches("^ue(nchant)?$") && !this.hasPermissions(sender, "enchant", "unsafe")) {
 			this.getLog().error(sender, "You are not allowed to set unsafe enchantments!");

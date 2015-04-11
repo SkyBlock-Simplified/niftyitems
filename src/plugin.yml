@@ -25,7 +25,7 @@ commands:
     aliases: [gm, adventure, creative, survival, spectator]
   give:
     description: Spawns an item
-    usage: /<command> <player> <type>[:datavalue] [amount [itemdata]]
+    usage: /<command> <player> <type>[:datavalue] [amount]
     aliases: [item, g, i]
   invsee:
     description: View other players inventories and armor

@@ -96,7 +96,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	}
 
 	public boolean destroySpawnedDrops(Player player, ItemStack stack) {
-		return this.isBlacklisted(player, stack, "drop") ? false : this.destroySpawnedDrops();
+		return this.hasBypass(player, stack, "drop") ? false : this.destroySpawnedDrops();
 	}
 
 	public boolean destroyAllDrops() {
@@ -111,7 +111,6 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		return this.silent.keySet().contains(blacklist) ? this.silent.get(blacklist) : false;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean hasBypass(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
@@ -130,7 +129,6 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		return hasBypass;
 	}
 
-	@SuppressWarnings("deprecation")
 	public boolean isBlacklisted(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
@@ -168,12 +166,20 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (save) this.save();
 	}
 
+	public boolean preventSpawnedDrops() {
+		return this.preventSpawned;
+	}
+
 	public boolean preventSpawnedDrops(Player player, ItemStack stack) {
-		return this.isBlacklisted(player, stack, "drop") ? false : this.preventSpawned;
+		return this.hasBypass(player, stack, "drop") ? false : this.preventSpawnedDrops();
+	}
+
+	public boolean preventAllDrops() {
+		return this.preventAll;
 	}
 
 	public boolean preventAllDrops(Player player, ItemStack stack) {
-		return !this.hasBypass(player, stack, "drop") ? false : this.preventAll;
+		return this.hasBypass(player, stack, "drop") ? false : this.preventAllDrops();
 	}
 
 	@Override

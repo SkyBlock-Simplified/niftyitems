@@ -77,7 +77,9 @@ public class Players extends BukkitListener {
 			ItemStack item = player.getItemInHand();
 
 			if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "place")) {
-				this.getLog().error(player, "The item {{0}} cannot be used!", item.getType().toString());
+				if (!NiftyItems.getPluginConfig().isSilent("place"))
+					this.getLog().error(player, "The item {{0}} cannot be used!", item.getType().toString());
+
 				event.setCancelled(true);
 			}
 		}
