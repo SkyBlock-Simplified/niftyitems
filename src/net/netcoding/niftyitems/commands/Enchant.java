@@ -11,6 +11,7 @@ import net.netcoding.niftybukkit.util.ListUtil;
 import net.netcoding.niftybukkit.util.StringUtil;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +31,7 @@ public class Enchant extends BukkitCommand {
 		ItemStack stack = player.getItemInHand();
 		List<String> enchants = new ArrayList<>();
 
-		if (stack == null) {
+		if (stack == null || Material.AIR.equals(stack.getType())) {
 			this.getLog().error(sender, "You must be holding an item in order to list or apply enchantments!");
 			return;
 		}
