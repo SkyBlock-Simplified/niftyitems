@@ -139,7 +139,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 
 		if (!hasBypass) {
 			for (ItemData item : NiftyBukkit.getItemDatabase().parse(String.valueOf(this.blacklists.get(blacklist)))) {
-				if (item.getId() == stack.getTypeId() && (item.getData() == 0 || item.getData() == stack.getDurability()))
+				if (item.getTypeId() == stack.getTypeId() && (item.getDurability() == 0 || item.getDurability() == stack.getDurability()))
 					return true;
 			}
 		}

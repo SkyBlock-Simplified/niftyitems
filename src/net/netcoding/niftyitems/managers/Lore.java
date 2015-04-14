@@ -3,10 +3,10 @@ package net.netcoding.niftyitems.managers;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.netcoding.niftybukkit.util.ListUtil;
+import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftybukkit.util.RegexUtil;
+import net.netcoding.niftybukkit.util.StringUtil;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -17,27 +17,21 @@ public class Lore {
 
 	public static ItemStack apply(CommandSender sender, ItemStack stack, String lore) {
 		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return stack;
-		ItemMeta factory = Bukkit.getItemFactory().getItemMeta(stack.getType());
+		ItemData data = new ItemData(stack);
 
-		if (!stack.hasItemMeta() || stack.getItemMeta() == null && factory != null)
-			stack.setItemMeta(factory);
-
-		if (stack.hasItemMeta()) {
-			if (!stack.getItemMeta().hasLore() || ListUtil.isEmpty(stack.getItemMeta().getLore()))
-				stack.getItemMeta().setLore(new ArrayList<String>());
-
-			ItemMeta itemMeta = stack.getItemMeta();
+		if (data.hasItemMeta()) {
+			ItemMeta itemMeta = data.getItemMeta();
 			List<String> lores = itemMeta.getLore();
-			lores.add(0, String.format("%s%s%s | %s", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
+			lores.add(0, StringUtil.format("{0}{1}{2} | {3}", ChatColor.DARK_GRAY, ChatColor.ITALIC, lore, sender.getName()));
 			itemMeta.setLore(lores);
-			stack.setItemMeta(itemMeta);
+			data.setItemMeta(itemMeta);
 		}
 
-		return stack;
+		return data;
 	}
 
 	public static String getLore(String type) {
-		return ("creative".equals(type) ? "Creative" : ("spawned".equals(type) ? "Spawned" : null));
+		return ("creative".equals(type) ? "Creative" : ("spawned".equals(type) ? "Spawned" : ""));
 	}
 
 	public static String getOwner(ItemStack stack) {
