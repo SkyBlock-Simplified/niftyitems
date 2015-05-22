@@ -3,9 +3,9 @@ package net.netcoding.niftyitems.commands;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventoryInstance;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.mojang.MojangProfile;
-import net.netcoding.niftybukkit.mojang.exceptions.ProfileNotFoundException;
-import net.netcoding.niftybukkit.util.StringUtil;
+import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
+import net.netcoding.niftycore.mojang.exceptions.ProfileNotFoundException;
+import net.netcoding.niftycore.util.StringUtil;
 import net.netcoding.niftyitems.NiftyItems;
 
 import org.bukkit.command.CommandSender;
@@ -22,8 +22,8 @@ public class Invsee extends BukkitCommand {
 
 	@Override
 	protected void onCommand(CommandSender sender, String alias, String[] args) throws Exception {
-		MojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer((Player)sender);
-		MojangProfile target;
+		BukkitMojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer((Player)sender);
+		BukkitMojangProfile target;
 
 		try {
 			target = NiftyBukkit.getMojangRepository().searchByUsername(args[0]);

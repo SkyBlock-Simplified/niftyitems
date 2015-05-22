@@ -6,7 +6,7 @@ import java.util.List;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
-import net.netcoding.niftybukkit.mojang.MojangProfile;
+import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
 
@@ -31,11 +31,11 @@ public class Inventory extends BukkitListener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryClick(InventoryClickEvent event) {
 		final Player player = (Player)event.getWhoClicked();
-		MojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
+		BukkitMojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
 
 		if (FakeInventory.isOpenAnywhere(profile)) {
 			if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
-				MojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
+				BukkitMojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
 				NiftyItems.getFakeArmorInventory().update(targeter, player.getInventory().getArmorContents());
 			}/* else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
 				MojangProfile targeter = NiftyItems.getFakePlayerInventory().getTargeter(profile);

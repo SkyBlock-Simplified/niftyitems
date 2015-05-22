@@ -2,9 +2,9 @@ package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.mojang.MojangProfile;
-import net.netcoding.niftybukkit.mojang.exceptions.ProfileNotFoundException;
-import net.netcoding.niftybukkit.util.ListUtil;
+import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
+import net.netcoding.niftycore.mojang.exceptions.ProfileNotFoundException;
+import net.netcoding.niftycore.util.ListUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class GameMode extends BukkitCommand {
 			return;
 		}
 
-		MojangProfile profile;
+		BukkitMojangProfile profile;
 		org.bukkit.GameMode mode;
 		String arg = ListUtil.isEmpty(args) ? "" : args[0];
 		if (arg.matches("(?i)^(0|s|survival)$")) arg = "SURVIVAL";

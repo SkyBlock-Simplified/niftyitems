@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.netcoding.niftybukkit.inventory.items.ItemData;
-import net.netcoding.niftybukkit.util.RegexUtil;
-import net.netcoding.niftybukkit.util.StringUtil;
+import net.netcoding.niftycore.util.RegexUtil;
+import net.netcoding.niftycore.util.StringUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

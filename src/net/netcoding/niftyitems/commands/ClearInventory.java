@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.util.StringUtil;
+import net.netcoding.niftycore.util.StringUtil;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

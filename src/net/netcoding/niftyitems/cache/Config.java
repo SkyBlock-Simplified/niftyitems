@@ -6,11 +6,12 @@ import java.util.Map;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
-import net.netcoding.niftybukkit.util.StringUtil;
-import net.netcoding.niftybukkit.yaml.ConfigSection;
-import net.netcoding.niftybukkit.yaml.annotations.Comment;
-import net.netcoding.niftybukkit.yaml.annotations.Path;
-import net.netcoding.niftybukkit.yaml.exceptions.InvalidConfigurationException;
+import net.netcoding.niftycore.util.StringUtil;
+import net.netcoding.niftycore.yaml.ConfigSection;
+import net.netcoding.niftycore.yaml.annotations.Comment;
+import net.netcoding.niftycore.yaml.annotations.Path;
+import net.netcoding.niftycore.yaml.exceptions.InvalidConfigurationException;
+import net.netcoding.niftyitems.NiftyItems;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -18,7 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Config extends net.netcoding.niftybukkit.yaml.Config {
+public class Config extends net.netcoding.niftycore.yaml.Config {
 
 	public static final int DEFAULT_ITEMSTACK_SIZE = 1;
 	public static final int DEFAULT_BLOCKSTACK_SIZE = 64;
@@ -65,7 +66,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 	private Map<String, Boolean> silent = new HashMap<>();
 
 	public Config(JavaPlugin plugin) {
-		super(plugin, "config");
+		super(plugin.getDataFolder(), "config");
 		String defaultStart = "7,8,9,10,11";
 		String harmfulPotions = "373:[16388,16420,16452,16424,16426,16428,16456,16458,16460]";
 		String monsterEggs = "383:[51,52,54-62,65-68]";
@@ -116,12 +117,12 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 		if (stack == null) return true;
 		if (Material.AIR.equals(stack.getType())) return false;
 		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
-		boolean hasBypass = this.hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || this.hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
+		boolean hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
 		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
 
 		if (!hasBypass) {
 			for (String name : names) {
-				if (hasBypass = this.hasPermissions(sender, "bypass", blacklist, name) || this.hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", name, stack.getDurability())))
+				if (hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, name) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", name, stack.getDurability())))
 					break;
 			}
 		}
@@ -162,7 +163,7 @@ public class Config extends net.netcoding.niftybukkit.yaml.Config {
 			save = true;
 		}
 
-		this.getPlugin().getServer().dispatchCommand(this.getPlugin().getServer().getConsoleSender(), StringUtil.format("gamerule doTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
+		NiftyItems.getPlugin(NiftyItems.class).getServer().dispatchCommand(NiftyItems.getPlugin(NiftyItems.class).getServer().getConsoleSender(), StringUtil.format("gamerule doTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
 		if (save) this.save();
 	}
 

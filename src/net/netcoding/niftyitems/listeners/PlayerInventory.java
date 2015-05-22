@@ -9,7 +9,7 @@ import net.netcoding.niftybukkit.inventory.events.InventoryCloseEvent;
 import net.netcoding.niftybukkit.inventory.events.InventoryItemInteractEvent;
 import net.netcoding.niftybukkit.inventory.events.InventoryOpenEvent;
 import net.netcoding.niftybukkit.minecraft.BukkitHelper;
-import net.netcoding.niftybukkit.util.ListUtil;
+import net.netcoding.niftycore.util.ListUtil;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

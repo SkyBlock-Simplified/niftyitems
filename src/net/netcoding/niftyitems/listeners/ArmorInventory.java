@@ -11,7 +11,7 @@ import net.netcoding.niftybukkit.inventory.events.InventoryCloseEvent;
 import net.netcoding.niftybukkit.inventory.events.InventoryItemInteractEvent;
 import net.netcoding.niftybukkit.inventory.events.InventoryOpenEvent;
 import net.netcoding.niftybukkit.minecraft.BukkitHelper;
-import net.netcoding.niftybukkit.util.ListUtil;
+import net.netcoding.niftycore.util.ListUtil;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 				return;
 			}
 		}
-
+		
 		Player opener = event.getProfile().getOfflinePlayer().getPlayer();
 		Player target = event.getTarget().getOfflinePlayer().getPlayer();
 		List<ItemStack> stack = Arrays.asList(target.getInventory().getArmorContents());
