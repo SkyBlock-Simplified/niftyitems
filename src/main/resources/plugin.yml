@@ -1,9 +1,9 @@
-name: NiftyItems
-version: 2.0.6
-website: https://netcoding.net/
-author: Brian Graham
+name: ${project.name}
+version: ${project.version}
+website: ${project.url}
+author: ${author}
 
-main: net.netcoding.niftyitems.NiftyItems
+main: ${project.groupId}.${project.artifactId}.${project.name}
 depend: [NiftyBukkit]
 
 commands:
