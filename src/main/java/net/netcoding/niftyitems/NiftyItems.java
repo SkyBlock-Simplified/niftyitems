@@ -19,16 +19,16 @@ import net.netcoding.niftyitems.listeners.Players;
 
 public class NiftyItems extends BukkitPlugin {
 
-	private static transient Config pluginConfig;
-	private static transient FakeInventory fakeArmorInventory;
-	private static transient FakeInventory fakePlayerInventory;
+	private static transient Config PLUGIN_CONFIG;
+	private static transient FakeInventory FAKE_ARMOR_INVENTORY;
+	private static transient FakeInventory FAKE_PLAYER_INVENTORY;
 
 	@Override
 	public void onEnable() {
 		this.getLog().console("Loading Config");
 		try {
-			(pluginConfig = new Config(this)).init();
-			pluginConfig.startWatcher();
+			(PLUGIN_CONFIG = new Config(this)).init();
+			PLUGIN_CONFIG.startWatcher();
 		} catch (Exception ex) {
 			this.getLog().console("Unable to monitor config! Changes will require a restart!", ex);
 		}
@@ -47,33 +47,33 @@ public class NiftyItems extends BukkitPlugin {
 		new GameModeFix(this);
 		new Inventory(this);
 		new Players(this);
-		fakeArmorInventory = new FakeInventory(this, new ArmorInventory(this));
-		fakeArmorInventory.setTradingEnabled();
-		fakeArmorInventory.setTitle("Equipment Inventory");
-		fakePlayerInventory = new FakeInventory(this, new PlayerInventory(this));
-		fakePlayerInventory.setTradingEnabled();
-		fakeArmorInventory.setTitle("Player Inventory");
+		FAKE_ARMOR_INVENTORY = new FakeInventory(this, new ArmorInventory(this));
+		FAKE_ARMOR_INVENTORY.setTradingEnabled();
+		FAKE_ARMOR_INVENTORY.setTitle("Equipment Inventory");
+		FAKE_PLAYER_INVENTORY = new FakeInventory(this, new PlayerInventory(this));
+		FAKE_PLAYER_INVENTORY.setTradingEnabled();
+		FAKE_ARMOR_INVENTORY.setTitle("Player Inventory");
 	}
 
 	@Override
 	public void onDisable() {
-		if (fakeArmorInventory != null)
-			fakeArmorInventory.closeAll();
+		if (FAKE_ARMOR_INVENTORY != null)
+			FAKE_ARMOR_INVENTORY.closeAll();
 
-		if (fakePlayerInventory != null)
-			fakePlayerInventory.closeAll();
+		if (FAKE_PLAYER_INVENTORY != null)
+			FAKE_PLAYER_INVENTORY.closeAll();
 	}
 
 	public final static FakeInventory getFakeArmorInventory() {
-		return fakeArmorInventory;
+		return FAKE_ARMOR_INVENTORY;
 	}
 
 	public final static FakeInventory getFakePlayerInventory() {
-		return fakePlayerInventory;
+		return FAKE_PLAYER_INVENTORY;
 	}
 
 	public final static Config getPluginConfig() {
-		return pluginConfig;
+		return PLUGIN_CONFIG;
 	}
 
 }
