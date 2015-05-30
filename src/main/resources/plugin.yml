@@ -29,7 +29,7 @@ commands:
     aliases: [item, g, i]
   invsee:
     description: View other players inventories and armor
-    usage: /<command> <player> [armor]
+    usage: /<command> <player> [inv|chest|armor]
     aliases: inspect
   itemdb:
     description: Shows information related to an item
