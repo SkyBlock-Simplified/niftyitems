@@ -37,13 +37,16 @@ public class Invsee extends BukkitCommand {
 			return;
 		}
 
-		if (args.length == 1 || args[1].matches("^inv(entory)?$"))
+		if (args[1].matches("^inv(entory)?$"))
 			profile.getOfflinePlayer().getPlayer().openInventory(target.getOfflinePlayer().getPlayer().getInventory());
-		else {
+        else if (args[1].matches("^(ender)?chest$"))
+            profile.getOfflinePlayer().getPlayer().openInventory(target.getOfflinePlayer().getPlayer().getEnderChest());
+		else if (args[1].matches("^armou?r$")) {
 			FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(profile);
 			instance.setTitle(StringUtil.format("Equipment of {0}", profile.getName()));
 			instance.open(target);
-		}
+		} else
+            this.showUsage(sender);
 	}
 
 }
