@@ -1,21 +1,20 @@
 package net.netcoding.niftyitems.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.enchantments.EnchantmentData;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftycore.util.ListUtil;
 import net.netcoding.niftycore.util.StringUtil;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Enchant extends BukkitCommand {
 
@@ -66,13 +65,14 @@ public class Enchant extends BukkitCommand {
 		} else {
 			if (args[0].matches("^fake|hidden|glow$")) {
 				stack = ItemData.addGlow(stack);
+				player.setItemInHand(stack);
 				this.getLog().message(sender, "Your item now glows!");
 			} else {
 				for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
 					try {
 						if (data.apply(stack, alias.matches("^ue(nchant)?$")))
 							enchants.add(StringUtil.format("{{0}} at level {{1}}.", data.getName(), data.getUserLevel()));
-					} catch (Exception ex) { }
+					} catch (Exception ignored) { }
 				}
 
 				if (enchants.size() == 0)
