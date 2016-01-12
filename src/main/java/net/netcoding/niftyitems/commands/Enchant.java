@@ -64,9 +64,12 @@ public class Enchant extends BukkitCommand {
 			}
 		} else {
 			if (args[0].matches("^fake|hidden|glow$")) {
-				stack = ItemData.addGlow(stack);
-				player.setItemInHand(stack);
-				this.getLog().message(sender, "Your item now glows!");
+				if (alias.matches("^ue(nchant)?$") && !this.hasPermissions(sender, "enchant", "unsafe")) {
+					stack = ItemData.addGlow(stack);
+					player.setItemInHand(stack);
+					this.getLog().message(sender, "Your item now glows!");
+				} else
+					this.getLog().error(sender, "You are not allowed to a set fake enchantment!");
 			} else {
 				for (EnchantmentData data : NiftyBukkit.getEnchantmentDatabase().parse(args)) {
 					try {
