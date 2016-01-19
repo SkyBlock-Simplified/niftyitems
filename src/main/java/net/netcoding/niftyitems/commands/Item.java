@@ -31,6 +31,7 @@ public class Item extends BukkitCommand {
 		boolean isGive = alias.matches("^g(ive)?$");
 		boolean isItem = !isGive;
 		BukkitMojangProfile receiver;
+		String name = isGive ? args[0] : sender.getName();
 
 		if (!isGive && isConsole(sender)) {
 			this.getLog().error(sender, "You cannot use the item command from console!");
@@ -43,9 +44,9 @@ public class Item extends BukkitCommand {
 		}
 
 		try {
-			receiver = NiftyBukkit.getMojangRepository().searchByUsername(isGive ? args[0] : sender.getName());
+			receiver = NiftyBukkit.getMojangRepository().searchByUsername(name);
 		} catch (ProfileNotFoundException pnfex) {
-			this.getLog().error(sender, "Unable to locate profile for {{0}}!", args[0]);
+			this.getLog().error(sender, "Unable to locate profile for {{0}}!", name);
 			return;
 		}
 
