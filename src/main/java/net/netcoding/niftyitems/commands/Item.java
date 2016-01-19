@@ -74,6 +74,7 @@ public class Item extends BukkitCommand {
 		}
 
 		String displayName = NiftyBukkit.getItemDatabase().name(stack);
+		displayName = StringUtil.isEmpty(displayName) ? stack.getType().name() : displayName;
 		args = StringUtil.split(",", StringUtil.implode(",", args, 1));
 		int amount = -1;
 
