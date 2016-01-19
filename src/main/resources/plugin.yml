@@ -23,10 +23,10 @@ commands:
     description: Changes the gamemode of a player
     usage: /<command> <survival|creative|adventure|spectator> [player]
     aliases: [gm, adventure, creative, survival, spectator]
-  give:
+  item:
     description: Spawns an item
-    usage: /<command> <player> <type>[:datavalue] [amount]
-    aliases: [item, g, i]
+    usage: /<command> <type>[:datavalue] [amount]
+    aliases: [give, g, i]
   invsee:
     description: View other players inventories and armor
     usage: /<command> <player> [inv|chest|armor]
