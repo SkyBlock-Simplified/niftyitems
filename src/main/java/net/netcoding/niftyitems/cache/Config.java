@@ -1,9 +1,5 @@
 package net.netcoding.niftyitems.cache;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftycore.util.StringUtil;
@@ -12,12 +8,15 @@ import net.netcoding.niftycore.yaml.annotations.Comment;
 import net.netcoding.niftycore.yaml.annotations.Path;
 import net.netcoding.niftycore.yaml.exceptions.InvalidConfigurationException;
 import net.netcoding.niftyitems.NiftyItems;
-
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Config extends net.netcoding.niftycore.yaml.Config {
 
