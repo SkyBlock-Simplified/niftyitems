@@ -1,17 +1,16 @@
 package net.netcoding.niftyitems.managers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.netcoding.niftybukkit.inventory.items.ItemData;
 import net.netcoding.niftycore.util.RegexUtil;
 import net.netcoding.niftycore.util.StringUtil;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Lore {
 
