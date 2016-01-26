@@ -1,14 +1,13 @@
 package net.netcoding.niftyitems.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftycore.util.StringUtil;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClearInventory extends BukkitCommand {
 
@@ -33,19 +32,10 @@ public class ClearInventory extends BukkitCommand {
 		else if (args.length == 1) {
 			Player player = findPlayer(args[0]);
 
-			if (player != null) {
-				if (!sender.getName().equals(player.getName()) && !this.hasPermissions(sender, "clear", "other"))
-					return;
-
+			if (player != null)
 				players.add(player);
-			} else {
+			else {
 				action = this.getAction(args[0]);
-
-				if (isConsole(action) && args.length < 1) {
-					this.getLog().error(sender, "You must provide a player name from console!");
-					return;
-				}
-
 				players.add((Player)sender);
 			}
 		} else if (args.length == 2) {
@@ -62,10 +52,14 @@ public class ClearInventory extends BukkitCommand {
 					return;
 				}
 
-				if (!sender.getName().equals(player.getName()) && !this.hasPermissions(sender, "clear", "other"))
-					return;
-
 				players.add(player);
+			}
+		}
+
+		if (players.size() > 1 || !sender.getName().equals(players.get(0).getName())) {
+			if (!this.hasPermissions(sender, "clear", "other")) {
+				this.getLog().error(sender, "You do not have permission to clear other players' inventories!");
+				return;
 			}
 		}
 
