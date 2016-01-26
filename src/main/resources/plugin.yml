@@ -17,7 +17,7 @@ commands:
     aliases: [clore, cl]
   enchant:
     description: Apply enchantments to item in your hand
-    usage: /<command> [enchantments]
+    usage: /<command> <enchantment> [level]
     aliases: [uenchant, e, ue]
   gamemode:
     description: Changes the gamemode of a player
