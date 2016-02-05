@@ -58,12 +58,13 @@ public class Players extends BukkitListener {
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		Player player = event.getPlayer();
 
-		if (GameMode.CREATIVE.equals(player.getGameMode()) && !GameMode.CREATIVE.equals(event.getNewGameMode())) {
+		if (GameMode.CREATIVE == player.getGameMode() && GameMode.CREATIVE != event.getNewGameMode()) {
 			ItemStack[] items = player.getInventory().getArmorContents();
 
 			for (ItemStack item : items) {
 				if (Lore.isRestricted(item).equalsIgnoreCase("creative"))
-					item = new ItemStack(Material.AIR);
+					item.setType(Material.AIR); // TODO: Check this
+					//item = new ItemStack(Material.AIR);
 			}
 
 			player.getInventory().setArmorContents(items);
@@ -72,7 +73,7 @@ public class Players extends BukkitListener {
 
 	@EventHandler(ignoreCancelled = false)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (!Action.PHYSICAL.equals(event.getAction())) {
+		if (Action.PHYSICAL != event.getAction()) {
 			Player player = event.getPlayer();
 			ItemStack item = player.getItemInHand();
 
@@ -93,7 +94,7 @@ public class Players extends BukkitListener {
 			ItemStack item = event.getItem().getItemStack();
 
 			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
-				if (!(GameMode.CREATIVE.equals(player.getGameMode()) || Lore.isOwner(item, player.getName())))
+				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(item, player.getName())))
 					event.setCancelled(true);
 			}
 		}
