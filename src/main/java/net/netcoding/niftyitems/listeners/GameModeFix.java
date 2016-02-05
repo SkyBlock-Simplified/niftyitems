@@ -1,16 +1,15 @@
 package net.netcoding.niftyitems.listeners;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameModeFix extends BukkitListener {
 
@@ -25,7 +24,7 @@ public class GameModeFix extends BukkitListener {
 		final Player player = event.getPlayer();
 		loginTime.put(player.getName(), System.currentTimeMillis() + 100D);
 
-		if (!player.getGameMode().equals(this.getPlugin().getServer().getDefaultGameMode())) {
+		if (player.getGameMode() != this.getPlugin().getServer().getDefaultGameMode()) {
 			if (!this.hasPermissions(player, "gamemode", "maintain")) {
 				this.getPlugin().getServer().getScheduler().runTaskLater(this.getPlugin(), new Runnable() {
 					@Override

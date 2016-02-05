@@ -48,7 +48,7 @@ public class ItemDb extends BukkitCommand {
 		this.getLog().message(sender, "Item: {{0}} - {{1}}:{{2}}.", stack.getType().name(), stack.getTypeId(), stack.getDurability());
 		List<String> itemNameList = NiftyBukkit.getItemDatabase().names(stack);
 
-		if (itemHeld && !Material.AIR.equals(stack.getType()) && !stack.getType().isBlock()) {
+		if (itemHeld && Material.AIR != stack.getType() && !stack.getType().isBlock()) {
 			int maxuses = stack.getType().getMaxDurability();
 			int durability = (maxuses - stack.getDurability());
 

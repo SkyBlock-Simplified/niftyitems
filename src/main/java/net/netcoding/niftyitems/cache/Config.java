@@ -96,7 +96,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	}
 
 	public boolean destroySpawnedDrops(Player player, ItemStack stack) {
-		return this.hasBypass(player, stack, "drop") ? false : this.destroySpawnedDrops();
+		return !this.hasBypass(player, stack, "drop") && this.destroySpawnedDrops();
 	}
 
 	public boolean destroyAllDrops() {
@@ -104,7 +104,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	}
 
 	public boolean destroyAllDrops(Player player, ItemStack stack) {
-		return !this.hasBypass(player, stack, "drop") ? false : this.destroyAllDrops();
+		return this.hasBypass(player, stack, "drop") && this.destroyAllDrops();
 	}
 
 	public boolean isSilent(String blacklist) {
@@ -114,7 +114,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	public boolean hasBypass(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
-		if (Material.AIR.equals(stack.getType())) return false;
+		if (Material.AIR == stack.getType()) return false;
 		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
 		boolean hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
 		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
@@ -132,7 +132,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	public boolean isBlacklisted(CommandSender sender, ItemStack stack, String blacklist) {
 		if (sender == null) return true;
 		if (stack == null) return true;
-		if (Material.AIR.equals(stack.getType())) return false;
+		if (Material.AIR == stack.getType()) return false;
 		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
 		boolean hasBypass = this.hasBypass(sender, stack, blacklist);
 		if (blacklist.matches("^store|drop$")) return !hasBypass;
@@ -171,7 +171,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	}
 
 	public boolean preventSpawnedDrops(Player player, ItemStack stack) {
-		return this.hasBypass(player, stack, "drop") ? false : this.preventSpawnedDrops();
+		return !this.hasBypass(player, stack, "drop") && this.preventSpawnedDrops();
 	}
 
 	public boolean preventAllDrops() {
@@ -179,7 +179,7 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 	}
 
 	public boolean preventAllDrops(Player player, ItemStack stack) {
-		return this.hasBypass(player, stack, "drop") ? false : this.preventAllDrops();
+		return !this.hasBypass(player, stack, "drop") && this.preventAllDrops();
 	}
 
 	@Override
