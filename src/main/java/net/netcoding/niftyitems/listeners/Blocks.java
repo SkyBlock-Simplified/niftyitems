@@ -78,7 +78,6 @@ public class Blocks extends BukkitListener {
 		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(event.getItem()).equalsIgnoreCase("spawned"))) {
 			event.setItem(new ItemStack(Material.AIR));
 			event.setCancelled(true);
-			return;
 		}
 	}
 
@@ -97,12 +96,11 @@ public class Blocks extends BukkitListener {
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			if (Lore.isRestricted(stack).equalsIgnoreCase("creative")) {
-				if (!(GameMode.CREATIVE.equals(player.getGameMode()) || Lore.isOwner(stack, player.getName()))) {
+				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(stack, player.getName()))) {
 					if (!NiftyItems.getPluginConfig().isSilent("place"))
 						this.getLog().error(player, "You must be in creative mode or the owner to place {{0}}!", stack.getType().toString());
 
 					event.setCancelled(true);
-					return;
 				}
 			}
 		}
