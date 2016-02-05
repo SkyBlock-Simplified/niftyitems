@@ -64,15 +64,15 @@ public class NiftyItems extends BukkitPlugin {
 			FAKE_PLAYER_INVENTORY.closeAll();
 	}
 
-	public final static FakeInventory getFakeArmorInventory() {
+	public static FakeInventory getFakeArmorInventory() {
 		return FAKE_ARMOR_INVENTORY;
 	}
 
-	public final static FakeInventory getFakePlayerInventory() {
+	public static FakeInventory getFakePlayerInventory() {
 		return FAKE_PLAYER_INVENTORY;
 	}
 
-	public final static Config getPluginConfig() {
+	public static Config getPluginConfig() {
 		return PLUGIN_CONFIG;
 	}
 
