@@ -35,7 +35,7 @@ public class Lore {
 
 	public static String getOwner(ItemStack stack) {
 		if (isRestricted(stack).equalsIgnoreCase("none")) return "";
-		String lore = "none";
+		String lore;
 
 		if (!(lore = isRestricted(stack)).equalsIgnoreCase("none")) {
 			List<String> lores = stack.getItemMeta().getLore();
@@ -53,12 +53,12 @@ public class Lore {
 	}
 
 	public static boolean isOwner(ItemStack stack, String playerName) {
-		return getOwner(stack) == playerName;
+		return getOwner(stack).equals(playerName);
 	}
 
 	public static String isRestricted(ItemStack stack) {
 		String none = "none";
-		if (stack == null || Material.AIR.equals(stack)) return none;
+		if (stack == null || Material.AIR == stack.getType()) return none;
 		if (!stack.hasItemMeta() || !stack.getItemMeta().hasLore()) return none;
 
 		for (String lore : stack.getItemMeta().getLore()) {
