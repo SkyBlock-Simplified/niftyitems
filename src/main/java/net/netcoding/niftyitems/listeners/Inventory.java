@@ -1,15 +1,11 @@
 package net.netcoding.niftyitems.listeners;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
 import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -21,6 +17,9 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Inventory extends BukkitListener {
 
