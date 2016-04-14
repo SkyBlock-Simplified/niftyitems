@@ -60,11 +60,6 @@ public class GameMode extends BukkitCommand {
 					profile = NiftyBukkit.getMojangRepository().searchByUsername(name = (args.length == 1 ? args[0] : sender.getName()));
 			}
 
-			if (!profile.getOfflinePlayer().isOnline()) {
-				this.getLog().error(sender, "Cannot change gamemode for offline player {{0}}!", profile.getName());
-				return;
-			}
-
 			boolean self = sender.getName().equals(profile.getName());
 
 			if (isPlayer(sender) && !self && !this.hasPermissions(sender, "gamemode", "other")) {
@@ -72,9 +67,17 @@ public class GameMode extends BukkitCommand {
 				return;
 			}
 
-			profile.getOfflinePlayer().getPlayer().setGameMode(mode);
-			this.getLog().message(profile.getOfflinePlayer().getPlayer(), "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
-			if (!self) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), profile.getName());
+			if (!profile.getOfflinePlayer().isOnline()) {
+				this.getLog().error(sender, "Cannot change gamemode for offline player {{0}}!", profile.getName());
+				return;
+			}
+
+			if (this.hasPermissions(sender, "gamemode", mode.toString().toLowerCase())) {
+				profile.getOfflinePlayer().getPlayer().setGameMode(mode);
+				this.getLog().message(profile.getOfflinePlayer().getPlayer(), "Your gamemode has been changed to {{0}}.", mode.toString().toLowerCase());
+				if (!self) this.getLog().message(sender, "Set {{0}} gamemode for {{1}}.", mode.toString().toLowerCase(), profile.getName());
+			} else
+				this.getLog().error(sender, "You are not allowed to change your gamemode to {{0}}!", mode);
 		} catch (ProfileNotFoundException pnfex) {
 			this.getLog().error(sender, "Unable to locate profile for {{0}}!", name);
 		} catch (IllegalArgumentException iaex) {
