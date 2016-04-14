@@ -162,7 +162,6 @@ public class Config extends net.netcoding.niftycore.yaml.Config {
 			save = true;
 		}
 
-		NiftyItems.getPlugin(NiftyItems.class).getServer().dispatchCommand(NiftyItems.getPlugin(NiftyItems.class).getServer().getConsoleSender(), StringUtil.format("gamerule doTileDrops {0}", String.valueOf(!this.destroyAllDrops())));
 		if (save) this.save();
 	}
 

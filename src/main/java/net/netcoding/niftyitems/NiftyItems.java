@@ -7,8 +7,8 @@ import net.netcoding.niftyitems.commands.ClearInventory;
 import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.Enchant;
 import net.netcoding.niftyitems.commands.GameMode;
-import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.Invsee;
+import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
 import net.netcoding.niftyitems.listeners.ArmorInventory;
 import net.netcoding.niftyitems.listeners.Blocks;
@@ -16,6 +16,7 @@ import net.netcoding.niftyitems.listeners.GameModeFix;
 import net.netcoding.niftyitems.listeners.Inventory;
 import net.netcoding.niftyitems.listeners.PlayerInventory;
 import net.netcoding.niftyitems.listeners.Players;
+import org.bukkit.World;
 
 public class NiftyItems extends BukkitPlugin {
 
@@ -31,6 +32,14 @@ public class NiftyItems extends BukkitPlugin {
 			PLUGIN_CONFIG.startWatcher();
 		} catch (Exception ex) {
 			this.getLog().console("Unable to monitor config! Changes will require a restart!", ex);
+		}
+
+		this.getLog().console("Registering Gamerules");
+		String destroyAll = String.valueOf(!getPluginConfig().destroyAllDrops());
+		for (World world : this.getServer().getWorlds()) {
+			world.setGameRuleValue("doEntityDrops", destroyAll);
+			world.setGameRuleValue("doTileDrops", destroyAll);
+			world.setGameRuleValue("doMobLoot", destroyAll);
 		}
 
 		this.getLog().console("Registering Commands");
