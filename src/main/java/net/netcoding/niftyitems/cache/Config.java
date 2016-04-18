@@ -2,6 +2,7 @@ package net.netcoding.niftyitems.cache;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.inventory.items.ItemData;
+import net.netcoding.niftybukkit.yaml.BukkitConfig;
 import net.netcoding.niftycore.util.StringUtil;
 import net.netcoding.niftycore.yaml.ConfigSection;
 import net.netcoding.niftycore.yaml.annotations.Comment;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Config extends net.netcoding.niftycore.yaml.Config {
+public class Config extends BukkitConfig {
 
 	public static final int DEFAULT_ITEMSTACK_SIZE = 1;
 	public static final int DEFAULT_BLOCKSTACK_SIZE = 64;
