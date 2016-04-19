@@ -1,6 +1,6 @@
 package net.netcoding.niftyitems.managers;
 
-import net.netcoding.niftybukkit.inventory.items.ItemData;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftycore.util.RegexUtil;
 import net.netcoding.niftycore.util.StringUtil;
 import org.bukkit.ChatColor;

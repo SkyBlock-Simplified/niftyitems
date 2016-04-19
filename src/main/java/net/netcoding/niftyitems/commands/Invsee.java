@@ -1,7 +1,7 @@
 package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
-import net.netcoding.niftybukkit.inventory.FakeInventoryInstance;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryInstance;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftycore.mojang.exceptions.ProfileNotFoundException;

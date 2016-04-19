@@ -1,19 +1,18 @@
 package net.netcoding.niftyitems.listeners;
 
-import java.util.Arrays;
-import java.util.List;
-
-import net.netcoding.niftybukkit.inventory.FakeInventoryListener;
-import net.netcoding.niftybukkit.inventory.events.InventoryClickEvent;
-import net.netcoding.niftybukkit.inventory.events.InventoryCloseEvent;
-import net.netcoding.niftybukkit.inventory.events.InventoryItemInteractEvent;
-import net.netcoding.niftybukkit.inventory.events.InventoryOpenEvent;
 import net.netcoding.niftybukkit.minecraft.BukkitHelper;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryListener;
+import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryClickEvent;
+import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryCloseEvent;
+import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryItemInteractEvent;
+import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryOpenEvent;
 import net.netcoding.niftycore.util.ListUtil;
-
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class PlayerInventory extends BukkitHelper implements FakeInventoryListener {
 

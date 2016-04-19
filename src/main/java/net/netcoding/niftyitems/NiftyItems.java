@@ -1,6 +1,6 @@
 package net.netcoding.niftyitems;
 
-import net.netcoding.niftybukkit.inventory.FakeInventory;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
 import net.netcoding.niftyitems.cache.Config;
 import net.netcoding.niftyitems.commands.ClearInventory;
