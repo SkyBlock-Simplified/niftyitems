@@ -14,8 +14,8 @@ import java.util.List;
 
 public class Lore {
 
-	public static ItemStack apply(CommandSender sender, ItemStack stack, String lore) {
-		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return stack;
+	public static ItemData apply(CommandSender sender, ItemStack stack, String lore) {
+		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return new ItemData(stack);
 		ItemData data = new ItemData(stack);
 
 		if (data.hasItemMeta()) {
