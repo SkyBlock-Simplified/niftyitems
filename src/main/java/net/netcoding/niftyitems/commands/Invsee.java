@@ -1,15 +1,15 @@
 package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
-import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryInstance;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryInstance;
 import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftycore.mojang.exceptions.ProfileNotFoundException;
 import net.netcoding.niftycore.util.StringUtil;
 import net.netcoding.niftyitems.NiftyItems;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Invsee extends BukkitCommand {
@@ -38,15 +38,23 @@ public class Invsee extends BukkitCommand {
 		}
 
 		String action = args.length > 1 ? args[1] : "inventory";
+		Player player = profile.getOfflinePlayer().getPlayer();
 
 		if (action.matches("^inv(entory)?$"))
-			profile.getOfflinePlayer().getPlayer().openInventory(target.getOfflinePlayer().getPlayer().getInventory());
+			player.openInventory(target.getOfflinePlayer().getPlayer().getInventory()); // Todo, maybe
         else if (action.matches("^(ender)?chest$"))
-            profile.getOfflinePlayer().getPlayer().openInventory(target.getOfflinePlayer().getPlayer().getEnderChest());
+            player.openInventory(target.getOfflinePlayer().getPlayer().getEnderChest());
 		else if (action.matches("^armou?r$")) {
 			FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(profile);
 			instance.setTitle(StringUtil.format("Equipment of {0}", profile.getName()));
-			instance.open(target);
+			ItemStack[] armorContents = player.getInventory().getArmorContents();
+
+			for (int i = 0; i < armorContents.length; i++) {
+				if (armorContents[i] != null)
+					instance.add(i, armorContents[i]);
+			}
+
+			instance.open();
 		} else
             this.showUsage(sender);
 	}
