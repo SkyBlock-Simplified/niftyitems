@@ -57,9 +57,11 @@ public class NiftyItems extends BukkitPlugin {
 		new Inventory(this);
 		new Players(this);
 		FAKE_ARMOR_INVENTORY = new FakeInventory(this, new ArmorInventory(this));
+		FAKE_ARMOR_INVENTORY.setAllowEmpty(true);
 		FAKE_ARMOR_INVENTORY.setTradingEnabled();
 		FAKE_ARMOR_INVENTORY.setTitle("Equipment Inventory");
 		FAKE_PLAYER_INVENTORY = new FakeInventory(this, new PlayerInventory(this));
+		FAKE_PLAYER_INVENTORY.setAllowEmpty(true);
 		FAKE_PLAYER_INVENTORY.setTradingEnabled();
 		FAKE_PLAYER_INVENTORY.setTitle("Player Inventory");
 	}
