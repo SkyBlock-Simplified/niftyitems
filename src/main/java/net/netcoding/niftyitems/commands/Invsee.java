@@ -38,23 +38,24 @@ public class Invsee extends BukkitCommand {
 		}
 
 		String action = args.length > 1 ? args[1] : "inventory";
-		Player player = profile.getOfflinePlayer().getPlayer();
+		Player profilePlayer = profile.getOfflinePlayer().getPlayer();
+		Player targetPlayer = target.getOfflinePlayer().getPlayer();
 
 		if (action.matches("^inv(entory)?$"))
-			player.openInventory(target.getOfflinePlayer().getPlayer().getInventory()); // Todo, maybe
+			profilePlayer.openInventory(targetPlayer.getInventory()); // Todo, maybe
         else if (action.matches("^(ender)?chest$"))
-            player.openInventory(target.getOfflinePlayer().getPlayer().getEnderChest());
+			profilePlayer.openInventory(targetPlayer.getEnderChest());
 		else if (action.matches("^armou?r$")) {
 			FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(profile);
 			instance.setTitle(StringUtil.format("Equipment of {0}", profile.getName()));
-			ItemStack[] armorContents = player.getInventory().getArmorContents();
+			ItemStack[] armorContents = targetPlayer.getInventory().getArmorContents();
 
 			for (int i = 0; i < armorContents.length; i++) {
 				if (armorContents[i] != null)
 					instance.add(i, armorContents[i]);
 			}
 
-			instance.open();
+			instance.open(target);
 		} else
             this.showUsage(sender);
 	}
