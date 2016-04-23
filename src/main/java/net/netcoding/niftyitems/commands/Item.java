@@ -1,5 +1,7 @@
 package net.netcoding.niftyitems.commands;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.minecraft.inventory.InventoryWorkaround;
@@ -15,6 +17,8 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Map;
 
 public class Item extends BukkitCommand {
 
@@ -103,7 +107,11 @@ public class Item extends BukkitCommand {
 			itemData = Lore.apply(sender, itemData, Lore.getLore("spawned"));
 
 		if (args.length > 0 && this.hasPermissions(sender, "item", "data")) {
-			// TODO: Item Data
+			String json = StringUtil.implode(" ", args, 0);
+			Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
+
+			for (String key : attributes.keySet())
+				itemData.putNbt(key, attributes.get(key));
 		}
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
