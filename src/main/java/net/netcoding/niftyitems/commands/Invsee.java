@@ -47,7 +47,7 @@ public class Invsee extends BukkitCommand {
 			profilePlayer.openInventory(targetPlayer.getEnderChest());
 		else if (action.matches("^armou?r$")) {
 			FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(profile);
-			instance.setTitle(StringUtil.format("Equipment of {0}", profile.getName()));
+			instance.setTitle(StringUtil.format("Equipment of {0}", target.getName()));
 			ItemStack[] armorContents = targetPlayer.getInventory().getArmorContents();
 
 			for (int i = 0; i < armorContents.length; i++) {
