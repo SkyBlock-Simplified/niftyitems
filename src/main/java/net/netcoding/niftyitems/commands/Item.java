@@ -25,8 +25,8 @@ public class Item extends BukkitCommand {
 	public Item(JavaPlugin plugin) {
 		super(plugin, "item");
 		this.setCheckPerms(false);
-		this.editUsage(0, "give", "<player> <type>[:datavalue] [amount]");
-		this.editUsage(0, "g", "<player> <type>[:datavalue] [amount]");
+		this.editUsage(0, "give", "<player> <type>[:datavalue] [amount] [itemdata]");
+		this.editUsage(0, "g", "<player> <type>[:datavalue] [amount] [itemdata]");
 	}
 
 	@Override
