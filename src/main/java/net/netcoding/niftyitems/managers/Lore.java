@@ -15,7 +15,7 @@ import java.util.List;
 public class Lore {
 
 	public static ItemData apply(CommandSender sender, ItemStack stack, String lore) {
-		if (!Lore.isRestricted(stack).equalsIgnoreCase("none")) return new ItemData(stack);
+		if (!"none".equalsIgnoreCase(Lore.isRestricted(stack))) return new ItemData(stack);
 		ItemData data = new ItemData(stack);
 
 		if (data.hasItemMeta()) {
@@ -34,10 +34,10 @@ public class Lore {
 	}
 
 	public static String getOwner(ItemStack stack) {
-		if (isRestricted(stack).equalsIgnoreCase("none")) return "";
+		if ("none".equalsIgnoreCase(isRestricted(stack))) return "";
 		String lore;
 
-		if (!(lore = isRestricted(stack)).equalsIgnoreCase("none")) {
+		if (!"none".equalsIgnoreCase(lore = isRestricted(stack))) {
 			List<String> lores = stack.getItemMeta().getLore();
 			String localized = getLore(lore);
 
@@ -74,7 +74,7 @@ public class Lore {
 	}
 
 	public static boolean revert(ItemStack stack) {
-		if (isRestricted(stack).equalsIgnoreCase("none")) return false;
+		if ("none".equalsIgnoreCase(isRestricted(stack))) return false;
 		ItemMeta itemMeta = stack.getItemMeta();
 		List<String> newLore = new ArrayList<>();
 
