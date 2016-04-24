@@ -56,10 +56,10 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 
 		Player opener = event.getProfile().getOfflinePlayer().getPlayer();
 		Player target = event.getTarget().getOfflinePlayer().getPlayer();
-		ArmorIndex clickedIndex = ArmorIndex.fromIndex(event.getRawSlot());
 		ConcurrentList<ItemStack> contents = new ConcurrentList<>();
-		ItemData clicked = event.getClickedItem(false);
 		ConcurrentMap<ArmorIndex, Boolean> valid = new ConcurrentMap<>();
+		ArmorIndex clickedIndex = ArmorIndex.fromIndex(event.getRawSlot());
+		ItemData clicked = event.getClickedItem(false);
 		int validCount = 0;
 
 		for (int i = 0; i < ArmorIndex.size(); i++)
@@ -70,7 +70,6 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 			return;
 		}
 
-
 		for (ArmorIndex armorIndex : ArmorIndex.values()) {
 			ItemStack itemStack = contents.get(armorIndex.getIndex());
 			valid.put(armorIndex, (itemStack == null || ALLOWED.get(armorIndex).contains(itemStack.getType())));
@@ -78,7 +77,7 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 			if (ArmorIndex.HELMET == armorIndex && !valid.get(armorIndex)) {
 				if (this.hasPermissions(event.getProfile(), "invsee", "modify", "head")) {
 					try {
-						opener.getInventory().setHelmet(clicked);
+						target.getInventory().setHelmet(clicked);
 						valid.put(armorIndex, true);
 					} catch (Exception ignore) { }
 				}
