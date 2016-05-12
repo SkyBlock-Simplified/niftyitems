@@ -1,9 +1,11 @@
 package net.netcoding.niftyitems.listeners;
 
+import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftyitems.NiftyItems;
+import net.netcoding.niftyitems.commands.BlockMask;
 import net.netcoding.niftyitems.managers.Lore;
-
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -62,15 +64,6 @@ public class Blocks extends BukkitListener {
 			if (NiftyItems.getPluginConfig().destroyAllDrops(player, stack))
 				stack.setType(Material.AIR);
 		}
-
-		/*if (block.getState() instanceof Chest) {
-			Chest chest = (Chest)block.getState();
-
-			for (ItemStack item : chest.getInventory().getContents()) {
-				// Destroy Spawned Drops
-				// Prevent Spawned Drops
-			}
-		}*/
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -84,25 +77,41 @@ public class Blocks extends BukkitListener {
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		Player player = event.getPlayer();
-		ItemStack stack = event.getItemInHand();
+		ItemData itemData = new ItemData(event.getItemInHand());
 
-		if (NiftyItems.getPluginConfig().isBlacklisted(player, stack, "place")) {
+		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY))
+			itemData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
+
+		if (NiftyItems.getPluginConfig().isBlacklisted(player, itemData, "place")) {
 			if (!NiftyItems.getPluginConfig().isSilent("place"))
-				this.getLog().error(player, "You cannot {0} {{1}}!", (stack.getType().isBlock() ? "place" : "use"), stack.getType().toString());
+				this.getLog().error(player, "You cannot {0} {{1}}!", (itemData.getType().isBlock() ? "place" : "use"), itemData.getType().toString());
 
 			event.setCancelled(true);
 			return;
 		}
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
-			if (Lore.isRestricted(stack).equalsIgnoreCase("creative")) {
-				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(stack, player.getName()))) {
+			if (Lore.isRestricted(itemData).equalsIgnoreCase("creative")) {
+				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(itemData, player.getName()))) {
 					if (!NiftyItems.getPluginConfig().isSilent("place"))
-						this.getLog().error(player, "You must be in creative mode or the owner to place {{0}}!", stack.getType().toString());
+						this.getLog().error(player, "You must be in creative mode or the owner to place {{0}}!", itemData.getType().toString());
 
 					event.setCancelled(true);
 				}
 			}
+		}
+
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onBlockPlaceMask(final BlockPlaceEvent event) {
+		final Player player = event.getPlayer();
+		ItemData itemData = new ItemData(player.getItemInHand());
+
+		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY)) {
+			ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
+			event.getBlock().setType(maskData.getType());
+			event.getBlock().setData(itemData.<Byte>getNbtPath(BlockMask.BLOCKMASK_DATA));
 		}
 	}
 
