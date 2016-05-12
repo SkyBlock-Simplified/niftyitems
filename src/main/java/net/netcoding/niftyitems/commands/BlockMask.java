@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
@@ -63,7 +62,7 @@ public class BlockMask extends BukkitCommand {
 			try {
 				ItemData maskData = NiftyBukkit.getItemDatabase().get(args[0]);
 
-				if (maskData.getType().isBlock() || maskData.getType() == Material.SKULL_ITEM) {
+				if (maskData.getType().isBlock() || maskData.getType() == Material.SKULL) {
 					String previousMask = itemData.getNbtPath(BLOCKMASK_KEY);
 
 					if (StringUtil.notEmpty(previousMask)) {
@@ -77,7 +76,7 @@ public class BlockMask extends BukkitCommand {
 						String json = StringUtil.implode(" ", args, 1);
 
 						try {
-							Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>(){}.getType());
+							Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
 							itemData.putNbtPath(BLOCKMASK_DATA, attributes);
 						} catch (Exception ex) {
 							this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
