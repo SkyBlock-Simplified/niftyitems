@@ -124,12 +124,10 @@ public class Blocks extends BukkitListener {
 					if (itemData.containsNbtPath(BlockMask.BLOCKMASK_DATA)) {
 						try {
 							Map<String, Object> map = itemData.getNbtPath(BlockMask.BLOCKMASK_DATA);
-							NbtCompound compound = NbtFactory.createRootCompound("tag");
+							NbtCompound compound = NbtFactory.fromBlockTag(event.getBlock());
 							compound.putAll(map);
 							NbtFactory.setBlockTag(event.getBlock(), compound);
-						} catch (Exception ex) {
-							getLog().console("Wat", ex);
-						}
+						} catch (Exception ignore) { }
 					}
 				}
 			});
