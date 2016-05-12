@@ -18,7 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 
 public class Item extends BukkitCommand {
@@ -55,7 +55,7 @@ public class Item extends BukkitCommand {
 		}
 
 		if (isGive || !receiver.getName().equals(sender.getName())) {
-			args = StringUtil.split(",", StringUtil.implode(",", args, 1));
+			args = StringUtil.split("__", StringUtil.implode("__", args, 1));
 
 			if (args.length == 0) {
 				this.showUsage(sender);
@@ -80,7 +80,7 @@ public class Item extends BukkitCommand {
 
 		String displayName = NiftyBukkit.getItemDatabase().name(itemData);
 		displayName = StringUtil.isEmpty(displayName) ? itemData.getType().name() : displayName;
-		args = StringUtil.split(",", StringUtil.implode(",", args, 1));
+		args = StringUtil.split("__", StringUtil.implode("__", args, 1));
 		int amount = -1;
 
 		if (isItem || (NiftyItems.getPluginConfig().giveEnforcesBlacklist() && !this.hasPermissions(sender, "bypass", "give"))) {
@@ -95,7 +95,7 @@ public class Item extends BukkitCommand {
 		if (args.length > 0) {
 			if (NumberUtil.isInt(args[0])) {
 				amount = Integer.parseInt(args[0]);
-				args = StringUtil.split(",", StringUtil.implode(",", args, 1));
+				args = StringUtil.split("__", StringUtil.implode("__", args, 1));
 			}
 		}
 
@@ -108,11 +108,12 @@ public class Item extends BukkitCommand {
 			itemData = Lore.apply(sender, itemData, Lore.getLore("spawned"));
 
 		if (args.length > 0 && this.hasPermissions(sender, "item", "data")) {
+			System.out.println("NBT Args: " + Arrays.toString(args));
 			String json = StringUtil.implode(" ", args, 0);
+			System.out.println("NBT Json: " + json);
 
 			try {
-				Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
-				}.getType());
+				Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
 				itemData.putAllNbt(attributes);
 			} catch (Exception ex) {
 				this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
