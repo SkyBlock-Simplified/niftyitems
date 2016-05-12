@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Item extends BukkitCommand {
@@ -108,10 +109,14 @@ public class Item extends BukkitCommand {
 
 		if (args.length > 0 && this.hasPermissions(sender, "item", "data")) {
 			String json = StringUtil.implode(" ", args, 0);
-			Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
 
-			for (String key : attributes.keySet())
-				itemData.putNbt(key, attributes.get(key));
+			try {
+				Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>() {
+				}.getType());
+				itemData.putAllNbt(attributes);
+			} catch (Exception ex) {
+				this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
+			}
 		}
 
 		if (this.hasPermissions(sender, "bypass", "stacksize"))
