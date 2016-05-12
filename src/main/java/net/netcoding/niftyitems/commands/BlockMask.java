@@ -74,8 +74,13 @@ public class BlockMask extends BukkitCommand {
 
 					if (args.length > 1) {
 						String json = StringUtil.implode(" ", args, 1);
-						Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>(){}.getType());
-						itemData.putNbtPath(BLOCKMASK_DATA, attributes);
+
+						try {
+							Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>(){}.getType());
+							itemData.putNbtPath(BLOCKMASK_DATA, attributes);
+						} catch (Exception ex) {
+							this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
+						}
 					} else if (itemData.containsNbtPath(BLOCKMASK_DATA))
 						itemData.removeNbtPath(BLOCKMASK_DATA);
 
