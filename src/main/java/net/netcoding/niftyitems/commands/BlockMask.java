@@ -66,7 +66,7 @@ public class BlockMask extends BukkitCommand {
 
 					itemData.putNbtPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
 					ItemMeta itemMeta = itemData.getItemMeta();
-					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}", ChatColor.DARK_AQUA, ChatColor.WHITE, maskData.getType()));
+					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}{3}", ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.WHITE, maskData.getType()));
 					itemData.setItemMeta(itemMeta);
 					player.setItemInHand(itemData);
 					this.getLog().message(sender, "The block in your hand now has a {{0}}:{{1}} block mask!{2}", maskData.getType(), maskData.getDurability(), (StringUtil.notEmpty(previousMask) ? StringUtil.format(" (Previously {0})", previousMask) : ""));
