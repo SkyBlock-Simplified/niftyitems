@@ -103,6 +103,7 @@ public class Blocks extends BukkitListener {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockPlaceMask(final BlockPlaceEvent event) {
 		final Player player = event.getPlayer();
@@ -110,8 +111,7 @@ public class Blocks extends BukkitListener {
 
 		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY)) {
 			ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
-			event.getBlock().setType(maskData.getType());
-			event.getBlock().setData(itemData.<Byte>getNbtPath(BlockMask.BLOCKMASK_DATA));
+			event.getBlock().setTypeIdAndData(maskData.getTypeId(), (byte)maskData.getDurability(), false);
 		}
 	}
 
