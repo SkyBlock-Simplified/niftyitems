@@ -1,5 +1,7 @@
 package net.netcoding.niftyitems.commands;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftybukkit.minecraft.items.ItemData;
@@ -12,10 +14,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SuppressWarnings("deprecation")
 public class BlockMask extends BukkitCommand {
 
 	public static final String BLOCKMASK_KEY = "niftyitems.blockmask";
+	public static final String BLOCKMASK_DATA = "niftyitems.blockdata";
 
 	public BlockMask(JavaPlugin plugin) {
 		super(plugin, "blockmask");
@@ -65,6 +71,14 @@ public class BlockMask extends BukkitCommand {
 					}
 
 					itemData.putNbtPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
+
+					if (args.length > 1) {
+						String json = StringUtil.implode(" ", args, 1);
+						Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<HashMap<String, Object>>(){}.getType());
+						itemData.putNbtPath(BLOCKMASK_DATA, attributes);
+					} else if (itemData.containsNbtPath(BLOCKMASK_DATA))
+						itemData.removeNbtPath(BLOCKMASK_DATA);
+
 					ItemMeta itemMeta = itemData.getItemMeta();
 					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}{3}", ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.WHITE, maskData.getType()));
 					itemData.setItemMeta(itemMeta);
@@ -73,7 +87,7 @@ public class BlockMask extends BukkitCommand {
 				} else
 					this.getLog().error(sender, "Cannot set mask to non-block type {{0}}:{{1}}!", maskData.getType(), maskData.getDurability());
 			} catch (Exception ex) {
-				this.getLog().error(sender, "The passed type {{0}} is invalid!", args[0]);
+				this.getLog().error(sender, "The passed type {{0}} is invalid!", ex, args[0]);
 			}
 		}
 	}
