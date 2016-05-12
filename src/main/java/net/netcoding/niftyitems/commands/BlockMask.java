@@ -72,7 +72,7 @@ public class BlockMask extends BukkitCommand {
 
 					itemData.putNbtPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
 
-					if (args.length > 1) {
+					if (args.length > 1 && this.hasPermissions(sender, "blockmask", "nbt")) {
 						String json = StringUtil.implode(" ", args, 1);
 
 						try {

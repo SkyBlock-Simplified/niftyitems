@@ -107,7 +107,7 @@ public class Item extends BukkitCommand {
 		if (!this.hasPermissions(sender, "bypass", "lore"))
 			itemData = Lore.apply(sender, itemData, Lore.getLore("spawned"));
 
-		if (args.length > 0 && this.hasPermissions(sender, "item", "data")) {
+		if (args.length > 0 && this.hasPermissions(sender, "item", "nbt")) {
 			System.out.println("NBT Args: " + Arrays.toString(args));
 			String json = StringUtil.implode(" ", args, 0);
 			System.out.println("NBT Json: " + json);
