@@ -39,12 +39,18 @@ public class BlockMask extends BukkitCommand {
 		if (ListUtil.isEmpty(args) || args[0].matches("^(remov|delet)e$")) {
 			if (itemData.containsNbtPath(BLOCKMASK_KEY)) {
 				String mask = itemData.getNbtPath(BLOCKMASK_KEY);
+
+				if (StringUtil.notEmpty(mask)) {
+					ItemData previousMaskData = NiftyBukkit.getItemDatabase().get(mask);
+					mask = StringUtil.format("{{0}}:{{1}}", previousMaskData.getType(), previousMaskData.getDurability());
+				}
+
 				itemData.removeNbt("niftyitems");
 				ItemMeta itemMeta = itemData.getItemMeta();
 				itemMeta.setDisplayName(null);
 				itemData.setItemMeta(itemMeta);
 				player.setItemInHand(itemData);
-				this.getLog().message(sender, "The {{0}} mask has been removed!", NiftyBukkit.getItemDatabase().get(mask).getType());
+				this.getLog().message(sender, "The {0} mask has been removed!", mask);
 			} else
 				this.getLog().error(sender, "There is no existing block mask to remove!");
 		} else {
@@ -53,13 +59,19 @@ public class BlockMask extends BukkitCommand {
 
 				if (maskData.getType().isBlock()) {
 					String mask = itemData.getNbtPath(BLOCKMASK_KEY);
+
+					if (StringUtil.notEmpty(mask)) {
+						ItemData previousMaskData = NiftyBukkit.getItemDatabase().get(mask);
+						mask = StringUtil.format("{{0}}:{{1}}", previousMaskData.getType(), previousMaskData.getDurability());
+					}
+
 					itemData.putNbtPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
 					itemData.putNbtPath(BLOCKMASK_DATA, maskData.getData().getData());
 					ItemMeta itemMeta = itemData.getItemMeta();
 					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}", ChatColor.DARK_AQUA, ChatColor.WHITE, maskData.getType()));
 					itemData.setItemMeta(itemMeta);
 					player.setItemInHand(itemData);
-					this.getLog().message(sender, "The block in your hand now has a {{0}} block mask!{1}", maskData.getType(), (StringUtil.notEmpty(mask) ? StringUtil.format(" (Previously {{0}})", NiftyBukkit.getItemDatabase().get(mask).getType()) : ""));
+					this.getLog().message(sender, "The block in your hand now has a {{0}}:{{1}} block mask!{1}", maskData.getType(), (StringUtil.notEmpty(mask) ? StringUtil.format(" (Previously {0})", mask) : ""));
 				} else
 					this.getLog().error(sender, "Cannot set mask to non-block type {{0}}!", maskData.getType());
 			} catch (Exception ex) {
