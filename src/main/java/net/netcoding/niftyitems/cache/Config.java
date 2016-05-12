@@ -25,29 +25,17 @@ public class Config extends BukkitConfig {
 	public static final int DEFAULT_BLOCKSTACK_SIZE = 64;
 	public static final int MAXIMUM_OVERSTACKED_SIZE = 100;
 
-	@Comment("Default stack sizes of items and blocks")
-	@Path("stack-size")
-	private ConfigSection stackSize;
-
 	@Path("stack-size.item")
 	private int itemStackSize = DEFAULT_ITEMSTACK_SIZE;
 
 	@Path("stack-size.block")
 	private int blockStackSize = DEFAULT_BLOCKSTACK_SIZE;
 
-	@Comment("Prevent items from being dropped")
-	@Path("destroy-items")
-	private ConfigSection preventDrop;
-
 	@Path("prevent-drop.spawned")
 	private boolean preventSpawned = true;
 
 	@Path("prevent-drop.all")
 	private boolean preventAll = false;
-
-	@Comment("Destroy items when dropped")
-	@Path("destroy-items")
-	private ConfigSection destroyItems;
 
 	@Path("destroy-items.spawned")
 	private boolean destroySpawned = false;
