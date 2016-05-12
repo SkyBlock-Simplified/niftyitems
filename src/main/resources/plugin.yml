@@ -7,6 +7,10 @@ main: ${project.groupId}.${project.artifactId}.${project.name}
 depend: [NiftyBukkit]
 
 commands:
+  blockmask:
+    description: Turns a block into a mask for another block
+    usage: /<command> <type[:data]>|remove
+    aliases: [bmask, block, bm]
   clear:
     description: Clears the players inventory
     usage: /<command> [player] [inv|armor|all]
@@ -35,11 +39,22 @@ commands:
     description: Shows information related to an item
     usage: /<command> <type>[:datavalue]
     aliases: idb
+  more:
+    description: Gives more of the item in your hand
+    usage: /<command> <amount>
+  nbt:
+    description: Gives more of the item in your hand
+    usage: /<command> <key|path>
 
 permissions:
   niftyitems.*:
     description: Gives access to all plugin features and commands
     children:
+      niftyitems.blockmask:
+        description: Allows you to mask a block to another
+        children:
+          niftyitems.blockmask.nbt:
+            description: Allows you to add nbt to the masked item
       niftyitems.bypass.*:
         description: Allows you to bypass all blacklists and stacksize limits
         children:
@@ -62,28 +77,31 @@ permissions:
       niftyitems.clear.*:
         description: Allows you to access all clear features
         children:
-          niftyitems.clear:
-            description: Allows you to clear your own inventory
           niftyitems.clear.other:
             description: Allows you to clear another players inventory
+            children:
+              niftyitems.clear:
+                description: Allows you to clear your own inventory
       niftyitems.clearlore:
         description: Allows you to clear the lore on one or all items
       niftyitems.enchant.*:
         description: Allows you to unsafely enchant items
         children:
-          niftyitems.enchant:
-            description: Allows you to enchant items
           niftyitems.enchant.unsafe:
             description: Allows you to unsafely enchant items
+            children:
+              niftyitems.enchant:
+                description: Allows you to enchant items
       niftyitems.gamemode.*:
         description: Allows you to access all gamemode features
         children:
-          niftyitems.gamemode:
-            description: Allows you to change your own gamemode
-          niftyitems.gamemode.maintain:
-            description: Allows you to maintain the non-default gamemode across logins
           niftyitems.gamemode.other:
             description: Allows you to change another players gamemode
+            children:
+              niftyitems.gamemode:
+                description: Allows you to change your own gamemode
+          niftyitems.gamemode.maintain:
+            description: Allows you to maintain the non-default gamemode across logins
       niftyitems.invsee.*:
         description: Allows you to see and modify all inventories
         children:
@@ -94,18 +112,24 @@ permissions:
           niftyitems.invsee.modify.*:
             description: Allows you to modify all inventories
             children:
-              niftyitems.invsee.modify:
-                description: Allows you to modify player inventories
               niftyitems.invsee.modify.admin:
                 description: Allows you to modify admin inventories
+                children:
+                  niftyitems.invsee.modify:
+                    description: Allows you to modify player inventories
       niftyitems.item.*:
         description: Allows you to spawn and give items
         children:
-          niftyitems.item:
-            description: Allows you to spawn items
           niftyitems.item.give:
             description: Allows you to give items
+            children:
+              niftyitems.item:
+                description: Allows you to spawn items
+          niftyitems.item.nbt:
+            description: Allows you to enter nbt data for items
       niftyitems.itemdb:
         description: Allows you to check item information
-      niftyitems.reload:
-        description: Allows you to reload the plugin config
+      niftyitems.more:
+        description: Allows you to retrieve more of the item in your hand
+      niftyitems.nbt:
+        description: Allows you to list the nbt of the item in your hand
