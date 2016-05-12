@@ -59,7 +59,7 @@ public class BlockMask extends BukkitCommand {
 					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}", ChatColor.DARK_AQUA, ChatColor.WHITE, maskData.getType()));
 					itemData.setItemMeta(itemMeta);
 					player.setItemInHand(itemData);
-					this.getLog().message(sender, "The block in your hand now has a {{0}} block mask!{1}", maskData.getType(), (StringUtil.notEmpty(mask) ? StringUtil.format(" (Previously {{0}})", mask) : ""));
+					this.getLog().message(sender, "The block in your hand now has a {{0}} block mask!{1}", maskData.getType(), (StringUtil.notEmpty(mask) ? StringUtil.format(" (Previously {{0}})", NiftyBukkit.getItemDatabase().get(mask).getType()) : ""));
 				} else
 					this.getLog().error(sender, "Cannot set mask to non-block type {{0}}!", maskData.getType());
 			} catch (Exception ex) {
