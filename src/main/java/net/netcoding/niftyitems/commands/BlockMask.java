@@ -9,6 +9,7 @@ import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftycore.minecraft.ChatColor;
 import net.netcoding.niftycore.util.ListUtil;
 import net.netcoding.niftycore.util.StringUtil;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -62,7 +63,7 @@ public class BlockMask extends BukkitCommand {
 			try {
 				ItemData maskData = NiftyBukkit.getItemDatabase().get(args[0]);
 
-				if (maskData.getType().isBlock()) {
+				if (maskData.getType().isBlock() || maskData.getType() == Material.SKULL_ITEM) {
 					String previousMask = itemData.getNbtPath(BLOCKMASK_KEY);
 
 					if (StringUtil.notEmpty(previousMask)) {

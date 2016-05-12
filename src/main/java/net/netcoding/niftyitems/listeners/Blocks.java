@@ -3,6 +3,9 @@ package net.netcoding.niftyitems.listeners;
 import net.netcoding.niftybukkit.NiftyBukkit;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
 import net.netcoding.niftybukkit.minecraft.items.ItemData;
+import net.netcoding.niftybukkit.minecraft.nbt.NbtCompound;
+import net.netcoding.niftybukkit.minecraft.nbt.NbtFactory;
+import net.netcoding.niftycore.minecraft.scheduler.MinecraftScheduler;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.commands.BlockMask;
 import net.netcoding.niftyitems.managers.Lore;
@@ -17,6 +20,8 @@ import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Map;
 
 public class Blocks extends BukkitListener {
 
@@ -104,14 +109,30 @@ public class Blocks extends BukkitListener {
 	}
 
 	@SuppressWarnings("deprecation")
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onBlockPlaceMask(final BlockPlaceEvent event) {
 		final Player player = event.getPlayer();
-		ItemData itemData = new ItemData(player.getItemInHand());
+		final ItemData itemData = new ItemData(player.getItemInHand());
 
 		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY)) {
-			ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
-			event.getBlock().setTypeIdAndData(maskData.getTypeId(), (byte)maskData.getDurability(), false);
+			MinecraftScheduler.schedule(new Runnable() {
+				@Override
+				public void run() {
+					ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
+					event.getBlock().setTypeIdAndData(maskData.getTypeId(), (byte)maskData.getDurability(), false);
+
+					if (itemData.containsNbtPath(BlockMask.BLOCKMASK_DATA)) {
+						try {
+							Map<String, Object> map = itemData.getNbtPath(BlockMask.BLOCKMASK_DATA);
+							NbtCompound compound = NbtFactory.createRootCompound("tag");
+							compound.putAll(map);
+							NbtFactory.setBlockTag(event.getBlock(), compound);
+						} catch (Exception ex) {
+							getLog().console("Wat", ex);
+						}
+					}
+				}
+			});
 		}
 	}
 
