@@ -114,7 +114,7 @@ public class Item extends BukkitCommand {
 
 			try {
 				Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
-				itemData.putAllNbt(attributes);
+				itemData.getNbt().putAll(attributes);
 			} catch (Exception ex) {
 				this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
 			}

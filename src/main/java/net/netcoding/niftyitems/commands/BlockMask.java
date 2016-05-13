@@ -42,15 +42,15 @@ public class BlockMask extends BukkitCommand {
 		ItemData itemData = new ItemData(player.getItemInHand());
 
 		if (ListUtil.isEmpty(args) || args[0].matches("^(remov|delet)e$")) {
-			if (itemData.containsNbtPath(BLOCKMASK_KEY)) {
-				String mask = itemData.getNbtPath(BLOCKMASK_KEY);
+			if (itemData.getNbt().containsPath(BLOCKMASK_KEY)) {
+				String mask = itemData.getNbt().getPath(BLOCKMASK_KEY);
 
 				if (StringUtil.notEmpty(mask)) {
 					ItemData previousMaskData = NiftyBukkit.getItemDatabase().get(mask);
 					mask = StringUtil.format("{{0}}:{{1}}", previousMaskData.getType(), previousMaskData.getDurability());
 				}
 
-				itemData.removeNbt("niftyitems");
+				itemData.getNbt().remove("niftyitems");
 				ItemMeta itemMeta = itemData.getItemMeta();
 				itemMeta.setDisplayName(null);
 				itemData.setItemMeta(itemMeta);
@@ -63,26 +63,26 @@ public class BlockMask extends BukkitCommand {
 				ItemData maskData = NiftyBukkit.getItemDatabase().get(args[0]);
 
 				if (maskData.getType().isBlock() || maskData.getType() == Material.SKULL) {
-					String previousMask = itemData.getNbtPath(BLOCKMASK_KEY);
+					String previousMask = itemData.getNbt().getPath(BLOCKMASK_KEY);
 
 					if (StringUtil.notEmpty(previousMask)) {
 						ItemData previousMaskData = NiftyBukkit.getItemDatabase().get(previousMask);
 						previousMask = StringUtil.format("{{0}}:{{1}}", previousMaskData.getType(), previousMaskData.getDurability());
 					}
 
-					itemData.putNbtPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
+					itemData.getNbt().putPath(BLOCKMASK_KEY, StringUtil.format("{0}:{1}", maskData.getType().name(), maskData.getDurability()));
 
 					if (args.length > 1 && this.hasPermissions(sender, "blockmask", "nbt")) {
 						String json = StringUtil.implode(" ", args, 1);
 
 						try {
 							Map<String, Object> attributes = new Gson().fromJson(json, new TypeToken<Map<String, Object>>(){}.getType());
-							itemData.putNbtPath(BLOCKMASK_DATA, attributes);
+							itemData.getNbt().putPath(BLOCKMASK_DATA, attributes);
 						} catch (Exception ex) {
 							this.getLog().error(sender, "Ignoring invalid NBT json: {{0}}.", json);
 						}
-					} else if (itemData.containsNbtPath(BLOCKMASK_DATA))
-						itemData.removeNbtPath(BLOCKMASK_DATA);
+					} else if (itemData.getNbt().containsPath(BLOCKMASK_DATA))
+						itemData.getNbt().removePath(BLOCKMASK_DATA);
 
 					ItemMeta itemMeta = itemData.getItemMeta();
 					itemMeta.setDisplayName(StringUtil.format("{0}Mask{1}: {2}{3}", ChatColor.DARK_AQUA, ChatColor.DARK_GRAY, ChatColor.WHITE, maskData.getType()));
