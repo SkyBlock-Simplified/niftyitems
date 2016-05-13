@@ -36,7 +36,7 @@ public class Nbt extends BukkitCommand {
 
 		ItemData itemData = new ItemData(player.getItemInHand());
 
-		if (itemData.containsNbt()) {
+		if (itemData.getNbt().notEmpty()) {
 			if (ListUtil.notEmpty(args)) {
 				String key = args[0];
 
