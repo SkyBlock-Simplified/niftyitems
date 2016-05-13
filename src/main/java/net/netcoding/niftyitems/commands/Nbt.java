@@ -40,14 +40,14 @@ public class Nbt extends BukkitCommand {
 			if (ListUtil.notEmpty(args)) {
 				String key = args[0];
 
-				if (itemData.containsNbt(key))
-					this.getLog().message(sender, "NBT key {{0}}: {{1}}.", key, filter(itemData.getNbt(key).toString()));
-				else if (itemData.containsNbtPath(key))
-					this.getLog().message(sender, "NBT path {{0}}: {{1}}.", key, filter(itemData.getNbtPath(key).toString()));
+				if (itemData.getNbt().containsKey(key))
+					this.getLog().message(sender, "NBT key {{0}}: {{1}}.", key, filter(itemData.getNbt().get(key).toString()));
+				else if (itemData.getNbt().containsPath(key))
+					this.getLog().message(sender, "NBT path {{0}}: {{1}}.", key, filter(itemData.getNbt().getPath(key).toString()));
 				else
 					this.getLog().error(sender, "NBT key {{0}} does not exist!", key);
 			} else
-				this.getLog().message(sender, "All NBT: {{0}}.", filter(itemData.getNbtString()));
+				this.getLog().message(sender, "All NBT: {{0}}.", filter(itemData.getNbt().toString()));
 		} else
 			this.getLog().message(sender, "Item contains no NBT.");
 	}
