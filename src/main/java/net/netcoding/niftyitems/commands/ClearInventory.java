@@ -4,6 +4,7 @@ import net.netcoding.niftybukkit.minecraft.BukkitCommand;
 import net.netcoding.niftycore.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -68,7 +69,9 @@ public class ClearInventory extends BukkitCommand {
 
 			if (action.matches("^all|inv$")) {
 				removed += "inventory";
+				ItemStack[] armorContents = player.getInventory().getArmorContents();
 				player.getInventory().clear();
+				player.getInventory().setArmorContents(armorContents);
 			}
 
 			if (action.matches("^all|armor$")) {
@@ -87,9 +90,7 @@ public class ClearInventory extends BukkitCommand {
 	}
 
 	private String getAction(String arg) {
-		if (arg.matches("(?i)^inv(entory)??$"))
-			return "inv";
-		else if (arg.matches("(?i)armou?r"))
+		if (arg.matches("(?i)armou?r"))
 			return "armor";
 		else if (arg.matches("(?i)all|\\*"))
 			return "all";
