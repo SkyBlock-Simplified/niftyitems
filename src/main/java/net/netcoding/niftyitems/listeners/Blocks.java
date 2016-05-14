@@ -84,8 +84,8 @@ public class Blocks extends BukkitListener {
 		Player player = event.getPlayer();
 		ItemData itemData = new ItemData(event.getItemInHand());
 
-		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY))
-			itemData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
+		if (itemData.getNbt().containsPath(BlockMask.BLOCKMASK_KEY))
+			itemData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.getNbt().<String>getPath(BlockMask.BLOCKMASK_KEY)));
 
 		if (NiftyItems.getPluginConfig().isBlacklisted(player, itemData, "place")) {
 			if (!NiftyItems.getPluginConfig().isSilent("place"))
@@ -114,19 +114,18 @@ public class Blocks extends BukkitListener {
 		final Player player = event.getPlayer();
 		final ItemData itemData = new ItemData(player.getItemInHand());
 
-		if (itemData.containsNbtPath(BlockMask.BLOCKMASK_KEY)) {
+		if (itemData.getNbt().containsPath(BlockMask.BLOCKMASK_KEY)) {
 			MinecraftScheduler.schedule(new Runnable() {
 				@Override
 				public void run() {
-					ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.<String>getNbtPath(BlockMask.BLOCKMASK_KEY)));
+					ItemData maskData = new ItemData(NiftyBukkit.getItemDatabase().get(itemData.getNbt().<String>getPath(BlockMask.BLOCKMASK_KEY)));
 					event.getBlock().setTypeIdAndData(maskData.getTypeId(), (byte)maskData.getDurability(), false);
 
-					if (itemData.containsNbtPath(BlockMask.BLOCKMASK_DATA)) {
+					if (itemData.getNbt().containsPath(BlockMask.BLOCKMASK_DATA)) {
 						try {
-							Map<String, Object> map = itemData.getNbtPath(BlockMask.BLOCKMASK_DATA);
+							Map<String, Object> map = itemData.getNbt().getPath(BlockMask.BLOCKMASK_DATA);
 							NbtCompound compound = NbtFactory.fromBlockTag(event.getBlock());
 							compound.putAll(map);
-							NbtFactory.setBlockTag(event.getBlock(), compound);
 						} catch (Exception ignore) { }
 					}
 				}
