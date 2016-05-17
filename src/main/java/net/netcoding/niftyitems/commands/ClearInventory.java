@@ -1,10 +1,12 @@
 package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftycore.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -66,17 +68,23 @@ public class ClearInventory extends BukkitCommand {
 
 		for (Player player : players) {
 			String removed = "";
+			PlayerInventory playerInventory = player.getInventory();
 
 			if (action.matches("^all|inv$")) {
 				removed += "inventory";
-				ItemStack[] armorContents = player.getInventory().getArmorContents();
-				player.getInventory().clear();
-				player.getInventory().setArmorContents(armorContents);
+
+				for (int i = 0; i < playerInventory.getSize(); i++) {
+					if (i >= 36 && i <= 39) continue;
+					if (playerInventory.getItem(i) == null) continue;
+					ItemData itemData = new ItemData(playerInventory.getItem(i));
+					if (FakeInventory.isAnyItemOpener(itemData)) continue;
+					playerInventory.setItem(i, null);
+				}
 			}
 
 			if (action.matches("^all|armor$")) {
 				removed += (StringUtil.notEmpty(removed) ? " and " : "") + "armor";
-				player.getInventory().setArmorContents(null);
+				playerInventory.setArmorContents(null);
 			}
 
 			if (!sender.getName().equals(player.getName()))
