@@ -91,7 +91,7 @@ public class BlockMask extends BukkitCommand {
 				} else
 					this.getLog().error(sender, "Cannot set mask to non-block type {{0}}:{{1}}!", maskData.getType(), maskData.getDurability());
 			} catch (Exception ex) {
-				this.getLog().error(sender, "The passed type {{0}} is invalid!", ex, args[0]);
+				this.getLog().error(sender, "The passed type {{0}} is invalid!", args[0]);
 			}
 		}
 	}
