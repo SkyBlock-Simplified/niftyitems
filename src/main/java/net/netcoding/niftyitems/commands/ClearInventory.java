@@ -1,7 +1,7 @@
 package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
-import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeItem;
 import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftycore.util.StringUtil;
 import org.bukkit.command.CommandSender;
@@ -77,7 +77,7 @@ public class ClearInventory extends BukkitCommand {
 					if (i >= 36 && i <= 39) continue;
 					if (playerInventory.getItem(i) == null) continue;
 					ItemData itemData = new ItemData(playerInventory.getItem(i));
-					if (FakeInventory.isAnyItemOpener(itemData)) continue;
+					if (FakeItem.isAnyItemOpener(itemData)) continue;
 					playerInventory.setItem(i, null);
 				}
 			}
