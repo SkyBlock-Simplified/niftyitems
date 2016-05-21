@@ -1,6 +1,7 @@
 package net.netcoding.niftyitems.commands;
 
 import net.netcoding.niftybukkit.minecraft.BukkitCommand;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftycore.util.ListUtil;
 import net.netcoding.niftycore.util.StringUtil;
 import net.netcoding.niftyitems.managers.Lore;
@@ -43,13 +44,24 @@ public class ClearLore extends BukkitCommand {
 		}
 
 		if ("hand".equalsIgnoreCase(action)) {
-			if (Lore.revert(player.getItemInHand()))
-				this.getLog().message(sender, "The item {{0}} has had its lore removed.", player.getItemInHand().getType().name());
-			else
+			ItemData itemData = new ItemData(player.getItemInHand());
+
+			if (Lore.revert(itemData)) {
+				player.setItemInHand(itemData);
+				this.getLog().message(sender, "The item {{0}} has had its lore removed.", itemData.getType().name());
+			} else
 				this.getLog().error(sender, "The item {{0}} has no lore.", player.getItemInHand().getType().name());
 		} else if ("all".equalsIgnoreCase(action)) {
-			for (ItemStack item : player.getInventory().getContents())
-				Lore.revert(item);
+			ItemStack[] contents = player.getInventory().getContents();
+
+			for (int i = 0; i < contents.length; i++) {
+				if (contents[i] == null)
+					continue;
+
+				ItemData itemData = new ItemData(contents[i]);
+				Lore.revert(itemData);
+				player.getInventory().setItem(i, itemData);
+			}
 
 			this.getLog().message(sender, "All items {0} have had their removed.", StringUtil.format("{0} {{1}}", (isSelf ? "in" : "for"), (isSelf ? "your inventory" : player.getName())));
 		} else

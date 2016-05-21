@@ -1,11 +1,14 @@
 package net.netcoding.niftyitems.listeners;
 
 import net.netcoding.niftybukkit.NiftyBukkit;
-import net.netcoding.niftybukkit.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryInstance;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftybukkit.mojang.BukkitMojangProfile;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
+import net.netcoding.niftyitems.managers.LoreType;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -32,34 +35,40 @@ public class Inventory extends BukkitListener {
 		final Player player = (Player)event.getWhoClicked();
 		BukkitMojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
 
-		if (FakeInventory.isOpenAnywhere(profile)) {
+		if (FakeInventory.isOpenAnywhere(profile))
+			return;
+		else {
 			if (NiftyItems.getFakeArmorInventory().isTargeted(profile)) {
 				BukkitMojangProfile targeter = NiftyItems.getFakeArmorInventory().getTargeter(profile);
-				NiftyItems.getFakeArmorInventory().update(targeter, player.getInventory().getArmorContents());
-			}/* else if (NiftyItems.getFakePlayerInventory().isTargeted(profile)) {
-				MojangProfile targeter = NiftyItems.getFakePlayerInventory().getTargeter(profile);
-				NiftyItems.getFakeArmorInventory().update(targeter, player.getInventory().getContents());
-			}*/
+				FakeInventoryInstance instance = NiftyItems.getFakeArmorInventory().newInstance(targeter);
+				ItemStack[] armorContents = player.getInventory().getArmorContents().clone();
 
-			/**
-			 * InventoryInteractEvent
-			 * InventoryDragEvent
-			 * InventoryClickEvent
-			 * InventoryPickupItemEvent
-			 * PlayerItemConsumeEvent
-			 * PlayerItemBreakEvent
-			 * PlayerPickupItemEvent
-			 * PlayerDropItemEvent
-			 */
-			return;
+				for (int i = 0; i < ArmorInventory.ArmorIndex.size(); i++) {
+					ItemStack itemStack = armorContents[i];
+					instance.add((itemStack == null ? null : new ItemData(itemStack)));
+				}
+
+				instance.open(profile);
+			}
 		}
+
+		/**
+		 * InventoryInteractEvent
+		 * InventoryDragEvent
+		 * InventoryClickEvent
+		 * InventoryPickupItemEvent
+		 * PlayerItemConsumeEvent
+		 * PlayerItemBreakEvent
+		 * PlayerPickupItemEvent
+		 * PlayerDropItemEvent
+		 */
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
 			InventoryType invType = event.getInventory().getType();
-			final ItemStack currentItem = FakeInventory.getClickedItem(event, false);
+			final ItemData currentItem = FakeInventory.getClickedItem(event, false);
 			List<InventoryType> allowed = Arrays.asList(InventoryType.CREATIVE, InventoryType.PLAYER, InventoryType.ENDER_CHEST);
 
-			if (Lore.isRestricted(currentItem).equalsIgnoreCase("spawned") && NiftyItems.getPluginConfig().isBlacklisted(player, currentItem, "store")) {
+			if (LoreType.SPAWNED == Lore.isRestricted(currentItem) && NiftyItems.getPluginConfig().isBlacklisted(player, currentItem, "store")) {
 				if (!allowed.contains(invType)) {
 					if (event.getClick().isShiftClick()) {
 						event.setResult(Result.DENY);
@@ -79,17 +88,21 @@ public class Inventory extends BukkitListener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onInventoryCreative(InventoryCreativeEvent event) {
 		Player player = (Player)event.getWhoClicked();
-		ItemStack item = event.getCursor();
+		BukkitMojangProfile profile = NiftyBukkit.getMojangRepository().searchByPlayer(player);
+		ItemData itemData = new ItemData(event.getCursor());
 
-		if (NiftyItems.getPluginConfig().isBlacklisted(player, item, "creative")) {
+		if (FakeInventory.isOpenAnywhere(profile))
+			return;
+
+		if (NiftyItems.getPluginConfig().isBlacklisted(player, itemData, "creative")) {
 			if (!NiftyItems.getPluginConfig().isSilent("creative"))
-				this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", NiftyBukkit.getItemDatabase().name(item));
+				this.getLog().error(player, "You cannot take {{0}} out of the creative menu!", NiftyBukkit.getItemDatabase().name(itemData));
 
 			event.setCursor(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 			event.setResult(Result.DENY);
 		} else if (!this.hasPermissions(player, "bypass", "lore"))
-			event.setCursor(Lore.apply(player, item, Lore.getLore("creative")));
+			event.setCursor(Lore.apply(player, itemData, LoreType.CREATIVE));
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -101,8 +114,10 @@ public class Inventory extends BukkitListener {
 				boolean lored = false;
 
 				for (ItemStack item : event.getInventory().getMatrix()) {
-					if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
-						Lore.apply(player, event.getInventory().getItem(0), Lore.getLore("creative"));
+					ItemData itemData = new ItemData(item);
+
+					if (LoreType.CREATIVE == Lore.isRestricted(itemData)) {
+						Lore.apply(player, new ItemData(event.getInventory().getItem(0)), LoreType.CREATIVE);
 						lored = true;
 						break;
 					}
@@ -110,8 +125,10 @@ public class Inventory extends BukkitListener {
 
 				if (!lored) {
 					for (ItemStack item : event.getInventory().getMatrix()) {
-						if (Lore.isRestricted(item).equalsIgnoreCase("spawned")) {
-							Lore.apply(player, event.getInventory().getItem(0), Lore.getLore("spawned"));
+						ItemData itemData = new ItemData(item);
+
+						if (LoreType.SPAWNED == Lore.isRestricted(itemData)) {
+							Lore.apply(player, new ItemData(event.getInventory().getItem(0)), LoreType.SPAWNED);
 							break;
 						}
 					}

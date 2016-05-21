@@ -17,7 +17,6 @@ import net.netcoding.niftyitems.listeners.ArmorInventory;
 import net.netcoding.niftyitems.listeners.Blocks;
 import net.netcoding.niftyitems.listeners.GameModeFix;
 import net.netcoding.niftyitems.listeners.Inventory;
-import net.netcoding.niftyitems.listeners.PlayerInventory;
 import net.netcoding.niftyitems.listeners.Players;
 import org.bukkit.World;
 
@@ -25,7 +24,6 @@ public class NiftyItems extends BukkitPlugin {
 
 	private static transient Config PLUGIN_CONFIG;
 	private static transient FakeInventory FAKE_ARMOR_INVENTORY;
-	private static transient FakeInventory FAKE_PLAYER_INVENTORY;
 
 	@Override
 	public void onEnable() {
@@ -66,27 +64,16 @@ public class NiftyItems extends BukkitPlugin {
 		FAKE_ARMOR_INVENTORY.setAllowEmpty(true);
 		FAKE_ARMOR_INVENTORY.setTradingEnabled();
 		FAKE_ARMOR_INVENTORY.setTitle("Equipment Inventory");
-		FAKE_PLAYER_INVENTORY = new FakeInventory(this, new PlayerInventory(this));
-		FAKE_PLAYER_INVENTORY.setAllowEmpty(true);
-		FAKE_PLAYER_INVENTORY.setTradingEnabled();
-		FAKE_PLAYER_INVENTORY.setTitle("Player Inventory");
 	}
 
 	@Override
 	public void onDisable() {
 		if (FAKE_ARMOR_INVENTORY != null)
 			FAKE_ARMOR_INVENTORY.closeAll();
-
-		if (FAKE_PLAYER_INVENTORY != null)
-			FAKE_PLAYER_INVENTORY.closeAll();
 	}
 
 	public static FakeInventory getFakeArmorInventory() {
 		return FAKE_ARMOR_INVENTORY;
-	}
-
-	public static FakeInventory getFakePlayerInventory() {
-		return FAKE_PLAYER_INVENTORY;
 	}
 
 	public static Config getPluginConfig() {
