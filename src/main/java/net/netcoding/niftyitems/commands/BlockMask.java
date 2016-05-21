@@ -19,8 +19,8 @@ import java.util.Map;
 @SuppressWarnings("deprecation")
 public class BlockMask extends BukkitCommand {
 
-	public static final String BLOCKMASK_KEY = "niftyitems.blockmask";
-	public static final String BLOCKMASK_DATA = "niftyitems.blockdata";
+	public static final String BLOCKMASK_KEY = "niftyitems.block.mask";
+	public static final String BLOCKMASK_DATA = "niftyitems.block.data";
 
 	public BlockMask(JavaPlugin plugin) {
 		super(plugin, "blockmask");
