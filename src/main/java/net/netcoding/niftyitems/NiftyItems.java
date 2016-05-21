@@ -1,8 +1,9 @@
 package net.netcoding.niftyitems;
 
-import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
 import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
+import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
 import net.netcoding.niftyitems.cache.Config;
+import net.netcoding.niftyitems.commands.BlockMask;
 import net.netcoding.niftyitems.commands.ClearInventory;
 import net.netcoding.niftyitems.commands.ClearLore;
 import net.netcoding.niftyitems.commands.Enchant;
@@ -10,6 +11,8 @@ import net.netcoding.niftyitems.commands.GameMode;
 import net.netcoding.niftyitems.commands.Invsee;
 import net.netcoding.niftyitems.commands.Item;
 import net.netcoding.niftyitems.commands.ItemDb;
+import net.netcoding.niftyitems.commands.More;
+import net.netcoding.niftyitems.commands.Nbt;
 import net.netcoding.niftyitems.listeners.ArmorInventory;
 import net.netcoding.niftyitems.listeners.Blocks;
 import net.netcoding.niftyitems.listeners.GameModeFix;
@@ -43,13 +46,16 @@ public class NiftyItems extends BukkitPlugin {
 		}
 
 		this.getLog().console("Registering Commands");
+		new BlockMask(this);
 		new ClearInventory(this);
 		new ClearLore(this);
 		new Enchant(this);
 		new GameMode(this);
-		new Item(this);
 		new Invsee(this);
+		new Item(this);
 		new ItemDb(this);
+		new More(this);
+		new Nbt(this);
 
 		this.getLog().console("Registering Listeners");
 		new Blocks(this);
