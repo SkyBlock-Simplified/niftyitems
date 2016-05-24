@@ -13,6 +13,7 @@ import net.netcoding.niftycore.util.StringUtil;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.cache.Config;
 import net.netcoding.niftyitems.managers.Lore;
+import net.netcoding.niftyitems.managers.LoreType;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -105,7 +106,7 @@ public class Item extends BukkitCommand {
 		itemData.setAmount(amount);
 
 		if (!this.hasPermissions(sender, "bypass", "lore"))
-			itemData = Lore.apply(sender, itemData, Lore.getLore("spawned"));
+			itemData = Lore.apply(sender, itemData, LoreType.SPAWNED);
 
 		if (args.length > 0 && this.hasPermissions(sender, "item", "nbt")) {
 			System.out.println("NBT Args: " + Arrays.toString(args));

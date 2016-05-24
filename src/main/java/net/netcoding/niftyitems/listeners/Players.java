@@ -1,9 +1,10 @@
 package net.netcoding.niftyitems.listeners;
 
 import net.netcoding.niftybukkit.minecraft.BukkitListener;
+import net.netcoding.niftybukkit.minecraft.items.ItemData;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.managers.Lore;
-
+import net.netcoding.niftyitems.managers.LoreType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -29,11 +30,13 @@ public class Players extends BukkitListener {
 		Player player = event.getEntity();
 
 		for (ItemStack item : event.getDrops()) {
-			if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+			ItemData itemData = new ItemData(item);
+
+			if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(itemData) == LoreType.SPAWNED))
 				item.setAmount(0);
-			else if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned")))
+			else if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(itemData) == LoreType.SPAWNED))
 				item.setAmount(0);
-			else if (Lore.isRestricted(item).equalsIgnoreCase("creative"))
+			else if (Lore.isRestricted(itemData) == LoreType.CREATIVE)
 				item.setAmount(0);
 		}
 	}
@@ -42,19 +45,20 @@ public class Players extends BukkitListener {
 	public void onPlayerDropItem(PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = event.getItemDrop().getItemStack();
+		ItemData itemData = new ItemData(item);
 
-		if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+		if (NiftyItems.getPluginConfig().preventAllDrops(player, item) || (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item) && Lore.isRestricted(itemData) == LoreType.SPAWNED)) {
 			event.setCancelled(true);
 			return;
 		}
 
-		if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(item).equalsIgnoreCase("spawned"))) {
+		if (NiftyItems.getPluginConfig().destroyAllDrops(player, item) || (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item) && Lore.isRestricted(itemData) == LoreType.SPAWNED)) {
 			event.getItemDrop().remove();
 			item.setAmount(0);
 		}
 	}
 
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler
 	public void onPlayerGameModeChange(PlayerGameModeChangeEvent event) {
 		Player player = event.getPlayer();
 
@@ -62,7 +66,9 @@ public class Players extends BukkitListener {
 			ItemStack[] items = player.getInventory().getArmorContents();
 
 			for (ItemStack item : items) {
-				if (Lore.isRestricted(item).equalsIgnoreCase("creative"))
+				ItemData itemData = new ItemData(item);
+
+				if (Lore.isRestricted(itemData) == LoreType.CREATIVE)
 					item.setType(Material.AIR); // TODO: Check this
 					//item = new ItemStack(Material.AIR);
 			}
@@ -71,7 +77,7 @@ public class Players extends BukkitListener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = false)
+	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if (Action.PHYSICAL != event.getAction()) {
 			Player player = event.getPlayer();
@@ -91,10 +97,10 @@ public class Players extends BukkitListener {
 		Player player = event.getPlayer();
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
-			ItemStack item = event.getItem().getItemStack();
+			ItemData itemData = new ItemData(event.getItem().getItemStack());
 
-			if (Lore.isRestricted(item).equalsIgnoreCase("creative")) {
-				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(item, player.getName())))
+			if (Lore.isRestricted(itemData) == LoreType.CREATIVE) {
+				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(itemData, player.getName())))
 					event.setCancelled(true);
 			}
 		}

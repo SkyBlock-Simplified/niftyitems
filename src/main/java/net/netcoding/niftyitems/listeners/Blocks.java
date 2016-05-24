@@ -9,6 +9,7 @@ import net.netcoding.niftycore.minecraft.scheduler.MinecraftScheduler;
 import net.netcoding.niftyitems.NiftyItems;
 import net.netcoding.niftyitems.commands.BlockMask;
 import net.netcoding.niftyitems.managers.Lore;
+import net.netcoding.niftyitems.managers.LoreType;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -45,11 +46,13 @@ public class Blocks extends BukkitListener {
 		}
 
 		// Prevent Spawned Drops
-		for (ItemStack stack : block.getDrops()) {
-			if (Lore.isRestricted(stack).equalsIgnoreCase("spawned")) {
-				if (NiftyItems.getPluginConfig().preventSpawnedDrops(player, stack)) {
+		for (ItemStack item : block.getDrops()) {
+			ItemData itemData = new ItemData(item);
+
+			if (Lore.isRestricted(itemData) == LoreType.SPAWNED) {
+				if (NiftyItems.getPluginConfig().preventSpawnedDrops(player, item)) {
 					if (!NiftyItems.getPluginConfig().isSilent("break"))
-						this.getLog().error(player, "Unable to break {{0}}! Spawned items cannot be dropped, please remove them first!", stack.getType().toString());
+						this.getLog().error(player, "Unable to break {{0}}! Spawned items cannot be dropped, please remove them first!", item.getType().toString());
 
 					return;
 				}
@@ -57,23 +60,27 @@ public class Blocks extends BukkitListener {
 		}
 
 		// Destroy Spawned Drops
-		for (ItemStack stack : block.getDrops()) {
-			if (Lore.isRestricted(stack).equalsIgnoreCase("spawned")) {
-				if (NiftyItems.getPluginConfig().destroySpawnedDrops(player, stack))
-					stack.setType(Material.AIR);
+		for (ItemStack item : block.getDrops()) {
+			ItemData itemData = new ItemData(item);
+
+			if (Lore.isRestricted(itemData) == LoreType.SPAWNED) {
+				if (NiftyItems.getPluginConfig().destroySpawnedDrops(player, item))
+					item.setType(Material.AIR);
 			}
 		}
 
 		// Destroy All Blocks
-		for (ItemStack stack : block.getDrops()) {
-			if (NiftyItems.getPluginConfig().destroyAllDrops(player, stack))
-				stack.setType(Material.AIR);
+		for (ItemStack item : block.getDrops()) {
+			if (NiftyItems.getPluginConfig().destroyAllDrops(player, item))
+				item.setType(Material.AIR);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onBlockDispense(BlockDispenseEvent event) {
-		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(event.getItem()).equalsIgnoreCase("spawned"))) {
+		ItemData itemData = new ItemData(event.getItem());
+
+		if (NiftyItems.getPluginConfig().destroyAllDrops() || (NiftyItems.getPluginConfig().destroySpawnedDrops() && Lore.isRestricted(itemData) == LoreType.SPAWNED)) {
 			event.setItem(new ItemStack(Material.AIR));
 			event.setCancelled(true);
 		}
@@ -96,7 +103,7 @@ public class Blocks extends BukkitListener {
 		}
 
 		if (!this.hasPermissions(player, "bypass", "lore")) {
-			if (Lore.isRestricted(itemData).equalsIgnoreCase("creative")) {
+			if (Lore.isRestricted(itemData) == LoreType.CREATIVE) {
 				if (!(GameMode.CREATIVE == player.getGameMode() || Lore.isOwner(itemData, player.getName()))) {
 					if (!NiftyItems.getPluginConfig().isSilent("place"))
 						this.getLog().error(player, "You must be in creative mode or the owner to place {{0}}!", itemData.getType().toString());
