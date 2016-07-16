@@ -1,20 +1,19 @@
 package net.netcoding.nifty.items.listeners;
 
 import net.netcoding.nifty.common.Nifty;
-import net.netcoding.nifty.common.api.plugin.MinecraftListener;
 import net.netcoding.nifty.common.api.plugin.Event;
+import net.netcoding.nifty.common.api.plugin.MinecraftListener;
 import net.netcoding.nifty.common.api.plugin.MinecraftPlugin;
 import net.netcoding.nifty.common.minecraft.entity.living.human.Player;
 import net.netcoding.nifty.common.minecraft.event.player.PlayerGameModeChangeEvent;
 import net.netcoding.nifty.common.minecraft.event.player.PlayerJoinEvent;
 import net.netcoding.nifty.common.minecraft.event.player.PlayerQuitEvent;
-
-import java.util.HashMap;
-import java.util.Map;
+import net.netcoding.nifty.core.util.concurrent.Concurrent;
+import net.netcoding.nifty.core.util.concurrent.ConcurrentMap;
 
 public class GameModeFix extends MinecraftListener {
 
-	private static final Map<String, Double> loginTime = new HashMap<>();
+	private static final ConcurrentMap<String, Double> loginTime = Concurrent.newMap();
 
 	public GameModeFix(MinecraftPlugin plugin) {
 		super(plugin);

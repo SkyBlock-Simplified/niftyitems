@@ -18,13 +18,11 @@ import net.netcoding.nifty.core.util.concurrent.ConcurrentMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ArmorInventory extends MinecraftHelper implements FakeInventoryListener {
 
-	private static final Map<ArmorIndex, List<Material>> ALLOWED = new HashMap<>();
+	private static final ConcurrentMap<ArmorIndex, List<Material>> ALLOWED = Concurrent.newMap();
 
 	static {
 		ALLOWED.put(ArmorIndex.BOOTS, new ArrayList<>(Arrays.asList(Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS, Material.DIAMOND_BOOTS)));

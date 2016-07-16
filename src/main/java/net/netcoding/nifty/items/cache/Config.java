@@ -2,21 +2,21 @@ package net.netcoding.nifty.items.cache;
 
 import net.netcoding.nifty.common.Nifty;
 import net.netcoding.nifty.common.api.plugin.MinecraftPlugin;
+import net.netcoding.nifty.common.minecraft.command.CommandSource;
 import net.netcoding.nifty.common.minecraft.entity.living.human.Player;
 import net.netcoding.nifty.common.minecraft.inventory.item.ItemStack;
 import net.netcoding.nifty.common.minecraft.material.Material;
-import net.netcoding.nifty.common.minecraft.command.CommandSource;
 import net.netcoding.nifty.common.yaml.BukkitConfig;
 import net.netcoding.nifty.core.util.StringUtil;
+import net.netcoding.nifty.core.util.concurrent.Concurrent;
+import net.netcoding.nifty.core.util.concurrent.ConcurrentMap;
 import net.netcoding.nifty.core.yaml.ConfigSection;
 import net.netcoding.nifty.core.yaml.annotations.Comment;
 import net.netcoding.nifty.core.yaml.annotations.Path;
 import net.netcoding.nifty.core.yaml.exceptions.InvalidConfigurationException;
 import net.netcoding.nifty.items.NiftyItems;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Config extends BukkitConfig {
 
@@ -47,10 +47,10 @@ public class Config extends BukkitConfig {
 	private boolean giveEnforcesBlacklist = false;
 
 	@Comment("Prevent the access, use and breaking of blocks/items")
-	private Map<String, String> blacklists = new HashMap<>();
+	private ConcurrentMap<String, String> blacklists = Concurrent.newMap();
 
 	@Comment("Silence messages sent to players when prevented by a blacklist")
-	private Map<String, Boolean> silent = new HashMap<>();
+	private ConcurrentMap<String, Boolean> silent = Concurrent.newMap();
 
 	public Config(MinecraftPlugin plugin) {
 		super(plugin.getDataFolder(), "config");
