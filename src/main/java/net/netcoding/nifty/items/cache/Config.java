@@ -1,19 +1,18 @@
-package net.netcoding.niftyitems.cache;
+package net.netcoding.nifty.items.cache;
 
-import net.netcoding.niftybukkit.NiftyBukkit;
-import net.netcoding.niftybukkit.minecraft.items.ItemData;
-import net.netcoding.niftybukkit.yaml.BukkitConfig;
-import net.netcoding.niftycore.util.StringUtil;
-import net.netcoding.niftycore.yaml.ConfigSection;
-import net.netcoding.niftycore.yaml.annotations.Comment;
-import net.netcoding.niftycore.yaml.annotations.Path;
-import net.netcoding.niftycore.yaml.exceptions.InvalidConfigurationException;
-import net.netcoding.niftyitems.NiftyItems;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.netcoding.nifty.common.Nifty;
+import net.netcoding.nifty.common.api.plugin.MinecraftPlugin;
+import net.netcoding.nifty.common.minecraft.entity.living.human.Player;
+import net.netcoding.nifty.common.minecraft.inventory.item.ItemStack;
+import net.netcoding.nifty.common.minecraft.material.Material;
+import net.netcoding.nifty.common.minecraft.command.CommandSource;
+import net.netcoding.nifty.common.yaml.BukkitConfig;
+import net.netcoding.nifty.core.util.StringUtil;
+import net.netcoding.nifty.core.yaml.ConfigSection;
+import net.netcoding.nifty.core.yaml.annotations.Comment;
+import net.netcoding.nifty.core.yaml.annotations.Path;
+import net.netcoding.nifty.core.yaml.exceptions.InvalidConfigurationException;
+import net.netcoding.nifty.items.NiftyItems;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,7 @@ public class Config extends BukkitConfig {
 	@Comment("Silence messages sent to players when prevented by a blacklist")
 	private Map<String, Boolean> silent = new HashMap<>();
 
-	public Config(JavaPlugin plugin) {
+	public Config(MinecraftPlugin plugin) {
 		super(plugin.getDataFolder(), "config");
 		String defaultStart = "7,8,9,10,11";
 		String harmfulPotions = "373:[16388,16420,16452,16424,16426,16428,16456,16458,16460]";
@@ -97,20 +96,20 @@ public class Config extends BukkitConfig {
 	}
 
 	public boolean isSilent(String blacklist) {
-		return this.silent.keySet().contains(blacklist) ? this.silent.get(blacklist) : false;
+		return this.silent.containsKey(blacklist) ? this.silent.get(blacklist) : false;
 	}
 
-	public boolean hasBypass(CommandSender sender, ItemStack stack, String blacklist) {
-		if (sender == null) return true;
+	public boolean hasBypass(CommandSource source, ItemStack stack, String blacklist) {
+		if (source == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR == stack.getType()) return false;
 		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
-		boolean hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, String.valueOf(stack.getTypeId())) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
-		List<String> names = NiftyBukkit.getItemDatabase().names(stack);
+		boolean hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(source, "bypass", blacklist, String.valueOf(stack.getTypeId())) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(source, "bypass", blacklist, StringUtil.format("{0}:{1}", String.valueOf(stack.getTypeId()), stack.getDurability()));
+		List<String> names = Nifty.getItemDatabase().names(stack);
 
 		if (!hasBypass) {
 			for (String name : names) {
-				if (hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, name) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(sender, "bypass", blacklist, StringUtil.format("{0}:{1}", name, stack.getDurability())))
+				if (hasBypass = NiftyItems.getPlugin(NiftyItems.class).hasPermissions(source, "bypass", blacklist, name) || NiftyItems.getPlugin(NiftyItems.class).hasPermissions(source, "bypass", blacklist, StringUtil.format("{0}:{1}", name, stack.getDurability())))
 					break;
 			}
 		}
@@ -118,16 +117,16 @@ public class Config extends BukkitConfig {
 		return hasBypass;
 	}
 
-	public boolean isBlacklisted(CommandSender sender, ItemStack stack, String blacklist) {
-		if (sender == null) return true;
+	public boolean isBlacklisted(CommandSource source, ItemStack stack, String blacklist) {
+		if (source == null) return true;
 		if (stack == null) return true;
 		if (Material.AIR == stack.getType()) return false;
 		if (!(this.blacklists.keySet().contains(blacklist) || blacklist.matches("^store|drop$"))) return false;
-		boolean hasBypass = this.hasBypass(sender, stack, blacklist);
+		boolean hasBypass = this.hasBypass(source, stack, blacklist);
 		if (blacklist.matches("^store|drop$")) return !hasBypass;
 
 		if (!hasBypass) {
-			for (ItemData item : NiftyBukkit.getItemDatabase().parse(String.valueOf(this.blacklists.get(blacklist)))) {
+			for (ItemStack item : Nifty.getItemDatabase().parse(String.valueOf(this.blacklists.get(blacklist)))) {
 				if (item.getTypeId() == stack.getTypeId() && (item.getDurability() == 0 || item.getDurability() == stack.getDurability()))
 					return true;
 			}

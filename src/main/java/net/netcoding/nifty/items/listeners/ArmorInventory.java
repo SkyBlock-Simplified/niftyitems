@@ -1,20 +1,20 @@
-package net.netcoding.niftyitems.listeners;
+package net.netcoding.nifty.items.listeners;
 
-import net.netcoding.niftybukkit.minecraft.BukkitHelper;
-import net.netcoding.niftybukkit.minecraft.inventory.FakeInventoryListener;
-import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryClickEvent;
-import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryCloseEvent;
-import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryItemInteractEvent;
-import net.netcoding.niftybukkit.minecraft.inventory.events.InventoryOpenEvent;
-import net.netcoding.niftybukkit.minecraft.items.ItemData;
-import net.netcoding.niftybukkit.reflection.MinecraftProtocol;
-import net.netcoding.niftycore.util.ListUtil;
-import net.netcoding.niftycore.util.concurrent.ConcurrentList;
-import net.netcoding.niftycore.util.concurrent.ConcurrentMap;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import net.netcoding.nifty.common.api.inventory.FakeInventoryListener;
+import net.netcoding.nifty.common.api.inventory.events.FakeInventoryClickEvent;
+import net.netcoding.nifty.common.api.inventory.events.FakeInventoryCloseEvent;
+import net.netcoding.nifty.common.api.inventory.events.FakeInventoryOpenEvent;
+import net.netcoding.nifty.common.api.inventory.events.FakeItemInteractEvent;
+import net.netcoding.nifty.common.api.plugin.MinecraftHelper;
+import net.netcoding.nifty.common.api.plugin.MinecraftPlugin;
+import net.netcoding.nifty.common.minecraft.entity.living.human.Player;
+import net.netcoding.nifty.common.minecraft.inventory.item.ItemStack;
+import net.netcoding.nifty.common.minecraft.material.Material;
+import net.netcoding.nifty.common.reflection.MinecraftProtocol;
+import net.netcoding.nifty.core.util.ListUtil;
+import net.netcoding.nifty.core.util.concurrent.Concurrent;
+import net.netcoding.nifty.core.util.concurrent.ConcurrentList;
+import net.netcoding.nifty.core.util.concurrent.ConcurrentMap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArmorInventory extends BukkitHelper implements FakeInventoryListener {
+public class ArmorInventory extends MinecraftHelper implements FakeInventoryListener {
 
-	private static Map<ArmorIndex, List<Material>> ALLOWED = new HashMap<>();
+	private static final Map<ArmorIndex, List<Material>> ALLOWED = new HashMap<>();
 
 	static {
 		ALLOWED.put(ArmorIndex.BOOTS, new ArrayList<>(Arrays.asList(Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS, Material.DIAMOND_BOOTS)));
@@ -36,12 +36,12 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 			ALLOWED.get(ArmorIndex.CHESTPLATE).add(Material.ELYTRA);
 	}
 
-	public ArmorInventory(JavaPlugin plugin) {
+	public ArmorInventory(MinecraftPlugin plugin) {
 		super(plugin);
 	}
 
 	@Override
-	public void onInventoryClick(InventoryClickEvent event) {
+	public void onInventoryClick(FakeInventoryClickEvent event) {
 		if (!this.hasPermissions(event.getProfile(), "invsee", "modify")) {
 			event.setCancelled(true);
 			return;
@@ -56,11 +56,12 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 
 		Player opener = event.getProfile().getOfflinePlayer().getPlayer();
 		Player target = event.getTarget().getOfflinePlayer().getPlayer();
-		ConcurrentList<ItemStack> contents = new ConcurrentList<>();
-		ConcurrentMap<ArmorIndex, Boolean> valid = new ConcurrentMap<>();
+		ConcurrentList<ItemStack> contents = Concurrent.newList();
+		ConcurrentMap<ArmorIndex, Boolean> valid = Concurrent.newMap();
 		ArmorIndex clickedIndex = ArmorIndex.fromIndex(event.getRawSlot());
-		ItemData clicked = event.getClickedItem(false);
+		ItemStack clicked = event.getPlacedItem();
 		int validCount = 0;
+		//this.getLog().console("Test: {0}:{1}:{2}", event.getRawSlot(), event.getSlot(), clicked);
 
 		for (int i = 0; i < ArmorIndex.size(); i++)
 			contents.add(opener.getOpenInventory().getTopInventory().getContents()[i]);
@@ -72,7 +73,11 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 
 		for (ArmorIndex armorIndex : ArmorIndex.values()) {
 			ItemStack itemStack = contents.get(armorIndex.getIndex());
-			valid.put(armorIndex, (itemStack == null || ALLOWED.get(armorIndex).contains(itemStack.getType())));
+
+			if (armorIndex.getIndex() == event.getRawSlot())
+				valid.put(armorIndex, ALLOWED.get(armorIndex).contains(clicked.getType()));
+			else
+				valid.put(armorIndex, (itemStack == null || ALLOWED.get(armorIndex).contains(itemStack.getType())));
 
 			if (ArmorIndex.HELMET == armorIndex && !valid.get(armorIndex)) {
 				if (this.hasPermissions(event.getProfile(), "invsee", "modify", "head")) {
@@ -85,27 +90,34 @@ public class ArmorInventory extends BukkitHelper implements FakeInventoryListene
 		}
 
 		for (ArmorIndex armorIndex : ArmorIndex.values()) {
+			//ItemStack itemStack = contents.get(armorIndex.getIndex());
+			//itemStack = (armorIndex.getIndex() == event.getRawSlot() ? clicked : itemStack);
+			//this.getLog().console("Armor: {0}:{1}:{2}", armorIndex.toString(), itemStack, valid.get(armorIndex));
+
 			if (valid.get(armorIndex))
 				validCount++;
 		}
 
+		this.getLog().console("Valid: {0}:{1}", validCount, ArmorIndex.size());
 		if (validCount == ArmorIndex.size()) {
 			if (event.getRawSlot() < ArmorIndex.size())
 				contents.set(clickedIndex.getIndex(), clicked);
 
+			this.getLog().console("Armor Set Contents: {0}", contents);
 			target.getInventory().setArmorContents(ListUtil.toArray(contents, ItemStack.class));
 		} else
 			event.setCancelled(true);
+		this.getLog().console("Armor Cancelled: {0}", event.isCancelled());
 	}
 
 	@Override
-	public void onInventoryClose(InventoryCloseEvent event) { }
+	public void onInventoryClose(FakeInventoryCloseEvent event) { }
 
 	@Override
-	public void onInventoryOpen(InventoryOpenEvent event) { }
+	public void onInventoryOpen(FakeInventoryOpenEvent event) { }
 
 	@Override
-	public void onInventoryItemInteract(InventoryItemInteractEvent event) { }
+	public void onItemInteract(FakeItemInteractEvent event) { }
 
 	public enum ArmorIndex {
 

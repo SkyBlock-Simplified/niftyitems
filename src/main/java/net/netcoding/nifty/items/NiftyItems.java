@@ -1,26 +1,17 @@
-package net.netcoding.niftyitems;
+package net.netcoding.nifty.items;
 
-import net.netcoding.niftybukkit.minecraft.BukkitPlugin;
-import net.netcoding.niftybukkit.minecraft.inventory.FakeInventory;
-import net.netcoding.niftyitems.cache.Config;
-import net.netcoding.niftyitems.commands.BlockMask;
-import net.netcoding.niftyitems.commands.ClearInventory;
-import net.netcoding.niftyitems.commands.ClearLore;
-import net.netcoding.niftyitems.commands.Enchant;
-import net.netcoding.niftyitems.commands.GameMode;
-import net.netcoding.niftyitems.commands.Invsee;
-import net.netcoding.niftyitems.commands.Item;
-import net.netcoding.niftyitems.commands.ItemDb;
-import net.netcoding.niftyitems.commands.More;
-import net.netcoding.niftyitems.commands.Nbt;
-import net.netcoding.niftyitems.listeners.ArmorInventory;
-import net.netcoding.niftyitems.listeners.Blocks;
-import net.netcoding.niftyitems.listeners.GameModeFix;
-import net.netcoding.niftyitems.listeners.Inventory;
-import net.netcoding.niftyitems.listeners.Players;
-import org.bukkit.World;
+import net.netcoding.nifty.common.api.inventory.FakeInventory;
+import net.netcoding.nifty.common.api.plugin.MinecraftPlugin;
+import net.netcoding.nifty.common.minecraft.region.World;
+import net.netcoding.nifty.items.cache.Config;
+import net.netcoding.nifty.items.commands.*;
+import net.netcoding.nifty.items.listeners.ArmorInventory;
+import net.netcoding.nifty.items.listeners.Blocks;
+import net.netcoding.nifty.items.listeners.GameModeFix;
+import net.netcoding.nifty.items.listeners.Inventory;
+import net.netcoding.nifty.items.listeners.Players;
 
-public class NiftyItems extends BukkitPlugin {
+public class NiftyItems extends MinecraftPlugin {
 
 	private static transient Config PLUGIN_CONFIG;
 	private static transient FakeInventory FAKE_ARMOR_INVENTORY;

@@ -1,4 +1,4 @@
-package net.netcoding.niftyitems.managers;
+package net.netcoding.nifty.items.managers;
 
 public enum LoreType {
 
