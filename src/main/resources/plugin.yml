@@ -4,7 +4,7 @@ website: ${project.url}
 author: ${author}
 
 main: ${project.groupId}.${project.artifactId}.${project.name}
-depend: [NiftyBukkit]
+depend: [NiftyLibrary]
 
 commands:
   blockmask:
